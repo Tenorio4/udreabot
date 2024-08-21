@@ -58,6 +58,7 @@ bot.on('text', async (ctx) => {
       for (let i = 0; i < miembros; i++) {
         try {
           const miembro = await ctx.telegram.getChatMember(ctx.chat.id, i);
+          console.error(miembro.user.username);
           const porcentaje = generarPorcentaje();
           if (miembro.user.is_bot === false) {  // Ignorar bots
             listaMiembros.push(`${miembro.user.first_name || miembro.user.username}: ${porcentaje}%`);
