@@ -9,7 +9,6 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 // Inicializa Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://udreabot-1.europe-west1.firebasedatabase.app'
 });
 
 const db = admin.firestore();
