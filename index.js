@@ -1,7 +1,17 @@
 const express = require('express');
 const { Telegraf } = require('telegraf');
+const admin = require('firebase-admin');
+const serviceAccount = require('serviceAccountKey.json');
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
+
+// Inicializa Firebase Admin SDK
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://udreabot-1.firebaseio.com'
+});
+
+const db = admin.firestore();
 
 // Ruta de ping
 app.get('/ping', (req, res) => {
