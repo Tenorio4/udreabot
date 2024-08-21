@@ -1,7 +1,7 @@
 const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
-const serviceAccount = require('serviceAccountKey.json');
+const serviceAccount = require('./serviceAccountKey.json');
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
