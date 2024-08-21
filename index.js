@@ -49,7 +49,7 @@ bot.on('text', async (ctx) => {
 
     // Verificar si el mensaje contiene "quien de aqui" (con o sin tildes)
     const mensaje = ctx.message.text.toLowerCase();
-    if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí')) || mensaje.includes('quiendeaqui') {
+    if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
       // Obtener los miembros del grupo
       const miembros = await ctx.getChatMembersCount();
       let listaMiembros = [];
