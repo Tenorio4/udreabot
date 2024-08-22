@@ -41,7 +41,8 @@ bot.on('text', async (ctx) => {
       userId: ctx.from.id,
       username: ctx.from.username,
       message: ctx.message.text,
-      timestamp: new Date()
+      timestamp: new Date(),
+      chatId: ctx.chat.id // Asegura que el chat ID se guarde
     });
 
     // Responder al usuario
@@ -50,31 +51,55 @@ bot.on('text', async (ctx) => {
     // Verificar si el mensaje contiene "quien de aqui" (con o sin tildes)
     const mensaje = ctx.message.text.toLowerCase();
     if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
-      // Obtener usuarios recientes del chat
-      let usuarios = {};
-      const messages = await db.collection('messages')
-        .where('userId', '!=', ctx.from.id)
-        .where('chatId', '==', ctx.chat.id)
-        .orderBy('timestamp', 'desc')
-        .limit(10)
-        .get();
+      const userId = ctx.from.id;
+      const username = ctx.from.username;
+      const chatId = ctx.chat.id;
 
-      messages.forEach(doc => {
-        const data = doc.data();
-        if (!usuarios[data.userId]) {
-          usuarios[data.userId] = data.username;
-        }
-      });
+      // Referencia a la colección de usuarios en Firestore
+      const usersRef = db.collection('quienDeAquiUsers').doc(chatId.toString());
 
-      // Generar respuesta con los porcentajes
-      let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
-      for (let id in usuarios) {
-        const porcentaje = generarPorcentaje();
-        respuesta += `${usuarios[id]}: ${porcentaje}%\n`;
+      // Intentar obtener el documento de usuarios
+      const doc = await usersRef.get();
+
+      let usersList = [];
+
+      if (doc.exists) {
+        usersList = doc.data().usersList || [];
       }
 
-      // Enviar respuesta
-      ctx.reply(respuesta);
+      // Verificar si el usuario ya está en la lista
+      let userExists = usersList.some(user => user.userId === userId);
+
+      if (!userExists) {
+        // Agregar usuario a la lista
+        const newUser = {
+          userId,
+          username,
+          percentage: generarPorcentaje()
+        };
+        usersList.push(newUser);
+
+        // Actualizar el documento en Firestore
+        await usersRef.set({ usersList });
+
+        // Generar respuesta con la lista actualizada de usuarios y sus porcentajes
+        let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
+        usersList.forEach(user => {
+          respuesta += `${user.username}: ${user.percentage}%\n`;
+        });
+
+        // Enviar respuesta
+        ctx.reply(respuesta);
+      } else {
+        // Si el usuario ya existe, simplemente responde con la lista actual
+        let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
+        usersList.forEach(user => {
+          respuesta += `${user.username}: ${user.percentage}%\n`;
+        });
+
+        // Enviar respuesta
+        ctx.reply(respuesta);
+      }
     }
   } catch (error) {
     console.error('Error guardando el mensaje:', error);
