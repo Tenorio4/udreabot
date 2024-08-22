@@ -50,30 +50,31 @@ bot.on('text', async (ctx) => {
     // Verificar si el mensaje contiene "quien de aqui" (con o sin tildes)
     const mensaje = ctx.message.text.toLowerCase();
     if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
-      // Obtener los miembros del grupo
-      const miembros = await ctx.getChatMembersCount();
-      let listaMiembros = [];
+      // Obtener usuarios recientes del chat
+      let usuarios = {};
+      const messages = await db.collection('messages')
+        .where('userId', '!=', ctx.from.id)
+        .where('chatId', '==', ctx.chat.id)
+        .orderBy('timestamp', 'desc')
+        .limit(10)
+        .get();
 
-      // Iterar sobre los miembros del grupo
-      for (let i = 0; i < miembros; i++) {
-        try {
-          const miembro = await ctx.telegram.getChatMember(ctx.chat.id, i);
-           ctx.reply(miembro.user.username);
-          const porcentaje = generarPorcentaje();
-          if (miembro.user.is_bot === false) {  // Ignorar bots
-            listaMiembros.push(`${miembro.user.first_name || miembro.user.username}: ${porcentaje}%`);
-          }
-        } catch (error) {
-          console.error(`Error obteniendo miembro con id ${i}:`, error);
+      messages.forEach(doc => {
+        const data = doc.data();
+        if (!usuarios[data.userId]) {
+          usuarios[data.userId] = data.username;
         }
+      });
+
+      // Generar respuesta con los porcentajes
+      let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
+      for (let id in usuarios) {
+        const porcentaje = generarPorcentaje();
+        respuesta += `${usuarios[id]}: ${porcentaje}%\n`;
       }
 
-      // Enviar la lista de miembros con sus porcentajes
-      if (listaMiembros.length > 0) {
-        ctx.reply(`Aquí está la lista de miembros del grupo con sus porcentajes:\n\n${listaMiembros.join('\n')}`);
-      } else {
-        ctx.reply('No pude obtener la lista de miembros.');
-      }
+      // Enviar respuesta
+      ctx.reply(respuesta);
     }
   } catch (error) {
     console.error('Error guardando el mensaje:', error);
