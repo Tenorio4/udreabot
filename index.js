@@ -22,88 +22,92 @@ app.listen(process.env.PORT || 3000, () => {
   console.log('Server is running');
 });
 
+// Función para generar un porcentaje aleatorio
+function generarPorcentaje() {
+  return Math.floor(Math.random() * 101); // 0 a 100%
+}
+
 // Comando /start
 bot.start((ctx) => ctx.reply('Hola, soy tu bot de Telegram!'));
 
 // Comando /help
 bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 
-// Función para generar un porcentaje aleatorio
-function generarPorcentaje() {
-  return Math.floor(Math.random() * 101);
-}
+// Responder al comando "nivel"
+bot.hears(/nivel/i, async (ctx) => {
+  const userId = ctx.from.id;
+  const username = ctx.from.username || ctx.from.first_name;
 
-// Responder directamente al autor del mensaje y manejar la cadena "quien de aqui"
-bot.on('text', async (ctx) => {
-  // Guardar el mensaje en Firestore
   try {
-    await db.collection('messages').add({
-      userId: ctx.from.id,
-      username: ctx.from.username,
-      message: ctx.message.text,
+    // Generar un porcentaje aleatorio para el usuario
+    const porcentaje = generarPorcentaje();
+
+    // Guardar el usuario y su porcentaje en Firestore
+    await db.collection('usuarios').doc(`${ctx.chat.id}_${userId}`).set({
+      userId: userId,
+      username: username,
+      porcentaje: porcentaje,
+      chatId: ctx.chat.id,
       timestamp: new Date(),
-      chatId: ctx.chat.id // Asegura que el chat ID se guarde
     });
 
-    // Responder al usuario
-    ctx.reply(`Recibí tu mensaje: ${ctx.message.text}`, { reply_to_message_id: ctx.message.message_id });
-
-    // Verificar si el mensaje contiene "quien de aqui" (con o sin tildes)
-    const mensaje = ctx.message.text.toLowerCase();
-    if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
-      const userId = ctx.from.id;
-      const username = ctx.from.username;
-      const chatId = ctx.chat.id;
-
-      // Referencia a la colección de usuarios en Firestore
-      const usersRef = db.collection('quienDeAquiUsers').doc(chatId.toString());
-
-      // Intentar obtener el documento de usuarios
-      const doc = await usersRef.get();
-
-      let usersList = [];
-
-      if (doc.exists) {
-        usersList = doc.data().usersList || [];
-      }
-
-      // Verificar si el usuario ya está en la lista
-      let userExists = usersList.some(user => user.userId === userId);
-
-      if (!userExists) {
-        // Agregar usuario a la lista
-        const newUser = {
-          userId,
-          username,
-          percentage: generarPorcentaje()
-        };
-        usersList.push(newUser);
-
-        // Actualizar el documento en Firestore
-        await usersRef.set({ usersList });
-
-        // Generar respuesta con la lista actualizada de usuarios y sus porcentajes
-        let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
-        usersList.forEach(user => {
-          respuesta += `${user.username}: ${user.percentage}%\n`;
-        });
-
-        // Enviar respuesta
-        ctx.reply(respuesta);
-      } else {
-        // Si el usuario ya existe, simplemente responde con la lista actual
-        let respuesta = "Aquí está la lista de usuarios y sus porcentajes:\n";
-        usersList.forEach(user => {
-          respuesta += `${user.username}: ${user.percentage}%\n`;
-        });
-
-        // Enviar respuesta
-        ctx.reply(respuesta);
-      }
-    }
+    // Responder al usuario con su porcentaje
+    ctx.reply(`${username}, tu nivel es: ${porcentaje}%`);
   } catch (error) {
-    console.error('Error guardando el mensaje:', error);
-    ctx.reply('Hubo un error al procesar tu mensaje.');
+    console.error('Error guardando el nivel:', error);
+    ctx.reply('Hubo un error al calcular tu nivel.');
+  }
+});
+
+// Comando /ranking
+bot.command('ranking', async (ctx) => {
+  try {
+    const usuariosSnapshot = await db.collection('usuarios').where('chatId', '==', ctx.chat.id).get();
+
+    if (usuariosSnapshot.empty) {
+      return ctx.reply('No hay usuarios en el ranking.');
+    }
+
+    // Crear un ranking con los usuarios ordenados por su porcentaje
+    let ranking = 'Ranking de niveles:\n';
+    usuariosSnapshot.forEach((doc) => {
+      const data = doc.data();
+      ranking += `${data.username}: ${data.porcentaje}%\n`;
+    });
+
+    ctx.reply(ranking);
+  } catch (error) {
+    console.error('Error obteniendo el ranking:', error);
+    ctx.reply('Hubo un error al obtener el ranking.');
+  }
+});
+
+// Responder al comando "quien de aqui"
+bot.hears(/quien de aqui|quién de aquí|quién de aqui|quien de aquí|quiendeaqui/i, async (ctx) => {
+  try {
+    const usuariosSnapshot = await db.collection('usuarios').where('chatId', '==', ctx.chat.id).orderBy('porcentaje', 'desc').limit(1).get();
+
+    if (usuariosSnapshot.empty) {
+      return ctx.reply('Aún no hay usuarios en el ranking.');
+    }
+
+    // Obtener el usuario con el porcentaje más alto
+    const topUser = usuariosSnapshot.docs[0].data();
+    ctx.reply(`El usuario con mayor nivel es ${topUser.username} con ${topUser.porcentaje}%.`);
+  } catch (error) {
+    console.error('Error obteniendo el usuario top:', error);
+    ctx.reply('Hubo un error al obtener al usuario top.');
+  }
+});
+
+// Responder directamente al autor del mensaje y manejar la cadena "nivel" y "quien de aqui"
+bot.on('text', async (ctx) => {
+  const mensaje = ctx.message.text.toLowerCase();
+
+  if (mensaje.includes('nivel')) {
+    bot.handleUpdate(ctx.update);
+  } else if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
+    bot.handleUpdate(ctx.update);
   }
 });
 
