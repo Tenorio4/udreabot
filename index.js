@@ -63,7 +63,7 @@ bot.hears(/nivel/i, async (ctx) => {
     // Responder al usuario con su porcentaje
     ctx.reply(`${username}, tu nivel es: ${porcentaje}%`);
   } catch (error) {
-    console.error('Error guardando el nivel:', error);
+    console.error('Error guardando el nivel:', error.stack);
     ctx.reply('Hubo un error al calcular tu nivel.');
   }
 });
