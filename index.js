@@ -48,15 +48,22 @@ bot.hears(/nivel/i, async (ctx) => {
   const username = ctx.from.username || ctx.from.first_name;
 
   try {
+  await db.collection('test').doc('simpleTest').set({ testField: 'testValue' });
+  console.log('Test de Firestore exitoso.');
+} catch (error) {
+  console.error('Error al guardar en Firestore:', error);
+}
+
+  try {
     // Generar un porcentaje aleatorio para el usuario
     const porcentaje = generarPorcentaje();
 
     // Guardar el usuario y su porcentaje en Firestore
     await db.collection('usuarios').doc(`${ctx.chat.id}_${userId}`).set({
-      //userId: userId,
+      userId: userId,
       username: username,
       porcentaje: porcentaje,
-      //chatId: ctx.chat.id,
+      chatId: ctx.chat.id,
       timestamp: new Date()
     });
 
