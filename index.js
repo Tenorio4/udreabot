@@ -46,14 +46,6 @@ bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 bot.hears(/nivel/i, async (ctx) => {
   const userId = ctx.from.id;
   const username = ctx.from.username || ctx.from.first_name;
-
-  try {
-  await db.collection('test').doc('simpleTest').set({ testField: 'testValue' });
-  console.log('Test de Firestore exitoso.');
-} catch (error) {
-  console.error('Error al guardar en Firestore:', error);
-}
-
   try {
     // Generar un porcentaje aleatorio para el usuario
     const porcentaje = generarPorcentaje();
@@ -72,9 +64,6 @@ bot.hears(/nivel/i, async (ctx) => {
   } catch (error) {
     console.error('Error guardando el nivel:', error.stack);
     ctx.reply('Hubo un error al calcular tu nivel.');
-    ctx.reply(userId);
-    ctx.reply(username);
-    ctx.reply(ctx.chat.id);
   }
 });
 
