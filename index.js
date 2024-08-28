@@ -65,7 +65,10 @@ bot.hears(/nivel/i, async (ctx) => {
   } catch (error) {
     console.error('Error guardando el nivel:', error.stack);
     ctx.reply('Hubo un error al calcular tu nivel.');
-    ctx.reply(process.env.FIREBASE_PROJECT_ID);
+    ctx.reply(userId);
+    ctx.reply(username);
+    ctx.reply(chatId);
+    ctx.reply(timestamp);
   }
 });
 
