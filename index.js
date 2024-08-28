@@ -53,11 +53,11 @@ bot.hears(/nivel/i, async (ctx) => {
 
     // Guardar el usuario y su porcentaje en Firestore
     await db.collection('usuarios').doc(`${ctx.chat.id}_${userId}`).set({
-      userId: userId,
+      //userId: userId,
       username: username,
       porcentaje: porcentaje,
-      chatId: ctx.chat.id,
-      timestamp: new Date().toISOString()
+      //chatId: ctx.chat.id,
+      timestamp: new Date()
     });
 
     // Responder al usuario con su porcentaje
@@ -67,9 +67,7 @@ bot.hears(/nivel/i, async (ctx) => {
     ctx.reply('Hubo un error al calcular tu nivel.');
     ctx.reply(userId);
     ctx.reply(username);
-    ctx.reply(generarPorcentaje());
     ctx.reply(ctx.chat.id);
-    ctx.reply(new Date().toISOString());
   }
 });
 
