@@ -57,7 +57,7 @@ bot.hears(/nivel/i, async (ctx) => {
       username: username,
       porcentaje: porcentaje,
       chatId: ctx.chat.id,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString()
     });
 
     // Responder al usuario con su porcentaje
