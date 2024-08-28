@@ -67,8 +67,9 @@ bot.hears(/nivel/i, async (ctx) => {
     ctx.reply('Hubo un error al calcular tu nivel.');
     ctx.reply(userId);
     ctx.reply(username);
+    ctx.reply(porcentaje);
     ctx.reply(ctx.chat.id);
-    ctx.reply(timestamp);
+    ctx.reply(new Date().toISOString());
   }
 });
 
