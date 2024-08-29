@@ -23,6 +23,23 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
+// Comando para registrar un grupo y guardar su chat_id
+bot.command('registrargrupo', async (ctx) => {
+  if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
+    const groupId = ctx.chat.id.toString(); // Obtener el chat_id del grupo
+
+    try {
+      await db.collection('config').doc('grupo').set({ groupId }); // Guardar el chat_id en Firestore
+      ctx.reply('Udrea!');
+    } catch (error) {
+      console.error('Error registrando el grupo:', error);
+      ctx.reply('Hubo un error al registrar el grupo.');
+    }
+  } else {
+    ctx.reply('Este comando solo puede usarse en grupos.');
+  }
+});
+
 // Variables globales para manejar el estado del anuncio
 let mensajesParaAnunciar = [];
 let modoAnunciar = false;
@@ -65,7 +82,13 @@ async function enviarMensajes(ctx) {
   }
 
   try {
-    const groupId = process.env.GROUP_ID; // Usar el ID del grupo almacenado en la variable de entorno
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+
+      if (!groupId) {
+        return ctx.reply('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+      }
 
     // Enviar cada mensaje al grupo
     for (const mensaje of mensajesParaAnunciar) {
