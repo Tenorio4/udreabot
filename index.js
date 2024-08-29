@@ -23,71 +23,92 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
-// Variable global para almacenar los mensajes temporalmente
+// Variables globales para manejar el estado del anuncio
 let mensajesParaAnunciar = [];
 let modoAnunciar = false;
 
 // Comando /anunciar para iniciar el modo de anuncio
 bot.command('anunciar', (ctx) => {
-  if (ctx.chat.type == 'private') {
+  if (ctx.chat.type == 'private') {    
     modoAnunciar = true;  // Activar modo de anuncio
     mensajesParaAnunciar = [];  // Limpiar los mensajes previos
-    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar.');
-  }
+    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar o usa /noenviar para cancelar.');
+}
 });
 
 // Capturar mensajes mientras está activado el modo de anuncio
 bot.on('text', (ctx) => {
   if (ctx.chat.type === 'private' && modoAnunciar) {
-    mensajesParaAnunciar.push(ctx.message.text);
+    const mensaje = ctx.message.text;
+
+    // Verificar si el mensaje es un comando
+    if (mensaje === '/enviar') {
+      return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
+    } else if (mensaje === '/noenviar') {
+      return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+    }
+
+    // Si no es un comando, se almacena como mensaje para anunciar
+    mensajesParaAnunciar.push(mensaje);
     ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
   }
 });
 
-// Comando /enviar para enviar los mensajes a los grupos
-bot.command('enviar', async (ctx) => {
-  if (ctx.chat.type == 'private') {  
-    if (!modoAnunciar) {
-      return ctx.reply('Primero activa el modo de anuncio usando /anunciar.');
+// Función para enviar los mensajes a los grupos
+async function enviarMensajes(ctx) {
+  if (!modoAnunciar) {
+    return ctx.reply('Primero activa el modo de anuncio usando /anunciar.');
+  }
+
+  if (mensajesParaAnunciar.length === 0) {
+    return ctx.reply('No hay mensajes para enviar.');
+  }
+
+  try {
+    const groupId = process.env.GROUP_ID; // Usar el ID del grupo almacenado en la variable de entorno
+
+    // Enviar cada mensaje al grupo
+    for (const mensaje of mensajesParaAnunciar) {
+      await bot.telegram.sendMessage(groupId, mensaje);
     }
-  
-    if (mensajesParaAnunciar.length === 0) {
-      return ctx.reply('No hay mensajes para enviar.');
-    }
-  
-    try {
-      const groupId = process.env.GROUP_ID; // Usar el ID del grupo almacenado en la variable de entorno
-  
-      // Enviar cada mensaje al grupo
-      for (const mensaje of mensajesParaAnunciar) {
-        await bot.telegram.sendMessage(groupId, mensaje);
-      }
-  
-      ctx.reply('Mensajes enviados a los grupos.');
-    } catch (error) {
-      console.error('Error enviando mensajes:', error);
-      ctx.reply('Hubo un error al enviar los mensajes.');
-    }
-  
-    // Reiniciar el modo de anuncio y limpiar los mensajes
-    modoAnunciar = false;
-    mensajesParaAnunciar = [];
+
+    ctx.reply('Mensajes enviados a los grupos.');
+  } catch (error) {
+    console.error('Error enviando mensajes:', error);
+    ctx.reply('Hubo un error al enviar los mensajes.');
+  }
+
+  // Reiniciar el modo de anuncio y limpiar los mensajes
+  modoAnunciar = false;
+  mensajesParaAnunciar = [];
+}
+
+// Función para cancelar el modo de anuncio y limpiar los mensajes
+function cancelarAnuncio(ctx) {
+  if (!modoAnunciar) {
+    return ctx.reply('No hay nada que cancelar.');
+  }
+
+  // Cancelar el modo de anuncio y limpiar los mensajes
+  modoAnunciar = false;
+  mensajesParaAnunciar = [];
+  ctx.reply('Modo de anuncio cancelado. Los mensajes no serán enviados.');
+}
+
+// Comando /noenviar explícito para mayor claridad
+bot.command('noenviar', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    cancelarAnuncio(ctx);
 }
 });
 
-// Comando /noenviar para cancelar la acción y limpiar los mensajes
-bot.command('noenviar', (ctx) => {
+// Comando /enviar explícito para mayor claridad
+bot.command('enviar', (ctx) => {
   if (ctx.chat.type == 'private') {
-    if (!modoAnunciar) {
-      return ctx.reply('No hay nada que cancelar.');
-    }
-  
-    // Cancelar el modo de anuncio y limpiar los mensajes
-    modoAnunciar = false;
-    mensajesParaAnunciar = [];
-    ctx.reply('Modo de anuncio cancelado. Los mensajes no serán enviados.');
+    enviarMensajes(ctx);
 }
 });
+
 
 
 // Lista de usuarios definidos
