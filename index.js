@@ -1,6 +1,7 @@
 const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
+const schedule = require('node-schedule'); // Librería para programación de tareas
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -22,6 +23,36 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
+// Lista de usuarios definidos
+const usuarios = [
+  '@TenorioSRG', '@HooksLasVegas', '@Pmoai', '@ireeneeri',
+  '@RangoLV', '@Chewyck', '@Papadopoulos', '@Numuhukumakiakiaialunamor'
+];
+
+// Inicializar datos de usuarios en Firestore
+async function inicializarUsuarios() {
+  try {
+    const batch = db.batch();
+    usuarios.forEach((username) => {
+      const userDoc = db.collection('usuarios').doc(username);
+      batch.set(userDoc, {
+        username: username,
+        porcentaje: null,
+        puntos: 0,
+        puntosMensuales: 0,
+        puntosAnuales: 0,
+        ultimaActualizacion: null
+      });
+    });
+    await batch.commit();
+    console.log('Usuarios inicializados en la base de datos.');
+  } catch (error) {
+    console.error('Error inicializando usuarios:', error);
+  }
+}
+
+inicializarUsuarios(); // Llamar una vez al inicio
+
 // Ruta de ping
 app.get('/ping', (req, res) => {
   res.send('Bot is running');
@@ -31,93 +62,218 @@ app.listen(process.env.PORT || 3000, () => {
   console.log('Server is running');
 });
 
-// Función para generar un porcentaje aleatorio
-function generarPorcentaje() {
-  return Math.floor(Math.random() * 101); // 0 a 100%
-}
-
 // Comando /start
 bot.start((ctx) => ctx.reply('Hola, soy tu bot de Telegram!'));
 
 // Comando /help
 bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 
-// Responder al comando "nivel"
+// Función para obtener un porcentaje aleatorio
+function obtenerPorcentajeAleatorio() {
+  return Math.floor(Math.random() * 101); // 0-100%
+}
+
+// Obtener la fecha de hoy en formato 'YYYY-MM-DD'
+function obtenerFechaHoy() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// Función para manejar el comando 'nivel'
 bot.hears(/nivel/i, async (ctx) => {
-  const userId = ctx.from.id;
-  const username = ctx.from.username || ctx.from.first_name;
+  const username = `@${ctx.from.username}`;
+  const today = obtenerFechaHoy();
+  
   try {
-    // Generar un porcentaje aleatorio para el usuario
-    const porcentaje = generarPorcentaje();
-
-    // Guardar el usuario y su porcentaje en Firestore
-    await db.collection('usuarios').doc(`${ctx.chat.id}_${userId}`).set({
-      userId: userId,
-      username: username,
-      porcentaje: porcentaje,
-      chatId: ctx.chat.id,
-      timestamp: new Date()
-    });
-
-    // Responder al usuario con su porcentaje
-    ctx.reply(`${username}, tu nivel es: ${porcentaje}%`);
+    const userDoc = db.collection('usuarios').doc(username);
+    const userData = (await userDoc.get()).data();
+    
+    if (userData && userData.ultimaActualizacion === today) {
+      ctx.reply(`Tu nivel de hoy ya ha sido tirado: ${userData.porcentaje}%`);
+    } else {
+      const nuevoPorcentaje = obtenerPorcentajeAleatorio();
+      await userDoc.set({
+        ...userData,
+        porcentaje: nuevoPorcentaje,
+        ultimaActualizacion: today
+      });
+      ctx.reply(`Tu nivel de hoy es: ${nuevoPorcentaje}%`);
+    }
   } catch (error) {
-    console.error('Error guardando el nivel:', error.stack);
+    console.error('Error al guardar en Firestore:', error);
     ctx.reply('Hubo un error al calcular tu nivel.');
   }
 });
 
-// Comando /ranking
+// Comando /ranking para mostrar el ranking del día
 bot.command('ranking', async (ctx) => {
   try {
-    const usuariosSnapshot = await db.collection('usuarios').where('chatId', '==', ctx.chat.id).get();
-
-    if (usuariosSnapshot.empty) {
-      return ctx.reply('No hay usuarios en el ranking.');
-    }
-
-    // Crear un ranking con los usuarios ordenados por su porcentaje
-    let ranking = 'Ranking de niveles:\n';
-    usuariosSnapshot.forEach((doc) => {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let ranking = [];
+    
+    usersSnapshot.forEach(doc => {
       const data = doc.data();
-      ranking += `${data.username}: ${data.porcentaje}%\n`;
+      if (data.porcentaje !== null) {
+        ranking.push({ username: data.username, porcentaje: data.porcentaje });
+      }
     });
 
-    ctx.reply(ranking);
+    ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
+
+    let rankingMensaje = 'Ranking del día:\n';
+    ranking.forEach((user, index) => {
+      rankingMensaje += `${index + 1}. ${user.username}: ${user.porcentaje}%\n`;
+    });
+
+    ctx.reply(rankingMensaje);
   } catch (error) {
     console.error('Error obteniendo el ranking:', error);
     ctx.reply('Hubo un error al obtener el ranking.');
   }
 });
 
-// Responder al comando "quien de aqui"
-bot.hears(/quien de aqui|quién de aquí|quién de aqui|quien de aquí|quiendeaqui/i, async (ctx) => {
+// Función para manejar "quien de aqui"
+bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí/i, async (ctx) => {
+  const today = obtenerFechaHoy();
   try {
-    const usuariosSnapshot = await db.collection('usuarios').where('chatId', '==', ctx.chat.id).orderBy('porcentaje', 'desc').limit(1).get();
+    const usersSnapshot = await db.collection('usuarios').get();
+    let ranking = [];
+    let cobardes = [];
 
-    if (usuariosSnapshot.empty) {
-      return ctx.reply('Aún no hay usuarios en el ranking.');
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.ultimaActualizacion === today) {
+        ranking.push({ username: data.username, porcentaje: data.porcentaje });
+      } else {
+        cobardes.push(data.username);
+      }
+    });
+
+    if (ranking.length === usuarios.length) {
+      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
+      ctx.reply(`El usuario con más porcentaje hoy es ${ganador.username} con ${ganador.porcentaje}%`);
+    } else {
+      if (cobardes.length > 0) {
+        const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
+        ctx.reply(`¡${cobardeElegido} es un cobarde que aún no ha hecho su tirada de nivel!`);
+      } else {
+        ctx.reply('Parece que todos han hecho su tirada de nivel.');
+      }
+    }
+  } catch (error) {
+    console.error('Error en "quien de aqui":', error);
+    ctx.reply('Hubo un error al procesar la solicitud.');
+  }
+});
+
+// Función para sumar puntos al ganador del día
+async function sumarPuntosAGanador(ganadorUsername) {
+  try {
+    const userDoc = db.collection('usuarios').doc(ganadorUsername);
+    const userData = (await userDoc.get()).data();
+    await userDoc.update({
+      puntos: userData.puntos + 1,
+      puntosMensuales: userData.puntosMensuales + 1,
+      puntosAnuales: userData.puntosAnuales + 1
+    });
+  } catch (error) {
+    console.error('Error sumando puntos al ganador:', error);
+  }
+}
+
+// Programación de tareas automáticas
+schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día
+  const today = obtenerFechaHoy();
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let ranking = [];
+    let cobardes = [];
+
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.ultimaActualizacion === today) {
+        ranking.push({ username: data.username, porcentaje: data.porcentaje });
+      } else {
+        cobardes.push(data.username);
+      }
+    });
+
+    if (cobardes.length > 0) {
+      const cobardesMensaje = `Los cobardes que no hicieron su tirada de nivel hoy son: ${cobardes.join(', ')}`;
+      bot.telegram.sendMessage(process.env.GROUP_ID, cobardesMensaje);
+    } else {
+      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
+      sumarPuntosAGanador(ganador.username);
+      bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del día es ${ganador.username} con ${ganador.porcentaje}%`);
     }
 
-    // Obtener el usuario con el porcentaje más alto
-    const topUser = usuariosSnapshot.docs[0].data();
-    ctx.reply(`El usuario con mayor nivel es ${topUser.username} con ${topUser.porcentaje}%.`);
+    // Resetear porcentajes para el siguiente día
+    const batch = db.batch();
+    usersSnapshot.forEach(doc => {
+      const userDoc = db.collection('usuarios').doc(doc.id);
+      batch.update(userDoc, { porcentaje: null });
+    });
+    await batch.commit();
   } catch (error) {
-    console.error('Error obteniendo el usuario top:', error);
-    ctx.reply('Hubo un error al obtener al usuario top.');
+    console.error('Error en la tarea diaria:', error);
   }
 });
 
-// Responder directamente al autor del mensaje y manejar la cadena "nivel" y "quien de aqui"
-bot.on('text', async (ctx) => {
-  const mensaje = ctx.message.text.toLowerCase();
+// Tarea mensual (último día de cada mes a las 23:59)
+schedule.scheduleJob('59 23 L * *', async () => { 
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let maxPuntos = -1;
+    let ganadorMes = null;
 
-  if (mensaje.includes('nivel')) {
-    bot.handleUpdate(ctx.update);
-  } else if (mensaje.includes('quien de aqui') || mensaje.includes('quién de aquí') || mensaje.includes('quién de aqui') || mensaje.includes('quien de aquí') || mensaje.includes('quiendeaqui')) {
-    bot.handleUpdate(ctx.update);
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.puntosMensuales > maxPuntos) {
+        maxPuntos = data.puntosMensuales;
+        ganadorMes = data.username;
+      }
+    });
+
+    bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del mes es ${ganadorMes} con ${maxPuntos} puntos.`);
+    
+    // Resetear puntos mensuales para el siguiente mes
+    const batch = db.batch();
+    usersSnapshot.forEach(doc => {
+      const userDoc = db.collection('usuarios').doc(doc.id);
+      batch.update(userDoc, { puntosMensuales: 0 });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error('Error en la tarea mensual:', error);
   }
 });
 
-// Iniciar el bot
+// Tarea anual (31 de diciembre a las 23:59)
+schedule.scheduleJob('59 23 31 12 *', async () => { 
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let maxPuntos = -1;
+    let ganadorAno = null;
+
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.puntosAnuales > maxPuntos) {
+        maxPuntos = data.puntosAnuales;
+        ganadorAno = data.username;
+      }
+    });
+
+    bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del año es ${ganadorAno} con ${maxPuntos} puntos.`);
+    
+    // Resetear puntos anuales para el siguiente año
+    const batch = db.batch();
+    usersSnapshot.forEach(doc => {
+      const userDoc = db.collection('usuarios').doc(doc.id);
+      batch.update(userDoc, { puntosAnuales: 0 });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error('Error en la tarea anual:', error);
+  }
+});
+
 bot.launch();
