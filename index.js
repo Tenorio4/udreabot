@@ -23,6 +23,73 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
+// Variable global para almacenar los mensajes temporalmente
+let mensajesParaAnunciar = [];
+let modoAnunciar = false;
+
+// Comando /anunciar para iniciar el modo de anuncio
+bot.command('anunciar', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    modoAnunciar = true;  // Activar modo de anuncio
+    mensajesParaAnunciar = [];  // Limpiar los mensajes previos
+    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar.');
+  }
+});
+
+// Capturar mensajes mientras está activado el modo de anuncio
+bot.on('text', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    mensajesParaAnunciar.push(ctx.message.text);
+    ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Comando /enviar para enviar los mensajes a los grupos
+bot.command('enviar', async (ctx) => {
+  if (ctx.chat.type == 'private') {  
+    if (!modoAnunciar) {
+      return ctx.reply('Primero activa el modo de anuncio usando /anunciar.');
+    }
+  
+    if (mensajesParaAnunciar.length === 0) {
+      return ctx.reply('No hay mensajes para enviar.');
+    }
+  
+    try {
+      const groupId = process.env.GROUP_ID; // Usar el ID del grupo almacenado en la variable de entorno
+  
+      // Enviar cada mensaje al grupo
+      for (const mensaje of mensajesParaAnunciar) {
+        await bot.telegram.sendMessage(groupId, mensaje);
+      }
+  
+      ctx.reply('Mensajes enviados a los grupos.');
+    } catch (error) {
+      console.error('Error enviando mensajes:', error);
+      ctx.reply('Hubo un error al enviar los mensajes.');
+    }
+  
+    // Reiniciar el modo de anuncio y limpiar los mensajes
+    modoAnunciar = false;
+    mensajesParaAnunciar = [];
+}
+});
+
+// Comando /noenviar para cancelar la acción y limpiar los mensajes
+bot.command('noenviar', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    if (!modoAnunciar) {
+      return ctx.reply('No hay nada que cancelar.');
+    }
+  
+    // Cancelar el modo de anuncio y limpiar los mensajes
+    modoAnunciar = false;
+    mensajesParaAnunciar = [];
+    ctx.reply('Modo de anuncio cancelado. Los mensajes no serán enviados.');
+}
+});
+
+
 // Lista de usuarios definidos
 const usuarios = [
   '@TenorioSRG', '@HooksLasVegas', '@Pmoai', '@ireeneeri',
