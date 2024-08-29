@@ -71,6 +71,42 @@ bot.on('text', (ctx) => {
   }
 });
 
+// Capturar imágenes
+bot.on('photo', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const photoId = ctx.message.photo[ctx.message.photo.length - 1].file_id; // Obtener la mejor resolución de la foto
+    mensajesParaAnunciar.push({ type: 'photo', content: photoId });
+    ctx.reply('Imagen recibida. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar GIFs animados
+bot.on('animation', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const animationId = ctx.message.animation.file_id;
+    mensajesParaAnunciar.push({ type: 'animation', content: animationId });
+    ctx.reply('GIF recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar stickers
+bot.on('sticker', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const stickerId = ctx.message.sticker.file_id;
+    mensajesParaAnunciar.push({ type: 'sticker', content: stickerId });
+    ctx.reply('Sticker recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar mensajes de voz
+bot.on('voice', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const voiceId = ctx.message.voice.file_id;
+    mensajesParaAnunciar.push({ type: 'voice', content: voiceId });
+    ctx.reply('Mensaje de voz recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
 // Función para enviar los mensajes a los grupos
 async function enviarMensajes(ctx) {
   if (!modoAnunciar) {
