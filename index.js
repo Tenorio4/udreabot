@@ -54,24 +54,7 @@ bot.command('anunciar', (ctx) => {
 });
 
 // Capturar mensajes mientras está activado el modo de anuncio
-bot.on('text', (ctx) => {
-  if (ctx.chat.type === 'private' && modoAnunciar) {
-    const mensaje = ctx.message.text;
 
-    // Verificar si el mensaje es un comando
-    if (mensaje.startsWith('/')) {
-      if (mensaje === '/enviar') {
-        return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
-      } else if (mensaje === '/noenviar') {
-        return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
-      }
-    } else {
-      // Si no es un comando, se almacena como mensaje para anunciar
-      mensajesParaAnunciar.push({ type: 'text', content: mensaje });
-      ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
-    }
-  }
-});
 
 // Capturar imágenes
 bot.on('photo', (ctx) => {
