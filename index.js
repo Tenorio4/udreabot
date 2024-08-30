@@ -54,43 +54,51 @@ bot.command('anunciar', (ctx) => {
 });
 
 // Capturar mensajes mientras está activado el modo de anuncio
-
-
-// Capturar imágenes
-bot.on('photo', (ctx) => {
-  if (ctx.chat.type === 'private' && modoAnunciar) {
-    const photoId = ctx.message.photo[ctx.message.photo.length - 1].file_id; // Obtener la mejor resolución de la foto
-    mensajesParaAnunciar.push({ type: 'photo', content: photoId });
-    ctx.reply('Imagen recibida. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  }
-});
-
-// Capturar GIFs animados
-bot.on('animation', (ctx) => {
-  if (ctx.chat.type === 'private' && modoAnunciar) {
-    const animationId = ctx.message.animation.file_id;
-    mensajesParaAnunciar.push({ type: 'animation', content: animationId });
-    ctx.reply('GIF recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  }
-});
-
-// Capturar stickers
-bot.on('sticker', (ctx) => {
-  if (ctx.chat.type === 'private' && modoAnunciar) {
-    const stickerId = ctx.message.sticker.file_id;
-    mensajesParaAnunciar.push({ type: 'sticker', content: stickerId });
-    ctx.reply('Sticker recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  }
-});
-
-// Capturar mensajes de voz
-bot.on('voice', (ctx) => {
-  if (ctx.chat.type === 'private' && modoAnunciar) {
-    const voiceId = ctx.message.voice.file_id;
-    mensajesParaAnunciar.push({ type: 'voice', content: voiceId });
-    ctx.reply('Mensaje de voz recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  }
-});
+ if (ctx.chat.type === 'private' && modoAnunciar) {
+  bot.on('text', (ctx) => {   
+      const mensaje = ctx.message.text;
+      // Verificar si el mensaje es un comando
+      if (mensaje.startsWith('/')) {
+        if (mensaje === '/enviar') {
+          return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
+        } else if (mensaje === '/noenviar') {
+          return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+        }
+      } else {
+        // Si no es un comando, se almacena como mensaje para anunciar
+        mensajesParaAnunciar.push({ type: 'text', content: mensaje });
+        ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
+      }
+  });
+  
+  // Capturar imágenes
+  bot.on('photo', (ctx) => {
+      const photoId = ctx.message.photo[ctx.message.photo.length - 1].file_id; // Obtener la mejor resolución de la foto
+      mensajesParaAnunciar.push({ type: 'photo', content: photoId });
+      ctx.reply('Imagen recibida. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  });
+  
+  // Capturar GIFs animados
+  bot.on('animation', (ctx) => {
+      const animationId = ctx.message.animation.file_id;
+      mensajesParaAnunciar.push({ type: 'animation', content: animationId });
+      ctx.reply('GIF recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  });
+  
+  // Capturar stickers
+  bot.on('sticker', (ctx) => {
+      const stickerId = ctx.message.sticker.file_id;
+      mensajesParaAnunciar.push({ type: 'sticker', content: stickerId });
+      ctx.reply('Sticker recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  });
+  
+  // Capturar mensajes de voz
+  bot.on('voice', (ctx) => {
+      const voiceId = ctx.message.voice.file_id;
+      mensajesParaAnunciar.push({ type: 'voice', content: voiceId });
+      ctx.reply('Mensaje de voz recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  });
+ }
 
 // Función para enviar los mensajes a los grupos
 async function enviarMensajes(ctx) {
