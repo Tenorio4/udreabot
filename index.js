@@ -206,7 +206,7 @@ schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día
       const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
 
     if (!groupId) {
-      return ctx.reply('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+      bot.telegram.sendMessage('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
     }
     const usersSnapshot = await db.collection('usuarios').get();
     let ranking = [];
