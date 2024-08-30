@@ -198,7 +198,8 @@ async function sumarPuntosAGanador(ganadorUsername) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob('59 10 * * *', async () => { // 23:59 cada día   
+schedule.scheduleJob('59 11 * * *', async () => { // 23:59 cada día   
+  bot.telegram.sendMessage('Ha llegado la hora');
   const today = obtenerFechaHoy();
   try {
       // Obtener el chat_id del grupo desde Firestore
