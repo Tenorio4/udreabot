@@ -297,7 +297,7 @@ bot.command('ranking', async (ctx) => {
 });
 
 // Función para manejar "quien de aqui"
-bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui/i, async (ctx) => {
+bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, async (ctx) => {
   const today = obtenerFechaHoy();
   try {
     const usersSnapshot = await db.collection('usuarios').get();
