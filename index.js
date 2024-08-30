@@ -198,7 +198,7 @@ async function sumarPuntosAGanador(ganadorUsername) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob('schedule.scheduleJob(', async () => { // 23:59 cada día   
+schedule.scheduleJob('*/5 * * * *', async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   bot.telegram.sendMessage('Ha llegado la hora');
   const today = obtenerFechaHoy();
