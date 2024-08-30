@@ -59,15 +59,17 @@ bot.on('text', (ctx) => {
     const mensaje = ctx.message.text;
 
     // Verificar si el mensaje es un comando
-    if (mensaje === '/enviar') {
-      return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
-    } else if (mensaje === '/noenviar') {
-      return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+    if (mensaje.startsWith('/')) {
+      if (mensaje === '/enviar') {
+        return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
+      } else if (mensaje === '/noenviar') {
+        return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+      }
+    } else {
+      // Si no es un comando, se almacena como mensaje para anunciar
+      mensajesParaAnunciar.push({ type: 'text', content: mensaje });
+      ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
     }
-
-    // Si no es un comando, se almacena como mensaje para anunciar
-    mensajesParaAnunciar.push(mensaje);
-    ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
   }
 });
 
