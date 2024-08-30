@@ -40,147 +40,6 @@ bot.command('registrargrupo', async (ctx) => {
   }
 });
 
-// Variables globales para manejar el estado del anuncio
-let mensajesParaAnunciar = [];
-let modoAnunciar = false;
-
-// Comando /anunciar para iniciar el modo de anuncio
-bot.command('anunciar', (ctx) => {
-  if (ctx.chat.type == 'private') {    
-    modoAnunciar = true;  // Activar modo de anuncio
-    mensajesParaAnunciar = [];  // Limpiar los mensajes previos
-    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar o usa /noenviar para cancelar.');
-}
-});
-
-// Capturar mensajes mientras está activado el modo de anuncio
- if (ctx.chat.type === 'private' && modoAnunciar) {
-  bot.on('text', (ctx) => {   
-      const mensaje = ctx.message.text;
-      // Verificar si el mensaje es un comando
-      if (mensaje.startsWith('/')) {
-        if (mensaje === '/enviar') {
-          return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
-        } else if (mensaje === '/noenviar') {
-          return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
-        }
-      } else {
-        // Si no es un comando, se almacena como mensaje para anunciar
-        mensajesParaAnunciar.push({ type: 'text', content: mensaje });
-        ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
-      }
-  });
-  
-  // Capturar imágenes
-  bot.on('photo', (ctx) => {
-      const photoId = ctx.message.photo[ctx.message.photo.length - 1].file_id; // Obtener la mejor resolución de la foto
-      mensajesParaAnunciar.push({ type: 'photo', content: photoId });
-      ctx.reply('Imagen recibida. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  });
-  
-  // Capturar GIFs animados
-  bot.on('animation', (ctx) => {
-      const animationId = ctx.message.animation.file_id;
-      mensajesParaAnunciar.push({ type: 'animation', content: animationId });
-      ctx.reply('GIF recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  });
-  
-  // Capturar stickers
-  bot.on('sticker', (ctx) => {
-      const stickerId = ctx.message.sticker.file_id;
-      mensajesParaAnunciar.push({ type: 'sticker', content: stickerId });
-      ctx.reply('Sticker recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  });
-  
-  // Capturar mensajes de voz
-  bot.on('voice', (ctx) => {
-      const voiceId = ctx.message.voice.file_id;
-      mensajesParaAnunciar.push({ type: 'voice', content: voiceId });
-      ctx.reply('Mensaje de voz recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
-  });
- }
-
-// Función para enviar los mensajes a los grupos
-async function enviarMensajes(ctx) {
-  if (!modoAnunciar) {
-    return ctx.reply('Primero activa el modo de anuncio usando /anunciar.');
-  }
-
-  if (mensajesParaAnunciar.length === 0) {
-    return ctx.reply('No hay mensajes para enviar.');
-  }
-
-  try {
-      // Obtener el chat_id del grupo desde Firestore
-      const groupDoc = await db.collection('config').doc('grupo').get();
-      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
-
-      if (!groupId) {
-        return ctx.reply('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
-      }
-
-    // Enviar cada mensaje al grupo
-    for (const mensaje of mensajesParaAnunciar) {
-      switch (mensaje.type) {
-        case 'text':
-          await bot.telegram.sendMessage(groupId, mensaje.content);
-          break;
-        case 'photo':
-          await bot.telegram.sendPhoto(groupId, mensaje.content);
-          break;
-        case 'animation':
-          await bot.telegram.sendAnimation(groupId, mensaje.content);
-          break;
-        case 'sticker':
-          await bot.telegram.sendSticker(groupId, mensaje.content);
-          break;
-        case 'voice':
-          await bot.telegram.sendVoice(groupId, mensaje.content);
-          break;
-        default:
-          console.log('Tipo de mensaje no soportado:', mensaje.type);
-      }
-    }
-
-    ctx.reply('Mensajes enviados a los grupos.');
-  } catch (error) {
-    console.error('Error enviando mensajes:', error);
-    ctx.reply('Hubo un error al enviar los mensajes.');
-  }
-
-  // Reiniciar el modo de anuncio y limpiar los mensajes
-  modoAnunciar = false;
-  mensajesParaAnunciar = [];
-}
-
-// Función para cancelar el modo de anuncio y limpiar los mensajes
-function cancelarAnuncio(ctx) {
-  if (!modoAnunciar) {
-    return ctx.reply('No hay nada que cancelar.');
-  }
-
-  // Cancelar el modo de anuncio y limpiar los mensajes
-  modoAnunciar = false;
-  mensajesParaAnunciar = [];
-  ctx.reply('Modo de anuncio cancelado. Los mensajes no serán enviados.');
-}
-
-// Comando /noenviar explícito para mayor claridad
-bot.command('noenviar', (ctx) => {
-  if (ctx.chat.type == 'private') {
-    cancelarAnuncio(ctx);
-}
-});
-
-// Comando /enviar explícito para mayor claridad
-bot.command('enviar', (ctx) => {
-  if (ctx.chat.type == 'private') {
-    enviarMensajes(ctx);
-}
-});
-
-
-
 // Lista de usuarios definidos
 const usuarios = [
   '@TenorioSRG', '@HooksLasVegas', '@Pmoai', '@ireeneeri',
@@ -339,9 +198,16 @@ async function sumarPuntosAGanador(ganadorUsername) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día
+schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día   
   const today = obtenerFechaHoy();
   try {
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+
+    if (!groupId) {
+      return ctx.reply('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+    }
     const usersSnapshot = await db.collection('usuarios').get();
     let ranking = [];
     let cobardes = [];
@@ -357,11 +223,11 @@ schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día
 
     if (cobardes.length > 0) {
       const cobardesMensaje = `Los cobardes que no hicieron su tirada de nivel hoy son: ${cobardes.join(', ')}`;
-      bot.telegram.sendMessage(process.env.GROUP_ID, cobardesMensaje);
+      bot.telegram.sendMessage(groupId, cobardesMensaje);
     } else {
       const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
       sumarPuntosAGanador(ganador.username);
-      bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del día es ${ganador.username} con ${ganador.porcentaje}%`);
+      bot.telegram.sendMessage(groupId, `El ganador del día es ${ganador.username} con ${ganador.porcentaje}%`);
     }
 
     // Resetear porcentajes para el siguiente día
@@ -432,6 +298,154 @@ schedule.scheduleJob('59 23 31 12 *', async () => {
   } catch (error) {
     console.error('Error en la tarea anual:', error);
   }
+});
+
+// Variables globales para manejar el estado del anuncio
+let mensajesParaAnunciar = [];
+let modoAnunciar = false;
+
+// Comando /anunciar para iniciar el modo de anuncio
+bot.command('anunciar', (ctx) => {
+  if (ctx.chat.type == 'private') {    
+    modoAnunciar = true;  // Activar modo de anuncio
+    mensajesParaAnunciar = [];  // Limpiar los mensajes previos
+    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar o usa /noenviar para cancelar.');
+}
+});
+
+// Capturar mensajes de texto mientras está activado el modo de anuncio
+bot.on('text', (ctx) => {   
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const mensaje = ctx.message.text;
+    
+    // Verificar si el mensaje es un comando
+    if (mensaje.startsWith('/')) {
+      if (mensaje === '/enviar') {
+        return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
+      } else if (mensaje === '/noenviar') {
+        return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+      }
+    } else {
+      // Si no es un comando, se almacena como mensaje para anunciar
+      mensajesParaAnunciar.push({ type: 'text', content: mensaje });
+      ctx.reply('Mensaje recibido. Puedes seguir enviando mensajes o usar /enviar para enviarlos a los grupos.');
+    }
+  }
+});
+
+// Capturar imágenes
+bot.on('photo', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const photoId = ctx.message.photo[ctx.message.photo.length - 1].file_id; // Obtener la mejor resolución de la foto
+    mensajesParaAnunciar.push({ type: 'photo', content: photoId });
+    ctx.reply('Imagen recibida. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar GIFs animados
+bot.on('animation', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const animationId = ctx.message.animation.file_id;
+    mensajesParaAnunciar.push({ type: 'animation', content: animationId });
+    ctx.reply('GIF recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar stickers
+bot.on('sticker', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const stickerId = ctx.message.sticker.file_id;
+    mensajesParaAnunciar.push({ type: 'sticker', content: stickerId });
+    ctx.reply('Sticker recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Capturar mensajes de voz
+bot.on('voice', (ctx) => {
+  if (ctx.chat.type === 'private' && modoAnunciar) {
+    const voiceId = ctx.message.voice.file_id;
+    mensajesParaAnunciar.push({ type: 'voice', content: voiceId });
+    ctx.reply('Mensaje de voz recibido. Puedes seguir enviando más contenido o usar /enviar para enviarlos a los grupos.');
+  }
+});
+
+// Función para enviar los mensajes a los grupos
+async function enviarMensajes(ctx) {
+  if (!modoAnunciar) {
+    return ctx.reply('Primero activa el modo de anuncio usando /anunciar.');
+  }
+
+  if (mensajesParaAnunciar.length === 0) {
+    return ctx.reply('No hay mensajes para enviar.');
+  }
+
+  try {
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+
+      if (!groupId) {
+        return ctx.reply('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+      }
+
+    // Enviar cada mensaje al grupo
+    for (const mensaje of mensajesParaAnunciar) {
+      switch (mensaje.type) {
+        case 'text':
+          await bot.telegram.sendMessage(groupId, mensaje.content);
+          break;
+        case 'photo':
+          await bot.telegram.sendPhoto(groupId, mensaje.content);
+          break;
+        case 'animation':
+          await bot.telegram.sendAnimation(groupId, mensaje.content);
+          break;
+        case 'sticker':
+          await bot.telegram.sendSticker(groupId, mensaje.content);
+          break;
+        case 'voice':
+          await bot.telegram.sendVoice(groupId, mensaje.content);
+          break;
+        default:
+          console.log('Tipo de mensaje no soportado:', mensaje.type);
+      }
+    }
+
+    ctx.reply('Mensajes enviados a los grupos.');
+  } catch (error) {
+    console.error('Error enviando mensajes:', error);
+    ctx.reply('Hubo un error al enviar los mensajes.');
+  }
+
+  // Reiniciar el modo de anuncio y limpiar los mensajes
+  modoAnunciar = false;
+  mensajesParaAnunciar = [];
+}
+
+// Función para cancelar el modo de anuncio y limpiar los mensajes
+function cancelarAnuncio(ctx) {
+  if (!modoAnunciar) {
+    return ctx.reply('No hay nada que cancelar.');
+  }
+
+  // Cancelar el modo de anuncio y limpiar los mensajes
+  modoAnunciar = false;
+  mensajesParaAnunciar = [];
+  ctx.reply('Modo de anuncio cancelado. Los mensajes no serán enviados.');
+}
+
+// Comando /noenviar explícito para mayor claridad
+bot.command('noenviar', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    cancelarAnuncio(ctx);
+}
+});
+
+// Comando /enviar explícito para mayor claridad
+bot.command('enviar', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    enviarMensajes(ctx);
+}
 });
 
 bot.launch();
