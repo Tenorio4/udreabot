@@ -31,7 +31,7 @@ const enviarMensajeProgramado = () => {
       const groupDoc = db.collection('config').doc('grupo').get();
       const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
       bot.telegram.sendMessage(groupId, 'Mensaje de prueba enviado cada 5 minutos.');
-    catch(error) {
+  }catch(error) {
     console.error('Error en la tarea diaria:', error);
     
     }
