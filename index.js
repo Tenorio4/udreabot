@@ -28,7 +28,7 @@ const db = admin.firestore();
 const enviarMensajeProgramado = () => {
   try {
       // Obtener el chat_id del grupo desde Firestore
-      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupDoc = db.collection('config').doc('grupo').get();
       const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
       bot.telegram.sendMessage(groupId, 'Mensaje de prueba enviado cada 5 minutos.');
     catch(error) {
