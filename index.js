@@ -2,6 +2,7 @@ const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
+const cron = require('node-cron'); // Alternativa a node-scheduler
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -22,6 +23,14 @@ admin.initializeApp({
   }),
 });
 const db = admin.firestore();
+
+// Función que envía el mensaje de prueba
+const enviarMensajeProgramado = () => {
+  const chatId = 'CHAT_ID'; // Reemplaza con tu chat ID
+  bot.telegram.sendMessage(chatId, 'Mensaje de prueba enviado cada 5 minutos.');
+};
+// Configurar la tarea programada para que se ejecute cada 5 minutos
+cron.schedule('*/5 * * * *', enviarMensajeProgramado);
 
 // Comando para registrar un grupo y guardar su chat_id
 bot.command('registrargrupo', async (ctx) => {
@@ -451,3 +460,7 @@ bot.command('enviar', (ctx) => {
 });
 
 bot.launch();
+
+// Manejar la detención del bot con mensajes de log
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
