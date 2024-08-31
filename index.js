@@ -221,7 +221,7 @@ schedule.scheduleJob('*/5 * * * *', async () => { // 23:59 cada día
   try {
       // Obtener el chat_id del grupo desde Firestore
       const groupDoc = await db.collection('config').doc('grupo').get();
-      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      const groupId = -1001980028569;
 
     if (!groupId) {
       bot.telegram.sendMessage('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
