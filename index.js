@@ -30,6 +30,8 @@ const enviarMensajeProgramado = () => {
       // Obtener el chat_id del grupo desde Firestore
       const groupDoc = db.collection('config').doc('grupo').get();
       const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      console.log("Se ejecuta el cron con groupId:");
+      console.log(groupId);
       bot.telegram.sendMessage(groupId, 'Mensaje de prueba enviado cada 5 minutos.');
   }catch(error) {
     console.error('Error en la tarea diaria:', error);
@@ -216,13 +218,12 @@ async function sumarPuntosAGanador(ganadorUsername) {
 // Programación de tareas automáticas
 schedule.scheduleJob('*/5 * * * *', async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
-  bot.telegram.sendMessage('Ha llegado la hora');
   const today = obtenerFechaHoy();
   try {
       // Obtener el chat_id del grupo desde Firestore
       const groupDoc = await db.collection('config').doc('grupo').get();
-      const groupId = -1001980028569;
-
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      console.log(groupId);
     if (!groupId) {
       bot.telegram.sendMessage('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
     }
