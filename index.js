@@ -26,8 +26,15 @@ const db = admin.firestore();
 
 // Función que envía el mensaje de prueba
 const enviarMensajeProgramado = () => {
-  const chatId = 'CHAT_ID'; // Reemplaza con tu chat ID
-  bot.telegram.sendMessage(chatId, 'Mensaje de prueba enviado cada 5 minutos.');
+  try {
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      bot.telegram.sendMessage(groupId, 'Mensaje de prueba enviado cada 5 minutos.');
+    catch(error) {
+    console.error('Error en la tarea diaria:', error);
+    
+    }
 };
 // Configurar la tarea programada para que se ejecute cada 5 minutos
 cron.schedule('*/5 * * * *', enviarMensajeProgramado);
