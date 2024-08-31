@@ -39,7 +39,7 @@ const enviarMensajeProgramado = () => {
     }
 };
 // Configurar la tarea programada para que se ejecute cada 5 minutos
-cron.schedule('*/5 * * * *', enviarMensajeProgramado);
+//cron.schedule('*/5 * * * *', enviarMensajeProgramado);
 
 // Comando para registrar un grupo y guardar su chat_id
 bot.command('registrargrupo', async (ctx) => {
