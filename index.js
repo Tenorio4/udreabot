@@ -2,7 +2,6 @@ const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
-const cron = require('node-cron'); // Alternativa a node-scheduler
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -23,23 +22,6 @@ admin.initializeApp({
   }),
 });
 const db = admin.firestore();
-
-// Función que envía el mensaje de prueba
-const enviarMensajeProgramado = () => {
-  try {
-      // Obtener el chat_id del grupo desde Firestore
-      const groupDoc = db.collection('config').doc('grupo').get();
-      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
-      console.log("Se ejecuta el cron con groupId:");
-      console.log(groupId);
-      bot.telegram.sendMessage(groupId, 'Mensaje de prueba enviado cada 5 minutos.');
-  }catch(error) {
-    console.error('Error en la tarea diaria:', error);
-    
-    }
-};
-// Configurar la tarea programada para que se ejecute cada 5 minutos
-//cron.schedule('*/5 * * * *', enviarMensajeProgramado);
 
 // Comando para registrar un grupo y guardar su chat_id
 bot.command('registrargrupo', async (ctx) => {
@@ -216,7 +198,7 @@ async function sumarPuntosAGanador(ganadorUsername) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob('*/5 * * * *', async () => { // 23:59 cada día   
+schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
