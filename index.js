@@ -5,6 +5,8 @@ const schedule = require('node-schedule'); // Librería para programación de ta
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
+// Configurar la zona horaria
+const TIMEZONE = 'Europe/Madrid';
 
 // Inicializa Firebase Admin SDK
 admin.initializeApp({
@@ -197,8 +199,14 @@ async function sumarPuntosAGanador(ganadorUsername) {
   }
 }
 
+// Convertir la hora a la zona horaria especificada
+function getTimeInTimezone(hour, minute) {
+  const now = moment.tz(TIMEZONE);
+  return now.set({ hour, minute, second: 0, millisecond: 0 }).toDate();
+}
+
 // Programación de tareas automáticas
-schedule.scheduleJob('59 23 * * *', async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(23, 59), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
