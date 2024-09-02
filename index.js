@@ -2,6 +2,7 @@ const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
+const moment = require('moment-timezone'); // Para manejo de zona horaria
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
