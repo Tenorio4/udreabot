@@ -1,4 +1,4 @@
-nconst express = require('express');
+const express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
