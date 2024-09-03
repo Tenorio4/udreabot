@@ -1,4 +1,4 @@
-const express = require('express');
+nconst express = require('express');
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
@@ -201,13 +201,13 @@ async function sumarPuntosAGanador(ganadorUsername) {
 }
 
 // Convertir la hora a la zona horaria especificada
-function getTimeInTimezone(hour, minute) {
+function getTimeInTimezone(hour, minute, second = 0) {
   const now = moment.tz(TIMEZONE);
-  return now.set({ hour, minute, second: 0, millisecond: 0 }).toDate();
+  return now.set({ hour, minute, second, millisecond: 0 }).toDate();
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(23, 59), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
