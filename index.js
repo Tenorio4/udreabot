@@ -3,6 +3,7 @@ const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 const schedule = require('node-schedule'); // Librería para programación de tareas
 const moment = require('moment-timezone'); // Para manejo de zona horaria
+const axios = require('axios'); // Para memes
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -235,7 +236,6 @@ async function enviarMensajeUdreaAleatorio(ctx) {
     ctx.reply('Hubo un error al enviar el mensaje.');
   }
 }
-
 
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('memedeldia', async (ctx) => {
