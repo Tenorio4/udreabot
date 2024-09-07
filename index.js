@@ -109,7 +109,7 @@ bot.hears(/nivel/i, async (ctx) => {
     const userData = (await userDoc.get()).data();
     
     if (userData && userData.ultimaActualizacion === today) {
-      ctx.reply(`${username} ya te he dicho que tienes un ${nuevoPorcentaje}% de vasto incremento`);
+      ctx.reply(`${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`);
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
       await userDoc.set({
