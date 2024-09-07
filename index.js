@@ -187,7 +187,7 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, asyn
 });
 
 // Expresión regular para capturar palabras derivadas de "udrea"
-const udreaRegex = /\budrea(a?|s|ría|ríe|)\b/i;
+const udreaRegex = /\budrea(a|aa|aaa|aaaa|aaaaa|s|ría|ríe|)\b/i;
 
 // Listener para palabras derivadas de "udrea" o el comando /udrea
 bot.hears(udreaRegex, async (ctx) => {
