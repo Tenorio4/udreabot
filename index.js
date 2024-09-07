@@ -245,7 +245,7 @@ bot.command('a', async (ctx) => {
       return;
     }
     const a = messagesSnapshot.docs.map(doc => doc.data());
-    await ctx.replyWithVoice(a[0].content);
+    await ctx.replyWithVoice("AwACAgQAAxkBAAIBYGbcYSQOofKaVG4423ToOINbjCiIAAINEQACr8mwUPbh44gcKaWQNgQ");
      } catch (error) {
     console.error('Error enviando a:', error);
     ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
