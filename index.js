@@ -109,7 +109,7 @@ bot.hears(/nivel/i, async (ctx) => {
     const userData = (await userDoc.get()).data();
     
     if (userData && userData.ultimaActualizacion === today) {
-      ctx.reply(`Tu nivel de hoy ya ha sido tirado: ${userData.porcentaje}%`);
+      ctx.reply(`${usenarme} ya te he dicho que tienes un ${nuevoPorcentaje}% de vasto incremento`);
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
       await userDoc.set({
@@ -117,7 +117,7 @@ bot.hears(/nivel/i, async (ctx) => {
         porcentaje: nuevoPorcentaje,
         ultimaActualizacion: today
       });
-      ctx.reply(`Tu nivel de hoy es: ${nuevoPorcentaje}%`);
+      ctx.reply(`${usenarme} tiene un ${nuevoPorcentaje}% de vasto incremento`);
     }
   } catch (error) {
     console.error('Error al guardar en Firestore:', error);
