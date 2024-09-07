@@ -185,6 +185,57 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, asyn
   }
 });
 
+// Expresión regular para capturar palabras derivadas de "udrea"
+const udreaRegex = /\budrea(s|ría|ríe|)\b/i;
+
+// Listener para palabras derivadas de "udrea" o el comando /udrea
+bot.hears(udreaRegex, async (ctx) => {
+  await enviarMensajeUdreaAleatorio(ctx);
+});
+
+bot.command('udrea', async (ctx) => {
+  await enviarMensajeUdreaAleatorio(ctx);
+});
+
+// Función para enviar un mensaje aleatorio de la colección "udreaMessages" en Firestore
+async function enviarMensajeUdreaAleatorio(ctx) {
+  try {
+    const messagesSnapshot = await db.collection('udreaMessages').get();
+    if (messagesSnapshot.empty) {
+      ctx.reply('No hay mensajes disponibles. Agrega uno usando /addudrea en un chat privado.');
+      return;
+    }
+
+    // Obtener un mensaje aleatorio
+    const mensajes = messagesSnapshot.docs.map(doc => doc.data());
+    const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)];
+
+    // Enviar el mensaje aleatorio según su tipo
+    switch (mensajeAleatorio.type) {
+      case 'text':
+        await ctx.reply(mensajeAleatorio.content);
+        break;
+      case 'photo':
+        await ctx.replyWithPhoto(mensajeAleatorio.content);
+        break;
+      case 'animation':
+        await ctx.replyWithAnimation(mensajeAleatorio.content);
+        break;
+      case 'sticker':
+        await ctx.replyWithSticker(mensajeAleatorio.content);
+        break;
+      case 'voice':
+        await ctx.replyWithVoice(mensajeAleatorio.content);
+        break;
+      default:
+        console.log('Tipo de mensaje no soportado:', mensajeAleatorio.type);
+    }
+  } catch (error) {
+    console.error('Error enviando mensaje aleatorio:', error);
+    ctx.reply('Hubo un error al enviar el mensaje.');
+  }
+}
+
 // Función para sumar puntos al ganador del día
 async function sumarPuntosAGanador(ganadorUsername) {
   try {
@@ -310,6 +361,16 @@ schedule.scheduleJob('59 23 31 12 *', async () => {
   }
 });
 
+// Comando /addudrea para iniciar el modo de agregar mensajes
+bot.command('addudrea', (ctx) => {
+  if (ctx.chat.type == 'private') {
+    modoAnunciar = true; // Reutilizar la variable modoAnunciar para este propósito
+    mensajesParaAnunciar = []; // Limpiar los mensajes previos
+    ctx.reply('Modo de agregar mensajes activado. Envía el mensaje (texto, imagen, audio, etc.) que deseas agregar. Usa /guardarudrea para guardar o /cancelarudrea para cancelar.');
+  } 
+});
+
+
 // Variables globales para manejar el estado del anuncio
 let mensajesParaAnunciar = [];
 let modoAnunciar = false;
@@ -334,6 +395,10 @@ bot.on('text', (ctx) => {
         return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
       } else if (mensaje === '/noenviar') {
         return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
+      } else if (mensaje === '/guardarudrea') {
+        return guardarMensajesUdrea(ctx); // Función para guardar los mensajes en Firestore
+      } else if (mensaje === '/cancelarudrea') {
+        return cancelarAnuncio(ctx); // Reutilizamos la función cancelarAnuncio para cancelar el modo de agregar mensajes
       }
     } else {
       // Si no es un comando, se almacena como mensaje para anunciar
@@ -456,6 +521,42 @@ bot.command('enviar', (ctx) => {
   if (ctx.chat.type == 'private') {
     enviarMensajes(ctx);
 }
+});
+
+// Función para guardar los mensajes en Firestore
+async function guardarMensajesUdrea(ctx) {
+  if (!modoAnunciar) {
+    return ctx.reply('Primero activa el modo de agregar mensajes usando /addudrea.');
+  }
+
+  if (mensajesParaAnunciar.length === 0) {
+    return ctx.reply('No hay mensajes para guardar.');
+  }
+
+  try {
+    const batch = db.batch(); // Batch para guardar múltiples mensajes
+    mensajesParaAnunciar.forEach((mensaje) => {
+      const newDoc = db.collection('udreaMessages').doc();
+      batch.set(newDoc, mensaje);
+    });
+
+    await batch.commit(); // Guardar en Firestore
+    ctx.reply('Mensajes guardados correctamente.');
+
+  } catch (error) {
+    console.error('Error guardando mensajes:', error);
+    ctx.reply('Hubo un error al guardar los mensajes.');
+  }
+
+  modoAnunciar = false;
+  mensajesParaAnunciar = [];
+}
+
+// Comando explícito para cancelar el modo de agregar mensajes
+bot.command('cancelarudrea', (ctx) => {
+  if (ctx.chat.type === 'private') {
+    cancelarAnuncio(ctx);
+  }
 });
 
 bot.launch();
