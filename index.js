@@ -203,7 +203,7 @@ async function enviarMensajeUdreaAleatorio(ctx) {
   try {
     const messagesSnapshot = await db.collection('udreaMessages').get();
     if (messagesSnapshot.empty) {
-      ctx.reply('No hay mensajes disponibles. Agrega uno usando /addudrea en un chat privado.');
+      ctx.reply('Udrea!');
       return;
     }
 
@@ -233,9 +233,24 @@ async function enviarMensajeUdreaAleatorio(ctx) {
     }
   } catch (error) {
     console.error('Error enviando mensaje aleatorio:', error);
-    ctx.reply('Hubo un error al enviar el mensaje.');
+    ctx.reply('Udrea!');
   }
 }
+
+bot.command('a', async (ctx) => {
+  try {
+    const messagesSnapshot = await db.collection('A').get();
+    if (messagesSnapshot.empty) {
+      ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
+      return;
+    }
+    const a = messagesSnapshot.docs.map(doc => doc.data()).first();
+    await ctx.replyWithVoice(a.content);
+     } catch (error) {
+    console.error('Error enviando a:', error);
+    ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
+  }
+});
 
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('memedeldia', async (ctx) => {
