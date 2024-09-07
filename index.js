@@ -195,27 +195,27 @@ bot.hears(udreaRegex, async (ctx) => {
 });
 
 bot.command('udrea', async (ctx) => {
-  await enviarMensajeAleatorio(ctx, 'udreaMessages';
+  await enviarMensajeAleatorio(ctx, 'udreaMessages');
 });
 
 bot.command('a', async (ctx) => {
-    await enviarMensajeAleatorio(ctx, 'a';
+    await enviarMensajeAleatorio(ctx, 'a');
 });
 
 bot.command('utsu', async (ctx) => {
-    await enviarMensajeAleatorio(ctx, 'utsu';
+    await enviarMensajeAleatorio(ctx, 'utsu');
 });
 
 bot.command('s', async (ctx) => {
-    await enviarMensajeAleatorio(ctx, 'suponia';
+    await enviarMensajeAleatorio(ctx, 'suponia');
 });
 
 bot.command('p', async (ctx) => {
-    await enviarMensajeAleatorio(ctx, 'peor';
+    await enviarMensajeAleatorio(ctx, 'peor');
 });
 
 bot.command('c', async (ctx) => {
-    await enviarMensajeAleatorio(ctx, 'claro';
+    await enviarMensajeAleatorio(ctx, 'claro');
 });
 
 // Función para enviar un mensaje aleatorio de la colección "udreaMessages" en Firestore
