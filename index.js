@@ -191,17 +191,37 @@ const udreaRegex = /\budrea(a|aa|aaa|aaaa|aaaaa|s|ría|ríe|)\b/i;
 
 // Listener para palabras derivadas de "udrea" o el comando /udrea
 bot.hears(udreaRegex, async (ctx) => {
-  await enviarMensajeUdreaAleatorio(ctx);
+  await enviarMensajeAleatorio(ctx, 'udreaMessages');
 });
 
 bot.command('udrea', async (ctx) => {
-  await enviarMensajeUdreaAleatorio(ctx);
+  await enviarMensajeAleatorio(ctx, 'udreaMessages';
+});
+
+bot.command('a', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'a';
+});
+
+bot.command('utsu', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'utsu';
+});
+
+bot.command('s', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'suponia';
+});
+
+bot.command('p', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'peor';
+});
+
+bot.command('c', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'claro';
 });
 
 // Función para enviar un mensaje aleatorio de la colección "udreaMessages" en Firestore
-async function enviarMensajeUdreaAleatorio(ctx) {
+async function enviarMensajeAleatorio(ctx, coleccion) {
   try {
-    const messagesSnapshot = await db.collection('udreaMessages').get();
+    const messagesSnapshot = await db.collection(coleccion).get();
     if (messagesSnapshot.empty) {
       ctx.reply('Udrea!');
       return;
@@ -236,21 +256,6 @@ async function enviarMensajeUdreaAleatorio(ctx) {
     ctx.reply('Udrea!');
   }
 }
-
-bot.command('a', async (ctx) => {
-  try {
-    const messagesSnapshot = await db.collection('a').get();
-    if (messagesSnapshot.empty) {
-      ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
-      return;
-    }
-    const a = messagesSnapshot.docs.map(doc => doc.data());
-    await ctx.replyWithVoice("AwACAgQAAxkBAAIBYGbcYSQOofKaVG4423ToOINbjCiIAAINEQACr8mwUPbh44gcKaWQNgQ");
-     } catch (error) {
-    console.error('Error enviando a:', error);
-    ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
-  }
-});
 
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('memedeldia', async (ctx) => {
