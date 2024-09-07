@@ -239,7 +239,7 @@ async function enviarMensajeUdreaAleatorio(ctx) {
 
 bot.command('a', async (ctx) => {
   try {
-    const messagesSnapshot = await db.collection('A').get();
+    const messagesSnapshot = await db.collection('a').get();
     if (messagesSnapshot.empty) {
       ctx.reply('AaaAAAaaAAAaaaAAaaahh!');
       return;
