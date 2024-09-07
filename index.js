@@ -186,7 +186,7 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, asyn
 });
 
 // Expresión regular para capturar palabras derivadas de "udrea"
-const udreaRegex = /\budrea(s|ría|ríe|)\b/i;
+const udreaRegex = /\budrea(a?|s|ría|ríe|)\b/i;
 
 // Listener para palabras derivadas de "udrea" o el comando /udrea
 bot.hears(udreaRegex, async (ctx) => {
@@ -233,6 +233,34 @@ async function enviarMensajeUdreaAleatorio(ctx) {
   } catch (error) {
     console.error('Error enviando mensaje aleatorio:', error);
     ctx.reply('Hubo un error al enviar el mensaje.');
+  }
+}
+
+
+// Comando /memedeldia para obtener un meme aleatorio
+bot.command('memedeldia', async (ctx) => {
+  try {
+    const meme = await obtenerMemeDelDia();
+    ctx.replyWithPhoto(meme.url, { caption: `${meme.title}\nFuente: ${meme.postLink}` }); // Enviar el meme como una imagen
+  } catch (error) {
+    console.error('Error obteniendo meme:', error);
+    ctx.reply('Hubo un error al obtener el meme. Inténtalo de nuevo más tarde.');
+  }
+});
+
+// Función para obtener un meme aleatorio desde MemeAPI
+async function obtenerMemeDelDia() {
+  try {
+    const response = await axios.get('https://meme-api.com/gimme');
+    const data = response.data;
+    return {
+      title: data.title,
+      url: data.url,
+      postLink: data.postLink,
+    };
+  } catch (error) {
+    console.error('Error llamando a MemeAPI:', error);
+    throw error;
   }
 }
 
