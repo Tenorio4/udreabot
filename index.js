@@ -117,7 +117,7 @@ bot.hears(/nivel/i, async (ctx) => {
         porcentaje: nuevoPorcentaje,
         ultimaActualizacion: today
       });
-      ctx.reply(`${username} tiene un **${nuevoPorcentaje}%** de vasto incremento`);
+      ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
     }
   } catch (error) {
     console.error('Error al guardar en Firestore:', error);
@@ -176,7 +176,7 @@ bot.command('cobardes', async (ctx) => {
 
       let cobardesMensaje = 'Estos son los cobardes:\n';
       cobardes.forEach((user, index) => {
-        cobardesMensaje += `- ${user.username}`;
+        cobardesMensaje += `- ${user.username}\n`;
       });
   
       ctx.reply(cobardesMensaje);
