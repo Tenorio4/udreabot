@@ -108,7 +108,7 @@ bot.hears(/nivel/i, async (ctx) => {
     const userDoc = db.collection('usuarios').doc(username);
     const userData = (await userDoc.get()).data();
     
-    if (userData && userData.ultimaActualizacion === today) {
+    if (userData && userData.ultimaActualizacion === today && !userData.porcentaje === null ) {
       ctx.reply(`${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`);
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
@@ -117,7 +117,7 @@ bot.hears(/nivel/i, async (ctx) => {
         porcentaje: nuevoPorcentaje,
         ultimaActualizacion: today
       });
-      ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+      ctx.reply(`${username} tiene un **${nuevoPorcentaje}%** de vasto incremento`);
     }
   } catch (error) {
     console.error('Error al guardar en Firestore:', error);
@@ -149,6 +149,41 @@ bot.command('ranking', async (ctx) => {
   } catch (error) {
     console.error('Error obteniendo el ranking:', error);
     ctx.reply('Hubo un error al obtener el ranking.');
+  }
+});
+
+// Comando /cobardes para mostrar a los cobardes del día
+bot.command('cobardes', async (ctx) => {
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let cobardes = [];
+    
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.porcentaje == null) {
+        cobardes.push({ username: data.username });
+      }
+    });
+
+    if (cobardes.empty) {
+      ctx.reply("Parece que no hay cobardes hoy");
+    } else  if (cobardes.length === 1) {
+      if (cobardes[0].username === "@ireeneeri")
+        ctx.reply(`${cobardes[0].username} es una cobarde`);
+      else
+        ctx.reply(`${cobardes[0].username} es un cobarde`);
+    } else {
+
+      let cobardesMensaje = 'Estos son los cobardes:\n';
+      cobardes.forEach((user, index) => {
+        cobardesMensaje += `- ${user.username}`;
+      });
+  
+      ctx.reply(cobardesMensaje);
+    }
+  } catch (error) {
+    console.error('Error obteniendo a los cobardes:', error);
+    ctx.reply('Hubo un error al obtener los cobardes');
   }
 });
 
@@ -271,7 +306,7 @@ bot.command('memedeldia', async (ctx) => {
 // Función para obtener un meme aleatorio desde MemeAPI
 async function obtenerMemeDelDia() {
   try {
-    const response = await axios.get('https://meme-api.com/gimme');
+    const response = await axios.get('https://meme-api.com/gimme/MemesESP');
     const data = response.data;
     return {
       title: data.title,
