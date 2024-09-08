@@ -72,7 +72,7 @@ async function inicializarUsuarios() {
   }
 }
 
-inicializarUsuarios(); // Llamar una vez al inicio
+//inicializarUsuarios(); // Llamar una vez al inicio
 
 // Ruta de ping
 app.get('/ping', (req, res) => {
