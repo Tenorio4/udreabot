@@ -341,7 +341,7 @@ function getTimeInTimezone(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(17, 07, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(17, 15, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -366,7 +366,7 @@ schedule.scheduleJob(getTimeInTimezone(17, 07, 50), async () => { // 23:59 cada 
     });
 
     if (cobardes.length > 0 && !(cobardes.length === 1)) {
-      const cobardesMensaje = `Los homos del día son:\n`;
+      let cobardesMensaje = `Los homos del día son:\n`;
       cobardes.forEach((user, index) => {
         sumarPuntosAGanador(user);
         cobardesMensaje += `- ${user}\n`;
