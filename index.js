@@ -140,7 +140,7 @@ bot.command('ranking', async (ctx) => {
 
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = '🏆 Ranking del día: 🏆 \n';
+    let rankingMensaje = '🏆 Ranking del día 🏆 \n\n';
     ranking.forEach((user, index) => {
       let icono = '';
       switch (index) {
@@ -307,6 +307,38 @@ async function enviarMensajeAleatorio(ctx, coleccion) {
   }
 }
 
+// Función para obtener un precio aleatorio entre 0.01€ y 4.99€
+function obtenerPrecioAleatorio() {
+  return (Math.random() * (4.99 - 0.01) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
+}
+
+// Comando /precio
+bot.command('precio', async (ctx) => {
+  const today = obtenerFechaHoy();
+
+  try {
+    const precioDoc = db.collection('precios').doc(today);
+    const precioData = (await precioDoc.get()).data();
+    
+    if (precioData && precioData.precio) {
+      ctx.reply(`El precio de hoy ya se ha generado: ${precioData.precio}€`);
+    } else {
+      const nuevoPrecio = obtenerPrecioAleatorio();
+      await precioDoc.set({
+        precio: nuevoPrecio,
+        fecha: today
+      });
+      ctx.reply(`El precio de la udrea hoy está a ${nuevoPrecio}€ la unidad`);
+    }
+  } catch (error) {
+    console.error('Error al guardar el precio en Firestore:', error);
+    ctx.reply('Lo siento, se nos han acabado las udreas. Vuelva otro día');
+  }
+});
+
+bot.command('vender', async (ctx) => {
+   ctx.reply("Si alguien te vende udreas no le creas");
+});
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('memedeldia', async (ctx) => {
   try {
