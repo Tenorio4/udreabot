@@ -341,7 +341,7 @@ function getTimeInTimezone(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(16, 59, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(17, 07, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
