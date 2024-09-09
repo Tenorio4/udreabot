@@ -321,7 +321,7 @@ bot.command('precio', async (ctx) => {
     const precioData = (await precioDoc.get()).data();
     
     if (precioData && precioData.precio) {
-      ctx.reply(`El precio de la udrea hoy está a ${nuevoPrecio}€ la unidad`);
+      ctx.reply(`El precio de la udrea hoy está a ${precioData.precio}€ la unidad`);
     } else {
       const nuevoPrecio = obtenerPrecioAleatorio();
       await precioDoc.set({
