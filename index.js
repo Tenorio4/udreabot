@@ -365,7 +365,7 @@ schedule.scheduleJob(getTimeInTimezone(14, 59, 50), async () => { // 23:59 cada 
       }
     });
 
-    if (cobardes.length > 0 && !cobardes.length === 1) {
+    if (cobardes.length > 0 && !(cobardes.length === 1)) {
       const cobardesMensaje = `Los homos del día son:\n`;
       cobardes.forEach((user, index) => {
         sumarPuntosAGanador(user.username);
