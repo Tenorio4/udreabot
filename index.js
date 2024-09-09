@@ -108,7 +108,7 @@ bot.hears(/nivel/i, async (ctx) => {
     const userDoc = db.collection('usuarios').doc(username);
     const userData = (await userDoc.get()).data();
     
-    if (userData && userData.ultimaActualizacion === today && !userData.porcentaje === null ) {
+    if (userData && userData.ultimaActualizacion === today && !(userData.porcentaje === null)) {
       ctx.reply(`${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`);
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
@@ -341,7 +341,7 @@ function getTimeInTimezone(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(14, 59, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(15, 59, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
