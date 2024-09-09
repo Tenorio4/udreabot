@@ -140,9 +140,24 @@ bot.command('ranking', async (ctx) => {
 
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = 'Ranking del día:\n';
+    let rankingMensaje = '🏆 Ranking del día: 🏆 \n';
     ranking.forEach((user, index) => {
-      rankingMensaje += `${index + 1}. ${user.username}: ${user.porcentaje}%\n`;
+      let icono = '';
+      switch (index) {
+        case 0:
+          icono = '🥇'; // Medalla de oro
+          break;
+        case 1:
+          icono = '🥈'; // Medalla de plata
+          break;
+        case 2:
+          icono = '🥉'; // Medalla de bronce
+          break;
+        default:
+          rankingMensaje += `${index + 1}.`;
+          break;
+       }
+    rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
     });
 
     ctx.reply(rankingMensaje);
@@ -341,7 +356,7 @@ function getTimeInTimezone(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(17, 15, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
