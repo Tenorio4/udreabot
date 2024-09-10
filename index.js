@@ -167,6 +167,90 @@ bot.command('ranking', async (ctx) => {
   }
 });
 
+// Comando /rankingdelmes para mostrar el ranking del mes
+bot.command('rankingdelmes', async (ctx) => {
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let ranking = [];
+    
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.puntosMensuales !== null) {
+        ranking.push({ username: data.username, puntosMensuales: data.puntosMensuales });
+      }
+    });
+
+    ranking.sort((a, b) => b.puntosMensuales - a.puntosMensuales); // Ordenar por porcentaje descendente
+
+    let rankingMensaje = '🏆 Ranking del mes 🏆 \n\n';
+    ranking.forEach((user, index) => {
+      let icono = '';
+      switch (index) {
+        case 0:
+          icono = '🥇'; // Medalla de oro
+          break;
+        case 1:
+          icono = '🥈'; // Medalla de plata
+          break;
+        case 2:
+          icono = '🥉'; // Medalla de bronce
+          break;
+        default:
+          rankingMensaje += `${index + 1}.`;
+          break;
+       }
+    rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}%\n`;
+    });
+
+    ctx.reply(rankingMensaje);
+  } catch (error) {
+    console.error('Error obteniendo el ranking:', error);
+    ctx.reply('Hubo un error al obtener el ranking.');
+  }
+});
+
+// Comando /rankingdelaño para mostrar el ranking del año
+bot.command('rankingdelaño', async (ctx) => {
+  try {
+    const usersSnapshot = await db.collection('usuarios').get();
+    let ranking = [];
+    
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.puntosAnuales !== null) {
+        ranking.push({ username: data.username, puntosAnuales: data.puntosAnuales });
+      }
+    });
+
+    ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
+
+    let rankingMensaje = '🏆 Ranking del mes 🏆 \n\n';
+    ranking.forEach((user, index) => {
+      let icono = '';
+      switch (index) {
+        case 0:
+          icono = '🥇'; // Medalla de oro
+          break;
+        case 1:
+          icono = '🥈'; // Medalla de plata
+          break;
+        case 2:
+          icono = '🥉'; // Medalla de bronce
+          break;
+        default:
+          rankingMensaje += `${index + 1}.`;
+          break;
+       }
+    rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}%\n`;
+    });
+
+    ctx.reply(rankingMensaje);
+  } catch (error) {
+    console.error('Error obteniendo el ranking:', error);
+    ctx.reply('Hubo un error al obtener el ranking.');
+  }
+});
+
 // Comando /cobardes para mostrar a los cobardes del día
 bot.command('cobardes', async (ctx) => {
   try {
@@ -203,7 +287,7 @@ bot.command('cobardes', async (ctx) => {
 });
 
 // Función para manejar "quien de aqui"
-bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, async (ctx) => {
+bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, async (ctx) => {
   const today = obtenerFechaHoy();
   try {
     const usersSnapshot = await db.collection('usuarios').get();
@@ -221,18 +305,18 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quiendeaqui|Quiendeaqui/i, asyn
 
     if (ranking.length === usuarios.length) {
       const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
-      ctx.reply(`El usuario con más porcentaje hoy es ${ganador.username} con ${ganador.porcentaje}%`);
+      ctx.reply(`${ganador.username} es el más homo con un ${ganador.porcentaje}% de vasto incremento`);
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
-        ctx.reply(`¡${cobardeElegido} es un cobarde que aún no ha hecho su tirada de nivel!`);
+        ctx.reply(`${cobardeElegido} es un cobarde y por tanto un homo`);
       } else {
         ctx.reply('Parece que todos han hecho su tirada de nivel.');
       }
     }
   } catch (error) {
     console.error('Error en "quien de aqui":', error);
-    ctx.reply('Hubo un error al procesar la solicitud.');
+    ctx.reply('José Guillén');
   }
 });
 
