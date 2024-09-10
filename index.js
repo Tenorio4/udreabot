@@ -340,9 +340,9 @@ bot.command('vender', async (ctx) => {
    ctx.reply("Si alguien te vende udreas no le creas");
 });
 // Comando /memedeldia para obtener un meme aleatorio
-bot.command('memedeldia', async (ctx) => {
+bot.command('meme', async (ctx) => {
   try {
-    const meme = await obtenerMemeDelDia();
+    const meme = await obtenerMeme();
     ctx.replyWithPhoto(meme.url, { caption: `${meme.title}\nFuente: ${meme.postLink}` }); // Enviar el meme como una imagen
   } catch (error) {
     console.error('Error obteniendo meme:', error);
@@ -351,7 +351,7 @@ bot.command('memedeldia', async (ctx) => {
 });
 
 // Función para obtener un meme aleatorio desde MemeAPI
-async function obtenerMemeDelDia() {
+async function obtenerMeme() {
   try {
     const response = await axios.get('https://meme-api.com/gimme/MemesESP');
     const data = response.data;
