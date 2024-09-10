@@ -168,7 +168,7 @@ bot.command('ranking', async (ctx) => {
 });
 
 // Comando /rankingdelmes para mostrar el ranking del mes
-bot.command('rankingdelmes', async (ctx) => {
+bot.command('rankingmensual', async (ctx) => {
   try {
     const usersSnapshot = await db.collection('usuarios').get();
     let ranking = [];
@@ -199,7 +199,7 @@ bot.command('rankingdelmes', async (ctx) => {
           rankingMensaje += `${index + 1}.`;
           break;
        }
-    rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}%\n`;
+    rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}\n`;
     });
 
     ctx.reply(rankingMensaje);
@@ -210,7 +210,7 @@ bot.command('rankingdelmes', async (ctx) => {
 });
 
 // Comando /rankingdelaño para mostrar el ranking del año
-bot.command('rankingdelaño', async (ctx) => {
+bot.command('rankinganual', async (ctx) => {
   try {
     const usersSnapshot = await db.collection('usuarios').get();
     let ranking = [];
@@ -458,6 +458,18 @@ async function sumarPuntosAGanador(ganadorUsername) {
     await userDoc.update({
       puntos: userData.puntos + 1,
       puntosMensuales: userData.puntosMensuales + 1,
+    });
+  } catch (error) {
+    console.error('Error sumando puntos al ganador:', error);
+  }
+}
+
+// Función para sumar puntos al ganador del día
+async function sumarPuntosAGanadorMes(ganadorUsername) {
+  try {
+    const userDoc = db.collection('usuarios').doc(ganadorUsername);
+    const userData = (await userDoc.get()).data();
+    await userDoc.update({
       puntosAnuales: userData.puntosAnuales + 1
     });
   } catch (error) {
@@ -469,6 +481,20 @@ async function sumarPuntosAGanador(ganadorUsername) {
 function getTimeInTimezone(hour, minute, second = 0) {
   const now = moment.tz(TIMEZONE);
   return now.set({ hour, minute, second, millisecond: 0 }).toDate();
+}
+
+// Función para obtener la fecha del último día del mes a una hora específica
+function getLastDayOfMonth(hour, minute, second = 0) {
+  const now = moment.tz(TIMEZONE);
+  const lastDayOfMonth = now.endOf('month').set({ hour, minute, second, millisecond: 0 });
+  return lastDayOfMonth.toDate();
+}
+
+// Función para obtener la fecha del último día del año a una hora específica
+function getLastDayOfYear(hour, minute, second = 0) {
+  const now = moment.tz(TIMEZONE);
+  const lastDayOfYear = now.endOf('year').set({ hour, minute, second, millisecond: 0 });
+  return lastDayOfYear.toDate();
 }
 
 // Programación de tareas automáticas
@@ -534,23 +560,33 @@ schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada 
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
-schedule.scheduleJob('59 23 L * *', async () => { 
+schedule.scheduleJob(getLastDayOfMonth(23, 59, 52), async () => { 
   try {
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      console.log(groupId);
+    if (!groupId) {
+     console.log('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+    }
     const usersSnapshot = await db.collection('usuarios').get();
-    let maxPuntos = -1;
-    let ganadorMes = null;
+    let ranking = [];
 
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.puntosMensuales > maxPuntos) {
-        maxPuntos = data.puntosMensuales;
-        ganadorMes = data.username;
-      }
+        ranking.push({ username: data.username, puntosMensuales: data.puntosMensuales });
     });
 
-    bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del mes es ${ganadorMes} con ${maxPuntos} puntos.`);
+    const ganador = ranking.reduce((max, user) => user.puntosMensuales > max.puntosMensuales ? user : max, ranking[0]);
+    sumarPuntosAGanadorMes(ganador.username);
+    if (ganador.username === "@ireeneeri")
+      bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+    else
+      bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+    bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     
-    // Resetear puntos mensuales para el siguiente mes
+
+    // Resetear porcentajes para el siguiente mes
     const batch = db.batch();
     usersSnapshot.forEach(doc => {
       const userDoc = db.collection('usuarios').doc(doc.id);
@@ -563,23 +599,32 @@ schedule.scheduleJob('59 23 L * *', async () => {
 });
 
 // Tarea anual (31 de diciembre a las 23:59)
-schedule.scheduleJob('59 23 31 12 *', async () => { 
+schedule.scheduleJob(getLastDayOfYear(23, 59, 55), async () => { 
   try {
+      // Obtener el chat_id del grupo desde Firestore
+      const groupDoc = await db.collection('config').doc('grupo').get();
+      const groupId = groupDoc.exists ? groupDoc.data().groupId : null;
+      console.log(groupId);
+    if (!groupId) {
+     console.log('No se ha registrado ningún grupo. Usa /registrargrupo en el grupo donde quieras enviar los mensajes.');
+    }
     const usersSnapshot = await db.collection('usuarios').get();
-    let maxPuntos = -1;
-    let ganadorAno = null;
+    let ranking = [];
 
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.puntosAnuales > maxPuntos) {
-        maxPuntos = data.puntosAnuales;
-        ganadorAno = data.username;
-      }
+        ranking.push({ username: data.username, puntosAnuales: data.puntosAnuales });
     });
 
-    bot.telegram.sendMessage(process.env.GROUP_ID, `El ganador del año es ${ganadorAno} con ${maxPuntos} puntos.`);
+    const ganador = ranking.reduce((max, user) => user.puntosAnuales > max.puntosAnuales ? user : max, ranking[0]);
+    if (ganador.username === "@ireeneeri")
+      bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosAnuales} puntos`);
+    else
+      bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosAnuales} puntos`);
+    bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     
-    // Resetear puntos anuales para el siguiente año
+
+    // Resetear porcentajes para el siguiente mes
     const batch = db.batch();
     usersSnapshot.forEach(doc => {
       const userDoc = db.collection('usuarios').doc(doc.id);
@@ -587,7 +632,7 @@ schedule.scheduleJob('59 23 31 12 *', async () => {
     });
     await batch.commit();
   } catch (error) {
-    console.error('Error en la tarea anual:', error);
+    console.error('Error en la tarea mensual:', error);
   }
 });
 
