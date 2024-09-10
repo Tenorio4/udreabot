@@ -224,7 +224,7 @@ bot.command('rankinganual', async (ctx) => {
 
     ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = '🏆 Ranking del mes 🏆 \n\n';
+    let rankingMensaje = '🏆 Ranking del año 🏆 \n\n';
     ranking.forEach((user, index) => {
       let icono = '';
       switch (index) {
@@ -241,7 +241,7 @@ bot.command('rankinganual', async (ctx) => {
           rankingMensaje += `${index + 1}.`;
           break;
        }
-    rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}%\n`;
+    rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}\n`;
     });
 
     ctx.reply(rankingMensaje);
