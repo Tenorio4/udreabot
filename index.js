@@ -143,18 +143,40 @@ bot.command('ranking', async (ctx) => {
     let rankingMensaje = '🏆 Ranking del día 🏆 \n\n';
     ranking.forEach((user, index) => {
       let icono = '';
+      let tercer = 0;
+      let x = 1;
       switch (index) {
         case 0:
           icono = '🥇'; // Medalla de oro
+          primer = user.porcentaje;
           break;
         case 1:
-          icono = '🥈'; // Medalla de plata
+          if (user.porcentaje === ranking[index-1].porcentaje) {
+            icono = '🥇'; 
+            x += 1;
+          } else {
+            icono = '🥈'; // Medalla de plata
+          }
           break;
         case 2:
-          icono = '🥉'; // Medalla de bronce
+          if (user.porcentaje === ranking[index-1].porcentaje) {
+              icono = '🥈'; 
+              x += 1;
+          } else {
+            icono = '🥉'; // Medalla de bronce
+          }
           break;
         default:
-          rankingMensaje += `${index + 1}.`;
+          if (user.porcentaje === tercer) {
+              icono = '🥉'; 
+              x += 1;
+          } else {
+            if (user.porcentaje === ranking[index-1].porcentaje) {
+              x -= 1;
+            }
+            rankingMensaje += `${index + x}.`;
+            x = 1;
+          }
           break;
        }
     rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
@@ -227,18 +249,40 @@ bot.command('rankinganual', async (ctx) => {
     let rankingMensaje = '🏆 Ranking del año 🏆 \n\n';
     ranking.forEach((user, index) => {
       let icono = '';
+      let tercer = 0;
+      let x = 1;
       switch (index) {
         case 0:
           icono = '🥇'; // Medalla de oro
+          primer = user.puntosAnuales;
           break;
         case 1:
-          icono = '🥈'; // Medalla de plata
+          if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
+            icono = '🥇'; 
+            x += 1;
+          } else {
+            icono = '🥈'; // Medalla de plata
+          }
           break;
         case 2:
-          icono = '🥉'; // Medalla de bronce
+          if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
+              icono = '🥈'; 
+              x += 1;
+          } else {
+            icono = '🥉'; // Medalla de bronce
+          }
           break;
         default:
-          rankingMensaje += `${index + 1}.`;
+          if (user.puntosAnuales === tercer) {
+              icono = '🥉'; 
+              x += 1;
+          } else {
+            if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
+              x -= 1;
+            }
+            rankingMensaje += `${index + x}.`;
+            x = 1;
+          }
           break;
        }
     rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}\n`;
