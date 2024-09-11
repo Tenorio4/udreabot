@@ -89,9 +89,17 @@ bot.start((ctx) => ctx.reply('Hola, soy tu bot de Telegram!'));
 // Comando /help
 bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 
-// Función para obtener un porcentaje aleatorio
+// Función para obtener un porcentaje "aleatorio"
 function obtenerPorcentajeAleatorio() {
-  return Math.floor(Math.random() * 101); // 0-100%
+  const probabilidad = Math.random(); // Número aleatorio entre 0 y 1
+
+  if (Math.random() <= 0.15) { // 15% de probabilidad 
+    if (Math.random() <= 0.01) // 15% * 1% de probabilidad
+      return 1000000;
+    return 100; 
+  } else {
+    return Math.floor(Math.random() * 100); // 85% de probabilidad de devolver un número entre 0 y 99
+  }
 }
 
 // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
@@ -117,7 +125,22 @@ bot.hears(/nivel/i, async (ctx) => {
         porcentaje: nuevoPorcentaje,
         ultimaActualizacion: today
       });
-      ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+      if (nuevoPorcentaje == 0) {
+        ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+      } else if (nuevoPorcentaje == 100) {
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+      } else if (nuevoPorcentaje == 1000000) {
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} TIENE UN VASTO INCREMENTO DEL 1.000.000% 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        sumarPuntosAGanador(username);
+      } else {
+        ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del 100% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} TIENE UN VASTO INCREMENTO DEL 1.000.000% 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+      }
     }
   } catch (error) {
     console.error('Error al guardar en Firestore:', error);
@@ -153,7 +176,10 @@ bot.command('ranking', async (ctx) => {
       rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
     });
 
-    ctx.reply(rankingMensaje);
+    if (!ranking.empty)
+      ctx.reply(rankingMensaje);
+    else
+      ctx.reply("Ahora mismo solo hay cobardes");
   } catch (error) {
     console.error('Error obteniendo el ranking:', error);
     ctx.reply('Hubo un error al obtener el ranking.');
@@ -176,25 +202,17 @@ bot.command('rankingmensual', async (ctx) => {
     ranking.sort((a, b) => b.puntosMensuales - a.puntosMensuales); // Ordenar por porcentaje descendente
 
     let rankingMensaje = '🏆 Ranking del mes 🏆 \n\n';
+    let icono = '';
+    let x = 0;
     ranking.forEach((user, index) => {
-      let icono = '';
-      switch (index) {
-        case 0:
-          icono = '🥇'; // Medalla de oro
-          break;
-        case 1:
-          icono = '🥈'; // Medalla de plata
-          break;
-        case 2:
-          icono = '🥉'; // Medalla de bronce
-          break;
-        default:
-          rankingMensaje += `${index + 1}.`;
-          break;
-       }
-    rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}\n`;
+      let posiciones = ['🥇', '🥈', '🥉', '4.', '5.', '6.', '7.', '8.'];
+            
+      if (index != 0 && user.puntosMensuales != ranking[index-1].puntosMensuales) 
+        x += 1; 
+      icono = posiciones[x]; 
+      
+      rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}%\n`;
     });
-
     ctx.reply(rankingMensaje);
   } catch (error) {
     console.error('Error obteniendo el ranking:', error);
@@ -218,47 +236,17 @@ bot.command('rankinganual', async (ctx) => {
     ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
 
     let rankingMensaje = '🏆 Ranking del año 🏆 \n\n';
+       let icono = '';
+    let x = 0;
     ranking.forEach((user, index) => {
-      let icono = '';
-      let tercer = 0;
-      let x = 1;
-      switch (index) {
-        case 0:
-          icono = '🥇'; // Medalla de oro
-          primer = user.puntosAnuales;
-          break;
-        case 1:
-          if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
-            icono = '🥇'; 
-            x += 1;
-          } else {
-            icono = '🥈'; // Medalla de plata
-          }
-          break;
-        case 2:
-          if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
-              icono = '🥈'; 
-              x += 1;
-          } else {
-            icono = '🥉'; // Medalla de bronce
-          }
-          break;
-        default:
-          if (user.puntosAnuales === tercer) {
-              icono = '🥉'; 
-              x += 1;
-          } else {
-            if (user.puntosAnuales === ranking[index-1].puntosAnuales) {
-              x -= 1;
-            }
-            rankingMensaje += `${index + x}.`;
-            x = 1;
-          }
-          break;
-       }
-    rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}\n`;
+      let posiciones = ['🥇', '🥈', '🥉', '4.', '5.', '6.', '7.', '8.'];
+            
+      if (index != 0 && user.puntosAnuales != ranking[index-1].puntosAnuales) 
+        x += 1; 
+      icono = posiciones[x]; 
+      
+      rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}%\n`;
     });
-
     ctx.reply(rankingMensaje);
   } catch (error) {
     console.error('Error obteniendo el ranking:', error);
@@ -311,7 +299,7 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
 
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.ultimaActualizacion === today) {
+      if (data.ultimaActualizacion === today && data.puntuacion != null) {
         ranking.push({ username: data.username, porcentaje: data.porcentaje });
       } else {
         cobardes.push(data.username);
@@ -324,7 +312,8 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
-        ctx.reply(`${cobardeElegido} es un cobarde y por tanto un homo`);
+        ctx.reply(`Aún no dispongo de los datos suficientes pero puedo afirmar que ${cobardeElegido} es un cobarde y por tanto un homo`);
+        ctx.reply("Pulsa aquí -> /cobardes para ver a todos los cobardes");
       } else {
         ctx.reply('Parece que todos han hecho su tirada de nivel.');
       }
@@ -366,6 +355,12 @@ bot.command('p', async (ctx) => {
 bot.command('c', async (ctx) => {
     await enviarMensajeAleatorio(ctx, 'claro');
 });
+bot.command('superudrea', async (ctx) => {
+  for (let i = 0; i < 20; step++) {
+    await enviarMensajeAleatorio(ctx, 'udreaMessages');
+  }
+});
+
 
 // Función para enviar un mensaje aleatorio de la colección "udreaMessages" en Firestore
 async function enviarMensajeAleatorio(ctx, coleccion) {
