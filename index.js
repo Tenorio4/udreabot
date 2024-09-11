@@ -143,42 +143,13 @@ bot.command('ranking', async (ctx) => {
     let rankingMensaje = '🏆 Ranking del día 🏆 \n\n';
     ranking.forEach((user, index) => {
       let icono = '';
-      let tercer = 0;
-      let x = 1;
-      switch (index) {
-        case 0:
-          icono = '🥇'; // Medalla de oro
-          primer = user.porcentaje;
-          break;
-        case 1:
-          if (user.porcentaje === ranking[index-1].porcentaje) {
-            icono = '🥇'; 
+      let posiciones = ['🥇', '🥈', '🥉', '4.', '5.', '6.', '7.', '8.'];
+      let x = 0;
+      
+      if (index != 0 && user.porcentaje != ranking[index-1]) 
             x += 1;
-          } else {
-            icono = '🥈'; // Medalla de plata
-          }
-          break;
-        case 2:
-          if (user.porcentaje === ranking[index-1].porcentaje) {
-              icono = '🥈'; 
-              x += 1;
-          } else {
-            icono = '🥉'; // Medalla de bronce
-          }
-          break;
-        default:
-          if (user.porcentaje === tercer) {
-              icono = '🥉'; 
-              x += 1;
-          } else {
-            if (user.porcentaje === ranking[index-1].porcentaje) {
-              x -= 1;
-            }
-            rankingMensaje += `${index + x}.`;
-            x = 1;
-          }
-          break;
-       }
+      icono = posiciones[x]; 
+      
     rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
     });
 
@@ -542,7 +513,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(15, 10, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(18, 25, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -595,8 +566,9 @@ schedule.scheduleJob(getTimeInTimezone(15, 10, 50), async () => { // 23:59 cada 
         let ganadoresMensaje = `Los homos del día son:\n`;
         ganadores.forEach((user, index) => {
           sumarPuntosAGanador(user.username);
-          ganadoresMensaje += `- ${user.username} con un ${user.username}% de vasto incremento\n`;
+          ganadoresMensaje += `- ${user.username}`;
         });
+        ganadoresMensaje += `\n Todos con un vasto incremento del ${ganadores[0].porcentaje}%\n`;
         bot.telegram.sendMessage(groupId, ganadoresMensaje);    
       }
       bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
