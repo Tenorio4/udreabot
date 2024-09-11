@@ -126,9 +126,12 @@ bot.hears(/nivel/i, async (ctx) => {
         ultimaActualizacion: today
       });
       if (nuevoPorcentaje == 0) {
-        ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+        await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+        await ctx.reply(`Disfruta de tu heterosexualidad!`);
+        await ctx.reply("(mientras dure)");
+        await ctx.reply("Udrea!");
       } else if (nuevoPorcentaje == 100) {
-        ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
       } else if (nuevoPorcentaje == 1000000) {
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} TIENE UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
@@ -272,12 +275,12 @@ bot.command('cobardes', async (ctx) => {
         ctx.reply(`${cobardes[0].username} es un cobarde`);
     } else {
 
-      let cobardesMensaje = 'Estos son los cobardes:\n';
+      let cobardesMensaje = 'Estos son los cobardes:\n\n';
       cobardes.forEach((user, index) => {
         cobardesMensaje += `- ${user.username}\n`;
       });
   
-      ctx.reply(cobardesMensaje);
+      await ctx.reply(cobardesMensaje);
     }
   } catch (error) {
     console.error('Error obteniendo a los cobardes:', error);
@@ -308,8 +311,8 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
-        ctx.reply(`Aún no dispongo de los datos suficientes pero puedo afirmar que ${cobardeElegido} es un cobarde y por tanto un homo`);
-        ctx.reply("Pulsa aquí -> /cobardes para ver a todos los cobardes");
+        await ctx.reply(`Aún no dispongo de los datos suficientes pero puedo afirmar que ${cobardeElegido} es un cobarde y por tanto un homo`);
+        await ctx.reply("Pulsa aquí -> /cobardes para ver quiénes son los cobardes");
       } else {
         ctx.reply('Parece que todos han hecho su tirada de nivel.');
       }
@@ -357,6 +360,14 @@ bot.command('superudrea', async (ctx) => {
   }
 });
 
+// Regex para detectar palabras que terminan en "ano"
+const regexAno = /ano\b/i;
+bot.hears(regexAno, async (ctx) => {
+  // Responde citando el mensaje original
+    ctx.reply('Pues me la agarras con la mano', {
+      reply_to_message_id: ctx.message.message_id,
+    });
+});
 
 // Función para enviar un mensaje aleatorio de la colección "udreaMessages" en Firestore
 async function enviarMensajeAleatorio(ctx, coleccion) {
