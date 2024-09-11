@@ -141,13 +141,13 @@ bot.command('ranking', async (ctx) => {
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
     let rankingMensaje = '🏆 Ranking del día 🏆 \n\n';
+    let x = 0;
     ranking.forEach((user, index) => {
       let icono = '';
       let posiciones = ['🥇', '🥈', '🥉', '4.', '5.', '6.', '7.', '8.'];
-      let x = 0;
-      
+            
       if (index != 0 && user.porcentaje != ranking[index-1]) 
-            x += 1;
+        x += 1; 
       icono = posiciones[x]; 
       
     rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
@@ -513,7 +513,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(18, 25, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(18, 40, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
