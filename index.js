@@ -513,7 +513,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(18, 40, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(18, 53, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
