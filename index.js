@@ -141,16 +141,16 @@ bot.command('ranking', async (ctx) => {
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
     let rankingMensaje = '🏆 Ranking del día 🏆 \n\n';
+    let icono = '';
     let x = 0;
     ranking.forEach((user, index) => {
-      let icono = '';
       let posiciones = ['🥇', '🥈', '🥉', '4.', '5.', '6.', '7.', '8.'];
             
-      if (index != 0 && user.porcentaje != ranking[index-1]) 
+      if (index != 0 && user.porcentaje != ranking[index-1].porcentaje) 
         x += 1; 
       icono = posiciones[x]; 
       
-    rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
+      rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
     });
 
     ctx.reply(rankingMensaje);
