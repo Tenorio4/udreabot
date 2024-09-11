@@ -513,7 +513,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(18, 58, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(19, 10, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -563,12 +563,12 @@ schedule.scheduleJob(getTimeInTimezone(18, 58, 50), async () => { // 23:59 cada 
         else
           bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);      
       } else {
-        let ganadoresMensaje = `Los homos del día son:\n`;
+        let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
           sumarPuntosAGanador(user.username);
           ganadoresMensaje += `- ${user.username}\n`;
         });
-        ganadoresMensaje += `\n\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%\n`;
+        ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
         bot.telegram.sendMessage(groupId, ganadoresMensaje);    
       }
       bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
