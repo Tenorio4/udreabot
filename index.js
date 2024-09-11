@@ -210,7 +210,7 @@ bot.command('rankingmensual', async (ctx) => {
         x += 1; 
       icono = posiciones[x]; 
       
-      rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}%\n`;
+      rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}\n`;
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -244,7 +244,7 @@ bot.command('rankinganual', async (ctx) => {
         x += 1; 
       icono = posiciones[x]; 
       
-      rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}%\n`;
+      rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}\n`;
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -515,7 +515,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(19, 10, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -545,14 +545,14 @@ schedule.scheduleJob(getTimeInTimezone(19, 10, 50), async () => { // 23:59 cada 
         sumarPuntosAGanador(user);
         cobardesMensaje += `- ${user}\n`;
       });
-      bot.telegram.sendMessage(groupId, cobardesMensaje);
-      bot.telegram.sendMessage(groupId, "Por cobardes");
+      await bot.telegram.sendMessage(groupId, cobardesMensaje);
+      await bot.telegram.sendMessage(groupId, "Por cobardes");
     } else if (cobardes.length === 1){
       sumarPuntosAGanador(cobardes[0]);
        if (cobardes[0] === "@ireeneeri")
-        bot.telegram.sendMessage(groupId, `El homo del día es ${cobardes[0]} por cobarde`);
+        await bot.telegram.sendMessage(groupId, `El homo del día es ${cobardes[0]} por cobarde`);
       else
-        bot.telegram.sendMessage(groupId, `La homo del día es ${cobardes[0]} por cobarde`);
+        await bot.telegram.sendMessage(groupId, `La homo del día es ${cobardes[0]} por cobarde`);
       bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     } else {
       const maxPorcentaje = Math.max(...ranking.map(user => user.porcentaje));
@@ -561,9 +561,9 @@ schedule.scheduleJob(getTimeInTimezone(19, 10, 50), async () => { // 23:59 cada 
       if (ganadores.length === 1) {
         sumarPuntosAGanador(ganador.username);
         if (ganador.username === "@ireeneeri")
-          bot.telegram.sendMessage(groupId, `El homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
+          await bot.telegram.sendMessage(groupId, `El homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
         else
-          bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);      
+          await bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);      
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
@@ -571,9 +571,9 @@ schedule.scheduleJob(getTimeInTimezone(19, 10, 50), async () => { // 23:59 cada 
           ganadoresMensaje += `- ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
-        bot.telegram.sendMessage(groupId, ganadoresMensaje);    
+        await bot.telegram.sendMessage(groupId, ganadoresMensaje);    
       }
-      bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
+      await bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     }
 
     // Resetear porcentajes para el siguiente día
