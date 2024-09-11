@@ -93,8 +93,8 @@ bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 function obtenerPorcentajeAleatorio() {
   const probabilidad = Math.random(); // Número aleatorio entre 0 y 1
 
-  if (Math.random() <= 0.15) { // 15% de probabilidad 
-    if (Math.random() <= 0.01) // 15% * 1% de probabilidad
+  if (Math.random() <= 0.10) { // 10% de probabilidad 
+    if (Math.random() <= 0.01) // 10% * 1% de probabilidad
       return 1000000;
     return 100; 
   } else {
@@ -130,15 +130,12 @@ bot.hears(/nivel/i, async (ctx) => {
       } else if (nuevoPorcentaje == 100) {
         ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
       } else if (nuevoPorcentaje == 1000000) {
-        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
-        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} TIENE UN VASTO INCREMENTO DEL 1.000.000% 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
-        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
-        sumarPuntosAGanador(username);
-      } else {
-        await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} TIENE UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        sumarPuntosAGanador(username);
+      } else {
+        await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
       }
     }
   } catch (error) {
@@ -355,7 +352,7 @@ bot.command('c', async (ctx) => {
     await enviarMensajeAleatorio(ctx, 'claro');
 });
 bot.command('superudrea', async (ctx) => {
-  for (let i = 0; i < 20; step++) {
+  for (let i = 0; i < 20; i++) {
     await enviarMensajeAleatorio(ctx, 'udreaMessages');
   }
 });
