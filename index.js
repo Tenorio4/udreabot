@@ -498,7 +498,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(14, 16, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -538,12 +538,23 @@ schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada 
         bot.telegram.sendMessage(groupId, `La homo del día es ${cobardes[0]} por cobarde`);
       bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     } else {
-      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
-      sumarPuntosAGanador(ganador.username);
-      if (ganador.username === "@ireeneeri")
-        bot.telegram.sendMessage(groupId, `El homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
-      else
-        bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
+      const maxPorcentaje = Math.max(...ranking.map(user => user.porcentaje));
+      const ganadores = ranking.filter(user => user.porcentaje === maxPorcentaje);
+      
+      if (ganadores.length === 1) {
+        sumarPuntosAGanador(ganador.username);
+        if (ganador.username === "@ireeneeri")
+          bot.telegram.sendMessage(groupId, `El homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
+        else
+          bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);      
+      } else {
+        let ganadoresMensaje = `Los homos del día son:\n`;
+        ganadores.forEach((user, index) => {
+          sumarPuntosAGanador(user.username);
+          ganadoresMensaje += `- ${user.username} con un ${user.username}% de vasto incremento\n`;
+        });
+        bot.telegram.sendMessage(groupId, ganadoresMensaje);    
+      }
       bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     }
 
