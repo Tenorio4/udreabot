@@ -50,6 +50,38 @@ const usuarios = [
   '@RangoLV', '@Chewyck', '@Papadopoulos', '@Numuhukumakiakiaialunamor'
 ];
 
+function getNombre(username) {
+  switch (username) {
+    case '@TenorioSRG':
+      return "Sergio";
+      break;    
+     case '@HooksLasVegas': 
+      return "Fran";
+      break;   
+     case '@Pmoai': 
+      return "Pedro Parrado";
+      break;   
+     case '@ireeneeri':
+      return "Irene";
+      break;   
+     case '@RangoLV':
+      return "Antonio";
+      break;   
+     case '@Chewyck':
+      return "José Guillén";
+      break;   
+     case '@Papadopoulos':
+      return "Dani";
+      break;   
+     case '@Numuhukumakiakiaialunamor':
+      return "Cuque";
+      break;   
+     default:
+      return "";
+      break;
+  }
+}
+
 // Inicializar datos de usuarios en Firestore
 async function inicializarUsuarios() {
   try {
@@ -117,7 +149,13 @@ bot.hears(/nivel/i, async (ctx) => {
     const userData = (await userDoc.get()).data();
     
     if (userData && userData.ultimaActualizacion === today && !(userData.porcentaje === null)) {
-      ctx.reply(`${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`);
+      if (userData.porcentaje == 100) {
+        await ctx.reply(`Que sí que sí\n🏳️‍🌈${username}🏳️‍🌈 que tienes un ${userData.porcentaje}% de vasto incremento`);
+      } else if (userData.porcentaje == 1000000) {
+        await ctx.reply(`Que sí que sí\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} QUE TIENES UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+      } else {
+        ctx.reply(`${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`);
+      }
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
       await userDoc.set({
@@ -172,7 +210,7 @@ bot.command('ranking', async (ctx) => {
         x += 1; 
       icono = posiciones[x]; 
       
-      rankingMensaje += `${icono} ${user.username}: ${user.porcentaje}%\n`;
+      rankingMensaje += `${icono} ${getNombre(user.username)}: ${user.porcentaje}%\n`;
     });
 
     if (ranking.length > 0)
@@ -210,7 +248,7 @@ bot.command('rankingmensual', async (ctx) => {
         x += 1; 
       icono = posiciones[x]; 
       
-      rankingMensaje += `${icono} ${user.username}: ${user.puntosMensuales}\n`;
+      rankingMensaje += `${icono} ${getNombre(user.username)}: ${user.puntosMensuales}\n`;
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -244,7 +282,7 @@ bot.command('rankinganual', async (ctx) => {
         x += 1; 
       icono = posiciones[x]; 
       
-      rankingMensaje += `${icono} ${user.username}: ${user.puntosAnuales}\n`;
+      rankingMensaje += `${icono} ${getNombre(user.username)}: ${user.puntosAnuales}\n`;
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -358,6 +396,9 @@ bot.command('superudrea', async (ctx) => {
   for (let i = 0; i < 20; i++) {
     await enviarMensajeAleatorio(ctx, 'udreaMessages');
   }
+});
+bot.command('m', async (ctx) => {
+    await enviarMensajeAleatorio(ctx, 'mMessages');
 });
 
 // Regex para detectar palabras que terminan en "ano"
@@ -515,7 +556,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(12, 53, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -553,7 +594,7 @@ schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada 
         await bot.telegram.sendMessage(groupId, `El homo del día es ${cobardes[0]} por cobarde`);
       else
         await bot.telegram.sendMessage(groupId, `La homo del día es ${cobardes[0]} por cobarde`);
-      bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
+      await bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     } else {
       const maxPorcentaje = Math.max(...ranking.map(user => user.porcentaje));
       const ganadores = ranking.filter(user => user.porcentaje === maxPorcentaje);
@@ -665,12 +706,12 @@ schedule.scheduleJob(getLastDayOfYear(23, 59, 55), async () => {
   }
 });
 
-// Comando /addudrea para iniciar el modo de agregar mensajes
-bot.command('addudrea', (ctx) => {
+// Comando /addmensaje para iniciar el modo de agregar mensajes
+bot.command('addmensaje', (ctx) => {
   if (ctx.chat.type == 'private') {
     modoAnunciar = true; // Reutilizar la variable modoAnunciar para este propósito
     mensajesParaAnunciar = []; // Limpiar los mensajes previos
-    ctx.reply('Modo de agregar mensajes activado. Envía el mensaje (texto, imagen, audio, etc.) que deseas agregar. Usa /guardarudrea para guardar o /cancelarudrea para cancelar.');
+    ctx.reply('Modo de agregar mensajes activado. Envía el mensaje (texto, imagen, audio, etc.) que deseas agregar. Usa /guardarudrea o /guardarm para guardar y /cancelar para cancelar.');
   } 
 });
 
@@ -684,7 +725,7 @@ bot.command('anunciar', (ctx) => {
   if (ctx.chat.type == 'private') {    
     modoAnunciar = true;  // Activar modo de anuncio
     mensajesParaAnunciar = [];  // Limpiar los mensajes previos
-    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar o usa /noenviar para cancelar.');
+    ctx.reply('Modo de anuncio activado. Envía los mensajes que quieres anunciar. Cuando termines, escribe /enviar o usa /cancelar para cancelar.');
 }
 });
 
@@ -697,13 +738,13 @@ bot.on('text', (ctx) => {
     if (mensaje.startsWith('/')) {
       if (mensaje === '/enviar') {
         return enviarMensajes(ctx);  // Llamar a la función para enviar los mensajes
-      } else if (mensaje === '/noenviar') {
+      } else if (mensaje === '/cancelar') {
         return cancelarAnuncio(ctx);  // Llamar a la función para cancelar
       } else if (mensaje === '/guardarudrea') {
-        return guardarMensajesUdrea(ctx); // Función para guardar los mensajes en Firestore
-      } else if (mensaje === '/cancelarudrea') {
-        return cancelarAnuncio(ctx); // Reutilizamos la función cancelarAnuncio para cancelar el modo de agregar mensajes
-      }
+        return guardarMensajes(ctx, "udreaMessages"); // Función para guardar los mensajes en Firestore
+      } else if (mensaje === '/guardarm') {
+        return guardarMensajes(ctx, "mMessages"); // Función para guardar los mensajes en Firestore
+      } 
     } else {
       // Si no es un comando, se almacena como mensaje para anunciar
       mensajesParaAnunciar.push({ type: 'text', content: mensaje });
@@ -828,9 +869,9 @@ bot.command('enviar', (ctx) => {
 });
 
 // Función para guardar los mensajes en Firestore
-async function guardarMensajesUdrea(ctx) {
+async function guardarMensajes(ctx, coleccion) {
   if (!modoAnunciar) {
-    return ctx.reply('Primero activa el modo de agregar mensajes usando /addudrea.');
+    return ctx.reply('Primero activa el modo de agregar mensajes usando /addmensaje.');
   }
 
   if (mensajesParaAnunciar.length === 0) {
@@ -840,7 +881,7 @@ async function guardarMensajesUdrea(ctx) {
   try {
     const batch = db.batch(); // Batch para guardar múltiples mensajes
     mensajesParaAnunciar.forEach((mensaje) => {
-      const newDoc = db.collection('udreaMessages').doc();
+      const newDoc = db.collection(coleccion).doc();
       batch.set(newDoc, mensaje);
     });
 
@@ -857,7 +898,7 @@ async function guardarMensajesUdrea(ctx) {
 }
 
 // Comando explícito para cancelar el modo de agregar mensajes
-bot.command('cancelarudrea', (ctx) => {
+bot.command('cancelar', (ctx) => {
   if (ctx.chat.type === 'private') {
     cancelarAnuncio(ctx);
   }
