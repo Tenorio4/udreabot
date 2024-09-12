@@ -394,7 +394,7 @@ bot.command('c', async (ctx) => {
 });
 bot.command('superudrea', async (ctx) => {
   for (let i = 0; i < 20; i++) {
-    await enviarMensajeAleatorio(ctx, 'udreaMessages');
+     enviarMensajeAleatorio(ctx, 'udreaMessages');
   }
 });
 bot.command('m', async (ctx) => {
@@ -556,7 +556,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(12, 53, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(getTimeInTimezone(13, 01, 50), async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
@@ -581,7 +581,7 @@ schedule.scheduleJob(getTimeInTimezone(12, 53, 50), async () => { // 23:59 cada 
     });
 
     if (cobardes.length > 0 && !(cobardes.length === 1)) {
-      let cobardesMensaje = `Los homos del día son:\n`;
+      let cobardesMensaje = `Los homos del día son:\n\n`;
       cobardes.forEach((user, index) => {
         sumarPuntosAGanador(user);
         cobardesMensaje += `- ${user}\n`;
@@ -711,10 +711,9 @@ bot.command('addmensaje', (ctx) => {
   if (ctx.chat.type == 'private') {
     modoAnunciar = true; // Reutilizar la variable modoAnunciar para este propósito
     mensajesParaAnunciar = []; // Limpiar los mensajes previos
-    ctx.reply('Modo de agregar mensajes activado. Envía el mensaje (texto, imagen, audio, etc.) que deseas agregar. Usa /guardarudrea o /guardarm para guardar y /cancelar para cancelar.');
+    ctx.reply('Modo de agregar mensajes activado. Envía el mensaje (texto, imagen, audio, etc.) que deseas agregar.\nUsa /guardarudrea o /guardarm para guardar y /cancelar para cancelar.');
   } 
 });
-
 
 // Variables globales para manejar el estado del anuncio
 let mensajesParaAnunciar = [];
