@@ -535,6 +535,12 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
   }
 }
 
+const rule = new schedule.RecurrenceRule();
+rule.hour = 23;
+rule.minute = 59;
+rule.second = 50;
+rule.tz = TIMEZONE; 
+
 // Convertir la hora a la zona horaria especificada
 function getTimeInTimezone(hour, minute, second = 0) {
   const now = moment.tz(TIMEZONE);
@@ -556,7 +562,7 @@ function getLastDayOfYear(hour, minute, second = 0) {
 }
 
 // Programación de tareas automáticas
-schedule.scheduleJob(getTimeInTimezone(23, 59, 50), async () => { // 23:59 cada día   
+schedule.scheduleJob(rule, async () => { // 23:59 cada día   
   console.log('Ejecutando tarea diaria...');
   const today = obtenerFechaHoy();
   try {
