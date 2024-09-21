@@ -150,7 +150,7 @@ bot.hears(/nivel/i, async (ctx) => {
     
     if (userData && userData.ultimaActualizacion === today && !(userData.porcentaje === null)) {
       if (userData.porcentaje == 100) {
-        await ctx.reply(`Que sí que sí\n🏳️‍🌈${username}🏳️‍🌈 que tienes un ${userData.porcentaje}% de vasto incremento`);
+        await ctx.reply(`Que sí que sí\n🏳️‍🌈${username}🏳️‍🌈 tienes un ${userData.porcentaje}% de vasto incremento`);
       } else if (userData.porcentaje == 1000000) {
         await ctx.reply(`Que sí que sí\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} QUE TIENES UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
       } else {
@@ -547,11 +547,38 @@ function getTimeInTimezone(hour, minute, second = 0) {
   return now.set({ hour, minute, second, millisecond: 0 }).toDate();
 }
 
+function getLastDayOfMonthRule() {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 23;
+  rule.minute = 59;
+  rule.second = 52;
+
+  // Obtenemos el último día del mes actual
+  const now = moment.tz(TIMEZONE);
+  const lastDay = now.clone().endOf('month').date(); // Último día del mes
+  rule.date = lastDay; // Especificamos que sea el último día del mes
+
+  return rule;
+}
+
 // Función para obtener la fecha del último día del mes a una hora específica
 function getLastDayOfMonth(hour, minute, second = 0) {
   const now = moment.tz(TIMEZONE);
   const lastDayOfMonth = now.endOf('month').set({ hour, minute, second, millisecond: 0 });
   return lastDayOfMonth.toDate();
+}
+
+function getLastDayOfYearRule() {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 23;
+  rule.minute = 59;
+  rule.second = 55;
+  
+  // Especificamos que sea el día 31 del mes 12 (diciembre)
+  rule.month = 11; // Diciembre (los meses en RecurrenceRule son 0-indexed, 0=enero)
+  rule.date = 31; // Día 31 de diciembre
+  
+  return rule;
 }
 
 // Función para obtener la fecha del último día del año a una hora específica
@@ -636,7 +663,7 @@ schedule.scheduleJob(rule, async () => { // 23:59 cada día
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
-schedule.scheduleJob(getLastDayOfMonth(23, 59, 52), async () => { 
+schedule.scheduleJob(getLastDayOfMonthRule(), async () => { 
   try {
       // Obtener el chat_id del grupo desde Firestore
       const groupDoc = await db.collection('config').doc('grupo').get();
@@ -653,13 +680,25 @@ schedule.scheduleJob(getLastDayOfMonth(23, 59, 52), async () => {
         ranking.push({ username: data.username, puntosMensuales: data.puntosMensuales });
     });
 
-    const ganador = ranking.reduce((max, user) => user.puntosMensuales > max.puntosMensuales ? user : max, ranking[0]);
-    sumarPuntosAGanadorMes(ganador.username);
-    if (ganador.username === "@ireeneeri")
-      bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
-    else
-      bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
-    bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
+    const maxPuntos = Math.max(...ranking.map(user => user.puntosMensuales));
+    const ganadores = ranking.filter(user => user.puntosMensuales === maxPuntos);
+
+    if (ganadores.length === 1) {  
+      sumarPuntosAGanadorMes(ganador.username);
+      if (ganador.username === "@ireeneeri")
+        await bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+      else
+        await bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+    } else {
+      let ganadoresMensaje = `Los homos del mes son:\n\n`;
+      ganadores.forEach((user, index) => {
+        sumarPuntosAGanadorMes(user.username);
+        ganadoresMensaje += `- ${user.username}\n`;
+      });
+      ganadoresMensaje += `\nTodos con ${ganadores[0].puntosMensuales} puntos`;
+      await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+    }
+    await bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     
 
     // Resetear porcentajes para el siguiente mes
@@ -675,7 +714,7 @@ schedule.scheduleJob(getLastDayOfMonth(23, 59, 52), async () => {
 });
 
 // Tarea anual (31 de diciembre a las 23:59)
-schedule.scheduleJob(getLastDayOfYear(23, 59, 55), async () => { 
+schedule.scheduleJob(getLastDayOfYearRule(), async () => { 
   try {
       // Obtener el chat_id del grupo desde Firestore
       const groupDoc = await db.collection('config').doc('grupo').get();
@@ -692,12 +731,25 @@ schedule.scheduleJob(getLastDayOfYear(23, 59, 55), async () => {
         ranking.push({ username: data.username, puntosAnuales: data.puntosAnuales });
     });
 
-    const ganador = ranking.reduce((max, user) => user.puntosAnuales > max.puntosAnuales ? user : max, ranking[0]);
-    if (ganador.username === "@ireeneeri")
-      bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosAnuales} puntos`);
-    else
-      bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosAnuales} puntos`);
-    bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
+    const maxPuntos = Math.max(...ranking.map(user => user.puntosAnuales));
+    const ganadores = ranking.filter(user => user.puntosAnuales === maxPuntos);
+
+    if (ganadores.length === 1) {  
+      if (ganador.username === "@ireeneeri")
+        await bot.telegram.sendMessage(groupId, `El homo del año es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+      else
+        await bot.telegram.sendMessage(groupId, `La homo del año es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+    } else {
+      let ganadoresMensaje = `Los homos del año son:\n\n`;
+      ganadores.forEach((user, index) => {
+        ganadoresMensaje += `- ${user.username}\n`;
+      });
+      ganadoresMensaje += `\nTodos con ${ganadores[0].puntosAnuales} puntos`;
+      await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+    }
+    await bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
+    await bot.telegram.sendMessage(groupId, "Y feliz año Udrea");
+    await enviarMensajeAleatorio(ctx, 'udreaMessages');
     
 
     // Resetear porcentajes para el siguiente mes
