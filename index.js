@@ -140,7 +140,7 @@ function obtenerFechaHoy() {
 }
 
 // Función para manejar el comando 'nivel'
-bot.hears(/nivel/i, async (ctx) => {
+bot.command('nivel', async (ctx) => {
   const username = `@${ctx.from.username}`;
   const today = obtenerFechaHoy();
   
@@ -169,7 +169,7 @@ bot.hears(/nivel/i, async (ctx) => {
         await ctx.reply("(mientras dure)");
         await ctx.reply("Udrea!");
       } else if (nuevoPorcentaje == 100) {
-        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} tiene un vasto incremento del ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
+        await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${username} 🏳️‍🌈🏳️‍🌈🏳️‍🌈 tiene un vasto incremento del\n🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
       } else if (nuevoPorcentaje == 1000000) {
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} TIENE UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
@@ -402,10 +402,19 @@ bot.command('m', async (ctx) => {
 });
 
 // Regex para detectar palabras que terminan en "ano"
-const regexAno = /ano\b/i;
+const regexAno = /ano\b$/i;
 bot.hears(regexAno, async (ctx) => {
   // Responde citando el mensaje original
     ctx.reply('Pues me la agarras con la mano', {
+      reply_to_message_id: ctx.message.message_id,
+    });
+});
+
+// Regex para detectar palabras que terminan en "inco o 5"
+const regexInco = /(inco|5)\b$/i;
+bot.hears(regexInco, async (ctx) => {
+  // Responde citando el mensaje original
+    ctx.reply('Pues por el culo de la hinco', {
       reply_to_message_id: ctx.message.message_id,
     });
 });
@@ -479,6 +488,10 @@ bot.command('precio', async (ctx) => {
 });
 
 bot.command('vender', async (ctx) => {
+   ctx.reply("No tienes udreas");
+});
+
+bot.command('comprar', async (ctx) => {
    ctx.reply("Si alguien te vende udreas no le creas");
 });
 // Comando /memedeldia para obtener un meme aleatorio
