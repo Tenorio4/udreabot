@@ -393,7 +393,7 @@ bot.command('c', async (ctx) => {
     await enviarMensajeAleatorio(ctx, 'claro');
 });
 bot.command('superudrea', async (ctx) => {
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 15; i++) {
      enviarMensajeAleatorio(ctx, 'udreaMessages');
   }
 });
