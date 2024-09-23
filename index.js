@@ -336,7 +336,7 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
 
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.puntuacion != null) {
+      if (data.porcentaje !== null) {
         ranking.push({ username: data.username, porcentaje: data.porcentaje });
       } else {
         cobardes.push(data.username);
@@ -619,7 +619,7 @@ schedule.scheduleJob(rule, async () => { // 23:59 cada día
 
     usersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.porcentaje != null) {
+      if (data.porcentaje !== null) {
         ranking.push({ username: data.username, porcentaje: data.porcentaje });
       } else {
         cobardes.push(data.username);
