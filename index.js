@@ -344,8 +344,8 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
     });
 
     if (ranking.length === usuarios.length) {
-      const ganadores[0] = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
-      ctx.reply(`${ganadores[0].username} es el más homo con un ${ganadores[0].porcentaje}% de vasto incremento`);
+      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
+      ctx.reply(`${ganador.username} es el más homo con un ${ganador.porcentaje}% de vasto incremento`);
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
@@ -521,7 +521,7 @@ async function obtenerMeme() {
   }
 }
 
-// Función para sumar puntos al ganadores[0] del día
+// Función para sumar puntos al ganador del día
 async function sumarPuntosAGanador(ganadorUsername) {
   try {
     const userDoc = db.collection('usuarios').doc(ganadorUsername);
@@ -531,11 +531,11 @@ async function sumarPuntosAGanador(ganadorUsername) {
       puntosMensuales: userData.puntosMensuales + 1,
     });
   } catch (error) {
-    console.error('Error sumando puntos al ganadores[0]:', error);
+    console.error('Error sumando puntos al ganador:', error);
   }
 }
 
-// Función para sumar puntos al ganadores[0] del día
+// Función para sumar puntos al ganador del día
 async function sumarPuntosAGanadorMes(ganadorUsername) {
   try {
     const userDoc = db.collection('usuarios').doc(ganadorUsername);
@@ -544,7 +544,7 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
       puntosAnuales: userData.puntosAnuales + 1
     });
   } catch (error) {
-    console.error('Error sumando puntos al ganadores[0]:', error);
+    console.error('Error sumando puntos al ganador:', error);
   }
 }
 
