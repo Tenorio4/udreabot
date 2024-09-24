@@ -344,8 +344,8 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
     });
 
     if (ranking.length === usuarios.length) {
-      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
-      ctx.reply(`${ganador.username} es el más homo con un ${ganador.porcentaje}% de vasto incremento`);
+      const ganadores[0] = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
+      ctx.reply(`${ganadores[0].username} es el más homo con un ${ganadores[0].porcentaje}% de vasto incremento`);
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
@@ -521,7 +521,7 @@ async function obtenerMeme() {
   }
 }
 
-// Función para sumar puntos al ganador del día
+// Función para sumar puntos al ganadores[0] del día
 async function sumarPuntosAGanador(ganadorUsername) {
   try {
     const userDoc = db.collection('usuarios').doc(ganadorUsername);
@@ -531,11 +531,11 @@ async function sumarPuntosAGanador(ganadorUsername) {
       puntosMensuales: userData.puntosMensuales + 1,
     });
   } catch (error) {
-    console.error('Error sumando puntos al ganador:', error);
+    console.error('Error sumando puntos al ganadores[0]:', error);
   }
 }
 
-// Función para sumar puntos al ganador del día
+// Función para sumar puntos al ganadores[0] del día
 async function sumarPuntosAGanadorMes(ganadorUsername) {
   try {
     const userDoc = db.collection('usuarios').doc(ganadorUsername);
@@ -544,13 +544,13 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
       puntosAnuales: userData.puntosAnuales + 1
     });
   } catch (error) {
-    console.error('Error sumando puntos al ganador:', error);
+    console.error('Error sumando puntos al ganadores[0]:', error);
   }
 }
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 23;
-rule.minute = 59;
+rule.hour = 10;
+rule.minute = 30;
 rule.second = 50;
 rule.tz = TIMEZONE; 
 
@@ -646,11 +646,11 @@ schedule.scheduleJob(rule, async () => { // 23:59 cada día
       const ganadores = ranking.filter(user => user.porcentaje === maxPorcentaje);
       
       if (ganadores.length === 1) {
-        sumarPuntosAGanador(ganador.username);
-        if (ganador.username === "@ireeneeri")
-          await bot.telegram.sendMessage(groupId, `El homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);
+        sumarPuntosAGanador(ganadores[0].username);
+        if (ganadores[0].username === "@ireeneeri")
+          await bot.telegram.sendMessage(groupId, `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);
         else
-          await bot.telegram.sendMessage(groupId, `La homo del día es ${ganador.username} con un ${ganador.porcentaje}% de vasto incremento`);      
+          await bot.telegram.sendMessage(groupId, `La homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);      
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
@@ -697,11 +697,11 @@ schedule.scheduleJob(getLastDayOfMonthRule(), async () => {
     const ganadores = ranking.filter(user => user.puntosMensuales === maxPuntos);
 
     if (ganadores.length === 1) {  
-      sumarPuntosAGanadorMes(ganador.username);
-      if (ganador.username === "@ireeneeri")
-        await bot.telegram.sendMessage(groupId, `El homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+      sumarPuntosAGanadorMes(ganadores[0].username);
+      if (ganadores[0].username === "@ireeneeri")
+        await bot.telegram.sendMessage(groupId, `El homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
       else
-        await bot.telegram.sendMessage(groupId, `La homo del mes es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+        await bot.telegram.sendMessage(groupId, `La homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
     } else {
       let ganadoresMensaje = `Los homos del mes son:\n\n`;
       ganadores.forEach((user, index) => {
@@ -748,10 +748,10 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
     const ganadores = ranking.filter(user => user.puntosAnuales === maxPuntos);
 
     if (ganadores.length === 1) {  
-      if (ganador.username === "@ireeneeri")
-        await bot.telegram.sendMessage(groupId, `El homo del año es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+      if (ganadores[0].username === "@ireeneeri")
+        await bot.telegram.sendMessage(groupId, `El homo del año es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
       else
-        await bot.telegram.sendMessage(groupId, `La homo del año es ${ganador.username} con un total de ${ganador.puntosMensuales} puntos`);
+        await bot.telegram.sendMessage(groupId, `La homo del año es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
     } else {
       let ganadoresMensaje = `Los homos del año son:\n\n`;
       ganadores.forEach((user, index) => {
