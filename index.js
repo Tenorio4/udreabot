@@ -304,15 +304,14 @@ bot.command('cobardes', async (ctx) => {
       }
     });
 
-    if (cobardes.empty) {
-      ctx.reply("Parece que no hay cobardes hoy");
+    if (cobardes.length === 0) {
+      await ctx.reply("Parece que no hay cobardes hoy");
     } else  if (cobardes.length === 1) {
       if (cobardes[0].username === "@ireeneeri")
         ctx.reply(`${cobardes[0].username} es una cobarde`);
       else
         ctx.reply(`${cobardes[0].username} es un cobarde`);
     } else {
-
       let cobardesMensaje = 'Estos son los cobardes:\n\n';
       cobardes.forEach((user, index) => {
         cobardesMensaje += `- ${user.username}\n`;
@@ -344,8 +343,24 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
     });
 
     if (ranking.length === usuarios.length) {
-      const ganador = ranking.reduce((max, user) => user.porcentaje > max.porcentaje ? user : max, ranking[0]);
-      ctx.reply(`${ganador.username} es el más homo con un ${ganador.porcentaje}% de vasto incremento`);
+      const maxPorcentaje = Math.max(...ranking.map(user => user.porcentaje));
+      const ganadores = ranking.filter(user => user.porcentaje === maxPorcentaje);
+      
+      if (ganadores.length === 1) {
+        sumarPuntosAGanador(ganadores[0].username);
+        if (ganadores[0].username === "@ireeneeri")
+          await ctx.reply(`${ganadores[0].username} es la más homo con un ${ganadores[0].porcentaje}% de vasto incremento`);
+        else
+          await ctx.reply(`${ganadores[0].username} es el más homo con un ${ganadores[0].porcentaje}% de vasto incremento`);   
+      } else {
+        let ganadoresMensaje = `Los homos del día son:\n\n`;
+        ganadores.forEach((user, index) => {
+          sumarPuntosAGanador(user.username);
+          ganadoresMensaje += `- ${user.username}\n`;
+        });
+        ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
+        await ctx.reply(ganadoresMensaje); 
+      }
     } else {
       if (cobardes.length > 0) {
         const cobardeElegido = cobardes[Math.floor(Math.random() * cobardes.length)];
@@ -549,8 +564,8 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
 }
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 10;
-rule.minute = 30;
+rule.hour = 23;
+rule.minute = 59;
 rule.second = 50;
 rule.tz = TIMEZONE; 
 
@@ -637,9 +652,9 @@ schedule.scheduleJob(rule, async () => { // 23:59 cada día
     } else if (cobardes.length === 1){
       sumarPuntosAGanador(cobardes[0]);
        if (cobardes[0] === "@ireeneeri")
-        await bot.telegram.sendMessage(groupId, `El homo del día es ${cobardes[0]} por cobarde`);
-      else
         await bot.telegram.sendMessage(groupId, `La homo del día es ${cobardes[0]} por cobarde`);
+      else
+        await bot.telegram.sendMessage(groupId, `El homo del día es ${cobardes[0]} por cobarde`);
       await bot.telegram.sendMessage(groupId, "Pulse aquí -> /s si ya lo suponías");
     } else {
       const maxPorcentaje = Math.max(...ranking.map(user => user.porcentaje));
