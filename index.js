@@ -663,9 +663,9 @@ schedule.scheduleJob(rule, async () => { // 23:59 cada día
       if (ganadores.length === 1) {
         sumarPuntosAGanador(ganadores[0].username);
         if (ganadores[0].username === "@ireeneeri")
-          await bot.telegram.sendMessage(groupId, `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);
+          await bot.telegram.sendMessage(groupId, `La homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);
         else
-          await bot.telegram.sendMessage(groupId, `La homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);      
+          await bot.telegram.sendMessage(groupId, `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`);      
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
@@ -714,9 +714,9 @@ schedule.scheduleJob(getLastDayOfMonthRule(), async () => {
     if (ganadores.length === 1) {  
       sumarPuntosAGanadorMes(ganadores[0].username);
       if (ganadores[0].username === "@ireeneeri")
-        await bot.telegram.sendMessage(groupId, `El homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
-      else
         await bot.telegram.sendMessage(groupId, `La homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
+      else
+        await bot.telegram.sendMessage(groupId, `El homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`);
     } else {
       let ganadoresMensaje = `Los homos del mes son:\n\n`;
       ganadores.forEach((user, index) => {
