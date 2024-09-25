@@ -136,7 +136,7 @@ function obtenerPorcentajeAleatorio() {
 
 // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
 function obtenerFechaHoy() {
-  return new Date().toISOString().split('T')[0];
+  return moment().tz(TIMEZONE).format('YYYY-MM-DD');
 }
 
 // Función para manejar el comando 'nivel'
@@ -483,12 +483,15 @@ bot.command('precio', async (ctx) => {
   const today = obtenerFechaHoy();
 
   try {
-    const precioDoc = db.collection('precios').doc(today);
+    // Siempre usa un único documento para guardar el precio y la fecha
+    const precioDoc = db.collection('precios').doc('precioActual');
     const precioData = (await precioDoc.get()).data();
-    
-    if (precioData && precioData.precio) {
+
+    if (precioData && precioData.fecha === today) {
+      // Si ya existe un precio para hoy, lo mostramos
       ctx.reply(`El precio de la udrea hoy está a ${precioData.precio}€ la unidad`);
     } else {
+      // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
       const nuevoPrecio = obtenerPrecioAleatorio();
       await precioDoc.set({
         precio: nuevoPrecio,
