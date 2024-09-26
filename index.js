@@ -540,7 +540,7 @@ bot.command('comprar', async (ctx) => {
 
       if (userData.dinero >= precioData.precio*cantidad) {
         // Lógica para manejar la compra de la cantidad solicitada
-        userData.set({
+        userDoc.set({
           dinero: userData.dinero - precioData.precio*cantidad,
           udreas: userData.udreas + cantidad
         })
