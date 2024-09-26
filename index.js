@@ -473,6 +473,19 @@ async function enviarMensajeAleatorio(ctx, coleccion) {
   }
 }
 
+function getBalance(username) {
+  try {
+      const userDoc = db.collection('usuarios').doc(username);
+      const userData = (await userDoc.get()).data();
+
+      await ctx.reply(`${username} tienes:\n- Dinero: ${userData.dinero}€\n- Udreas: ${userData.udreas}`);
+  } catch (error){
+    console.error("Error en obtener balance:", error);
+    await ctx.reply("Udrea!");
+  }
+
+}
+
 // Función para obtener un precio aleatorio entre 0.01€ y 4.99€
 function obtenerPrecioAleatorio() {
   return (Math.random() * (4.99 - 0.01) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
@@ -521,7 +534,7 @@ bot.command('comprar', async (ctx) => {
 
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
-        return ctx.reply('A ver udrea, especifica cuántas udreas quieres comprar. Ejemplo: /comprar 2');
+        return ctx.reply('A ver udrea, especifica cuántas udreas quieres comprar.\nEjemplo: /comprar 2');
       }
 
       const cantidad = parseInt(params[1]);
@@ -541,6 +554,7 @@ bot.command('comprar', async (ctx) => {
       if (userData.dinero >= precioData.precio*cantidad) {
         // Lógica para manejar la compra de la cantidad solicitada
         userDoc.set({
+          ...userData,
           dinero: userData.dinero - precioData.precio*cantidad,
           udreas: userData.udreas + cantidad
         })
@@ -558,6 +572,11 @@ bot.command('comprar', async (ctx) => {
     ctx.reply("Si alguien te vende udreas no le creas");
    }
 });
+
+bot.command('balance', async (ctx) => {
+   getBalance(`@${ctx.from.username}`);
+});
+
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('meme', async (ctx) => {
   try {
