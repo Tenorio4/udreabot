@@ -473,19 +473,6 @@ async function enviarMensajeAleatorio(ctx, coleccion) {
   }
 }
 
-function getBalance(username) {
-  try {
-      const userDoc = db.collection('usuarios').doc(username);
-      const userData = (await userDoc.get()).data();
-
-      await ctx.reply(`${username} tienes:\n- Dinero: ${userData.dinero}€\n- Udreas: ${userData.udreas}`);
-  } catch (error){
-    console.error("Error en obtener balance:", error);
-    await ctx.reply("Udrea!");
-  }
-
-}
-
 // Función para obtener un precio aleatorio entre 0.01€ y 4.99€
 function obtenerPrecioAleatorio() {
   return (Math.random() * (4.99 - 0.01) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
@@ -574,7 +561,15 @@ bot.command('comprar', async (ctx) => {
 });
 
 bot.command('balance', async (ctx) => {
-   getBalance(`@${ctx.from.username}`);
+   try {
+      const userDoc = db.collection('usuarios').doc(username);
+      const userData = (await userDoc.get()).data();
+
+      await ctx.reply(`${username} tienes:\n- Dinero: ${userData.dinero}€\n- Udreas: ${userData.udreas}`);
+  } catch (error){
+    console.error("Error en obtener balance:", error);
+    await ctx.reply("Udrea!");
+  }
 });
 
 // Comando /memedeldia para obtener un meme aleatorio
