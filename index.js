@@ -562,6 +562,7 @@ bot.command('comprar', async (ctx) => {
 
 bot.command('balance', async (ctx) => {
    try {
+      const username = `@${ctx.from.username}`;
       const userDoc = db.collection('usuarios').doc(username);
       const userData = (await userDoc.get()).data();
 
