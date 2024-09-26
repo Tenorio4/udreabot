@@ -531,9 +531,6 @@ bot.command('comprar', async (ctx) => {
         return ctx.reply('Tú eres tonto');
       }
 
-      if (cantidad == 5) {
-        return ctx.reply('Pues por el culo te la hinco');
-      }
       const username = `@${ctx.from.username}`;
       const userDoc = db.collection('usuarios').doc(username);
       const userData = (await userDoc.get()).data();
@@ -545,18 +542,23 @@ bot.command('comprar', async (ctx) => {
           dinero: userData.dinero - precioData.precio*cantidad,
           udreas: userData.udreas + cantidad
         })
-        ctx.reply(`Has comprado ${cantidad} unidades de udrea`);
+        if (cantidad == 1)
+          await ctx.reply(`Has comprado una udrea`);
+        else
+          await ctx.reply(`Has comprado ${cantidad} udreas`);
+      } else {
+          await ctx.reply(`No hago tratos con pobres`);
       }
       
     } else {
-      ctx.reply("No puedes comprar a ciegas");
-      ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
-      ctx.reply("Y no seas un udrea");
+      await ctx.reply("No puedes comprar a ciegas");
+      await ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
+      await ctx.reply("Y no seas un udrea");
     }
 
    } catch(error) {
     console.error("Error al comprar:",error);
-    ctx.reply("Si alguien te vende udreas no le creas");
+    await ctx.reply("Si alguien te vende udreas no le creas");
    }
 });
 
