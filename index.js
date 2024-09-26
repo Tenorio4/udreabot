@@ -509,8 +509,53 @@ bot.command('vender', async (ctx) => {
    ctx.reply("No tienes udreas");
 });
 
-bot.command('comprar', async (ctx) => {
-   ctx.reply("Si alguien te vende udreas no le creas");
+bot.command('comprar', async (ctx) => { 
+   try {
+    const precioDoc = db.collection('precios').doc('precioActual');
+    const precioData = (await precioDoc.get()).data();
+    if (precioData && precioData.fecha === today) {
+       // Extraer el parámetro después del comando
+      const messageText = ctx.message.text; // El texto completo del mensaje
+      const params = messageText.split(' '); // Dividimos el texto en partes por espacio
+
+      if (params.length < 2 || isNaN(params[1])) {
+        // Si no se especificó un número o el parámetro no es válido
+        return ctx.reply('A ver udrea, especifica cuántas udreas quieres comprar. Ejemplo: /comprar 2');
+      }
+
+      const cantidad = parseInt(params[1]);
+
+      // Ahora puedes usar la variable 'cantidad' en la lógica de compra
+      if (cantidad <= 0) {
+        return ctx.reply('Tú eres tonto');
+      }
+
+      if (cantidad == 5) {
+        return ctx.reply('Pues por el culo te la hinco');
+      }
+      const username = `@${ctx.from.username}`;
+      const userDoc = db.collection('usuarios').doc(username);
+      const userData = (await userDoc.get()).data();
+
+      if (userData.dinero >= precioData.precio*cantidad) {
+        // Lógica para manejar la compra de la cantidad solicitada
+        userData.set({
+          dinero: userData.dinero - precioData.precio*cantidad,
+          udreas: userData.udreas + cantidad
+        })
+        ctx.reply(`Has comprado ${cantidad} unidades de udrea`);
+      }
+      
+    } else {
+      ctx.reply("No puedes comprar a ciegas");
+      ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
+      ctx.reply("Y no seas un udrea");
+    }
+
+   } catch(error) {
+    console.error("Error al comprar:",error);
+    ctx.reply("Si alguien te vende udreas no le creas");
+   }
 });
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command('meme', async (ctx) => {
