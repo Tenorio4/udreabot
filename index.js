@@ -511,6 +511,7 @@ bot.command('vender', async (ctx) => {
 
 bot.command('comprar', async (ctx) => { 
    try {
+    const today = obtenerFechaHoy();
     const precioDoc = db.collection('precios').doc('precioActual');
     const precioData = (await precioDoc.get()).data();
     if (precioData && precioData.fecha === today) {
