@@ -347,7 +347,6 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
       const ganadores = ranking.filter(user => user.porcentaje === maxPorcentaje);
       
       if (ganadores.length === 1) {
-        sumarPuntosAGanador(ganadores[0].username);
         if (ganadores[0].username === "@ireeneeri")
           await ctx.reply(`${ganadores[0].username} es la más homo con un ${ganadores[0].porcentaje}% de vasto incremento`);
         else
@@ -355,7 +354,6 @@ bot.hears(/quien\s*de\s*aqui|quién\s*de\s*aquí|quién\s*de\s*aqui|quien\s*de\s
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
-          sumarPuntosAGanador(user.username);
           ganadoresMensaje += `- ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
@@ -539,7 +537,7 @@ bot.command('comprar', async (ctx) => {
         // Lógica para manejar la compra de la cantidad solicitada
         userDoc.set({
           ...userData,
-          dinero: userData.dinero - precioData.precio*cantidad,
+          dinero: (userData.dinero - precioData.precio*cantidad).toFixed(2),
           udreas: userData.udreas + cantidad
         })
         if (cantidad == 1)
