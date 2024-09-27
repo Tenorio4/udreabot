@@ -188,7 +188,7 @@ bot.command('desempatar', async (ctx) => {
    try {
     const username = `@${ctx.from.username}`;
     const usuarios = db.collection('usuarios').get();
-    const userDoc = usuarios.doc(username);
+    const userDoc = db.collection('usuarios').doc(username);
     const userData = (await userDoc.get()).data();
     let empatado = false;
     usuarios.forEach(doc => {
@@ -203,6 +203,7 @@ bot.command('desempatar', async (ctx) => {
         ...userData,
         desempate: resultado
       });
+      await ctx.reply(`${username} has sacado un ${resultado}`);
     } else {
       await ctx.reply("No has empatado con nadie, tonto");
       await ctx.reply(`${resultado}`);
