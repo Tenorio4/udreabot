@@ -187,7 +187,7 @@ bot.command('nivel', async (ctx) => {
 bot.command('desempatar', async (ctx) => {
    try {
     const username = `@${ctx.from.username}`;
-    const usuarios = db.collection('usuarios').get();
+    const usuarios =  await db.collection('usuarios').get();
     const userDoc = db.collection('usuarios').doc(username);
     const userData = (await userDoc.get()).data();
     let empatado = false;
