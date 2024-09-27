@@ -197,7 +197,7 @@ bot.command('desempatar', async (ctx) => {
         empatado = true
     });
 
-    if (empatado) {
+    if (!empatado) {
       const resultado = Math.floor(Math.random() * 11); // Entre 0 y 10
       await userDoc.set({
         ...userData,
@@ -206,7 +206,6 @@ bot.command('desempatar', async (ctx) => {
       await ctx.reply(`${username} has sacado un ${resultado}`);
     } else {
       await ctx.reply("No has empatado con nadie, tonto");
-      await ctx.reply(`${resultado}`);
     }
    } catch (error) {
       console.error("Error al desempatar:", error);
