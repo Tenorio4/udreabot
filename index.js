@@ -222,24 +222,27 @@ bot.command('desempatar', async (ctx) => {
             desempate: null
           });
           empatados.forEach(doc => {
-          const data = doc.data();
-          if (ganadoresTirada[0].username !== data.username) {
-            let userPerdedorDoc = db.collection('usuarios').doc(data.username);
-              userPerdedorDoc.set({
-              ...userData,
-              desempate: null
+            const data = doc.data();
+            if (ganadoresTirada[0].username !== data.username) {
+              let userPerdedorDoc = db.collection('usuarios').doc(data.username);
+                userPerdedorDoc.set({
+                ...userData,
+                desempate: null
+                });
+              }
             });
-          }
-        });
+          ctx.reply("Desempate realizado con éxito");
+          ctx.reply("Pulse aquí -> /ranking para ver el nuevo ranking");
         } else {
           empatados.forEach(doc => {
-          const data = doc.data();
-            let userEmpatadoDoc = db.collection('usuarios').doc(data.username);
-              userEmpatadoDoc.set({
-              ...userData,
-              desempate: null
-            });       
-        });
+            const data = doc.data();
+              let userEmpatadoDoc = db.collection('usuarios').doc(data.username);
+                userEmpatadoDoc.set({
+                ...userData,
+                desempate: null
+              });       
+          });
+          ctx.reply("Empate en el desempate, qué ironía!");
         }               
       }
     } else if (userData.desempate == null) {
