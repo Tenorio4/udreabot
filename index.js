@@ -224,7 +224,7 @@ bot.command('desempatar', async (ctx) => {
           empatados.forEach(doc => {
           const data = doc.data();
           if (ganadoresTirada[0].username !== data.username) {
-            let userPerdedorDoc = db.collection('usuarios').doc(data.username]);
+            let userPerdedorDoc = db.collection('usuarios').doc(data.username);
             await userPerdedorDoc.set({
               ...userData,
               desempate: null
@@ -234,7 +234,7 @@ bot.command('desempatar', async (ctx) => {
         } else {
           empatados.forEach(doc => {
           const data = doc.data();
-            let userEmpatadoDoc = db.collection('usuarios').doc(data.username]);
+            let userEmpatadoDoc = db.collection('usuarios').doc(data.username);
             await userEmpatadoDoc.set({
               ...userData,
               desempate: null
