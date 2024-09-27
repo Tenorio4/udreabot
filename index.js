@@ -245,7 +245,7 @@ bot.command('desempatar', async (ctx) => {
           ctx.reply("Empate en el desempate, qué ironía!");
         }               
       }
-    } else if (userData.desempate == null) {
+    } else if (userData.desempate !== null) {
       await ctx.reply(`${username} ya te he dicho que has sacado un ${userData.desempate}`);
     } else {
       await ctx.reply("No has empatado con nadie, tonto");
