@@ -123,8 +123,6 @@ bot.help((ctx) => ctx.reply('Envía un mensaje y te responderé!'));
 
 // Función para obtener un porcentaje "aleatorio"
 function obtenerPorcentajeAleatorio() {
-  const probabilidad = Math.random(); // Número aleatorio entre 0 y 1
-
   if (Math.random() <= 0.10) { // 10% de probabilidad 
     if (Math.random() <= 0.01) // 10% * 1% de probabilidad
       return 1000000;
@@ -183,6 +181,36 @@ bot.command('nivel', async (ctx) => {
     console.error('Error al guardar en Firestore:', error);
     ctx.reply('Hubo un error al calcular tu nivel.');
   }
+});
+
+// Desempatar
+bot.command('desempatar', async (ctx) => {
+   try {
+    const username = `@${ctx.from.username}`;
+    const usuarios = db.collection('usuarios').get();
+    const userDoc = usuarios.doc(username);
+    const userData = (await userDoc.get()).data();
+    let empatado = false;
+    usuarios.forEach(doc => {
+      const data = doc.data();
+      if (username !== data.username && userData.porcentaje === data.porcentaje)
+        empatado = true
+    });
+
+    if (empatado) {
+      const resultado = Math.floor(Math.random() * 11); // Entre 0 y 10
+      await userDoc.set({
+        ...userData,
+        desempate: resultado
+      });
+    } else {
+      await ctx.reply("No has empatado con nadie, tonto");
+      await ctx.reply(`${resultado}`);
+    }
+   } catch (error) {
+      console.error("Error al desempatar:", error);
+      await ctx.reply("Udrea!");
+   }
 });
 
 // Comando /ranking para mostrar el ranking del día
