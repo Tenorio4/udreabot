@@ -779,7 +779,7 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = 00;
-rule.minute = 45;
+rule.minute = 47;
 rule.second = 50;
 rule.tz = TIMEZONE;
 
@@ -920,8 +920,7 @@ schedule.scheduleJob(rule, async () => {
 
     // Ganar dinero segun la heterosexualidad
     usersSnapshot.forEach((doc) => {
-      let userDoc = db.collection("usuarios").doc(doc.id);
-      let userData = (await userDoc.get()).data();
+      const userData = doc.data();
       if (userData.porcentaje != null && userData.porcentaje < 100) {
         userDoc.update({
           dinero:
