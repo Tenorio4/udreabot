@@ -778,8 +778,8 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
 }
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 00;
-rule.minute = 47;
+rule.hour = 01;
+rule.minute = 01;
 rule.second = 50;
 rule.tz = TIMEZONE;
 
@@ -910,19 +910,21 @@ schedule.scheduleJob(rule, async () => {
           ganadoresMensaje += `- ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
-        await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+        // await bot.telegram.sendMessage(groupId, ganadoresMensaje);
       }
-      await bot.telegram.sendMessage(
-        groupId,
-        "Pulse aquí -> /s si ya lo suponías"
-      );
+      //await bot.telegram.sendMessage(
+      //groupId,
+      //"Pulse aquí -> /s si ya lo suponías"
+      //);
     }
 
+    const batch = db.batch();
     // Ganar dinero segun la heterosexualidad
     usersSnapshot.forEach((doc) => {
       const userData = doc.data();
+      const userDoc = db.collection("usuarios").doc(doc.id);
       if (userData.porcentaje != null && userData.porcentaje < 100) {
-        userDoc.update({
+        batch.update(userDoc, {
           dinero:
             userData.dinero + ((100 - userData.porcentaje) / 100).toFixed(2),
         });
@@ -930,7 +932,6 @@ schedule.scheduleJob(rule, async () => {
     });
 
     // Resetear porcentajes para el siguiente día
-    const batch = db.batch();
     usersSnapshot.forEach((doc) => {
       const userDoc = db.collection("usuarios").doc(doc.id);
       batch.update(userDoc, { porcentaje: null });
