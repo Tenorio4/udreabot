@@ -779,7 +779,7 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = 00;
-rule.minute = 23;
+rule.minute = 45;
 rule.second = 50;
 rule.tz = TIMEZONE;
 
