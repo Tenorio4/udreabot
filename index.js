@@ -918,15 +918,24 @@ schedule.scheduleJob(rule, async () => {
       );
     }
 
-    // Resetear porcentajes para el siguiente día y ganar dinero
+    // Ganar dinero segun la heterosexualidad
+    const usuarios = await db.collection("usuarios").get();
+    usuarios.forEach((doc) => {
+      let userDoc = db.collection("usuarios").doc(username);
+      let userData = userDoc.get().data();
+      if (userData.porcentaje < 100) {
+        userDoc.update({
+          dinero:
+            userData.dinero + ((100 - userData.porcentaje) / 100).toFixed(2),
+        });
+      }
+    });
+
+    // Resetear porcentajes para el siguiente día
     const batch = db.batch();
     usersSnapshot.forEach((doc) => {
       const userDoc = db.collection("usuarios").doc(doc.id);
-      batch.update(userDoc, {
-        porcentaje: null,
-        dinero:
-          userData.dinero + ((100 - userData.porcentaje) / 100).toFixed(2),
-      });
+      batch.update(userDoc, { porcentaje: null });
     });
     await batch.commit();
   } catch (error) {
