@@ -255,7 +255,7 @@ bot.command("desempatar", async (ctx) => {
         if (ganadoresTirada.length == 1) {
           const userGanadorDoc = db
             .collection("usuarios")
-            .doc(ganadoresTirada[0]);
+            .doc(ganadoresTirada[0].username);
           await userGanadorDoc.update({
             porcentaje: ganadoresTirada[0].porcentaje - 1,
             desempate: null,
