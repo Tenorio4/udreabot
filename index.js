@@ -923,7 +923,7 @@ schedule.scheduleJob(rule, async () => {
     usuarios.forEach((doc) => {
       let userDoc = db.collection("usuarios").doc(username);
       let userData = userDoc.get().data();
-      if (userData.porcentaje < 100) {
+      if (userData.porcentaje != null && userData.porcentaje < 100) {
         userDoc.update({
           dinero:
             userData.dinero + ((100 - userData.porcentaje) / 100).toFixed(2),
