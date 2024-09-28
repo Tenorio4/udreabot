@@ -919,10 +919,9 @@ schedule.scheduleJob(rule, async () => {
     }
 
     // Ganar dinero segun la heterosexualidad
-    const usuarios = await db.collection("usuarios").get();
-    usuarios.forEach((doc) => {
+    usersSnapshot.forEach((doc) => {
       let userDoc = db.collection("usuarios").doc(doc.id);
-      let userData = userDoc.get().data();
+      let userData = (await userDoc.get()).data();
       if (userData.porcentaje != null && userData.porcentaje < 100) {
         userDoc.update({
           dinero:
