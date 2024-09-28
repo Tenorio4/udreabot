@@ -162,7 +162,7 @@ bot.command("nivel", async (ctx) => {
     ) {
       if (userData.porcentaje == 100) {
         await ctx.reply(
-          `Que sí que sí\n🏳️‍🌈${username}🏳️‍🌈 tienes un ${userData.porcentaje}% de vasto incremento`
+          `Que sí que sí\n🏳️‍🌈${username}🏳️‍🌈 que tienes un ${userData.porcentaje}% de vasto incremento`
         );
       } else if (userData.porcentaje == 1000000) {
         await ctx.reply(
@@ -189,7 +189,7 @@ bot.command("nivel", async (ctx) => {
         await ctx.reply("Udrea!");
       } else if (nuevoPorcentaje == 100) {
         await ctx.reply(
-          `🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username}\n🏳️‍🌈tiene un vasto incremento del🏳️‍🌈\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`
+          `${username} tiene un vasto incremento del\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈 ${nuevoPorcentaje}% 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`
         );
       } else if (nuevoPorcentaje == 1000000) {
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
