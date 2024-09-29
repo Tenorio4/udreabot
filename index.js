@@ -147,8 +147,7 @@ function obtenerFechaHoy() {
 }
 
 // Función para manejar el comando 'nivel'
-bot.command("nivel", async (ctx) => {
-  const username = `@${ctx.from.username}`;
+async function nivel(username) {
   const today = obtenerFechaHoy();
 
   try {
@@ -208,6 +207,12 @@ bot.command("nivel", async (ctx) => {
     console.error("Error al guardar en Firestore:", error);
     ctx.reply("Hubo un error al calcular tu nivel.");
   }
+}
+
+// Comando para manejar el comando 'nivel'
+bot.command("nivel", async (ctx) => {
+  const username = `@${ctx.from.username}`;
+  nivel(username);
 });
 
 // Desempatar
@@ -730,6 +735,31 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· /picaduradelacobragay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     await ctx.reply(mercadoMensaje);
+  } catch (error) {
+    console.error("Error en obtener el mercado:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("reroll", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.udreas >= mercadoData.reroll) {
+      userDoc.update({
+        porcentaje: null,
+        ultimaActualizacion: null,
+        udreas: userData.udreas - mercadoData.reroll,
+      });
+
+      nivel(username);
+    } else {
+      ctx.reply(`${username} no tienes udreas suficientes`);
+    }
   } catch (error) {
     console.error("Error en obtener el mercado:", error);
     await ctx.reply("Udrea!");
