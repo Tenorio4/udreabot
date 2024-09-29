@@ -720,6 +720,22 @@ bot.command("balance", async (ctx) => {
   }
 });
 
+bot.command("mercado", async (ctx) => {
+  try {
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    let mercadoMensaje = `Mercado:\n\n`;
+    mercadoMensaje += `· /reroll: ${mercadoData.reroll} udrea(s)\n`;
+    mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· /picaduradelacobragay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
+    await ctx.reply(mercadoMensaje);
+  } catch (error) {
+    console.error("Error en obtener el mercado:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command("meme", async (ctx) => {
   try {
