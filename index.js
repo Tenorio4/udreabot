@@ -147,7 +147,7 @@ function obtenerFechaHoy() {
 }
 
 // Función para manejar el comando 'nivel'
-async function nivel(username) {
+async function nivel(username, ctx) {
   const today = obtenerFechaHoy();
 
   try {
@@ -212,7 +212,7 @@ async function nivel(username) {
 // Comando para manejar el comando 'nivel'
 bot.command("nivel", async (ctx) => {
   const username = `@${ctx.from.username}`;
-  nivel(username);
+  nivel(username, ctx);
 });
 
 // Desempatar
@@ -756,7 +756,7 @@ bot.command("reroll", async (ctx) => {
         udreas: userData.udreas - mercadoData.reroll,
       });
 
-      nivel(username);
+      nivel(username, ctx);
     } else {
       ctx.reply(`${username} no tienes udreas suficientes`);
     }
