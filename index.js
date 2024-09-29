@@ -709,9 +709,10 @@ bot.command("balance", async (ctx) => {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
+    const dinero = parseFloat(userData.dinero);
 
     await ctx.reply(
-      `${username} tienes:\n- Dinero: ${userData.dinero}€\n- Udreas: ${userData.udreas}`
+      `${username} tienes:\n- Dinero: ${dinero}€\n- Udreas: ${userData.udreas}`
     );
   } catch (error) {
     console.error("Error en obtener balance:", error);
