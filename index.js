@@ -875,8 +875,8 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
 }
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 23;
-rule.minute = 59;
+rule.hour = 02;
+rule.minute = 05;
 rule.second = 50;
 rule.tz = TIMEZONE;
 
@@ -899,6 +899,8 @@ function getLastDayOfMonthRule() {
 
   return rule;
 }
+
+console.log(moment.tz(TIMEZONE).clone().endOf("month").date());
 
 // Función para obtener la fecha del último día del mes a una hora específica
 function getLastDayOfMonth(hour, minute, second = 0) {
@@ -1041,7 +1043,7 @@ schedule.scheduleJob(rule, async () => {
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
-schedule.scheduleJob(getLastDayOfMonthRule(), async () => {
+schedule.scheduleJob(rule, async () => {
   console.log("Ejecutando tarea mensual...");
   try {
     // Obtener el chat_id del grupo desde Firestore
