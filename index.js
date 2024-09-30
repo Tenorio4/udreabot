@@ -655,7 +655,57 @@ bot.command("precio", async (ctx) => {
 });
 
 bot.command("vender", async (ctx) => {
-  ctx.reply("No tienes udreas");
+  try {
+    const today = obtenerFechaHoy();
+    const precioDoc = db.collection("precios").doc("precioActual");
+    const precioData = (await precioDoc.get()).data();
+    if (precioData && precioData.fecha === today) {
+      // Extraer el parámetro después del comando
+      const messageText = ctx.message.text; // El texto completo del mensaje
+      const params = messageText.split(" "); // Dividimos el texto en partes por espacio
+
+      if (params.length < 2 || isNaN(params[1])) {
+        // Si no se especificó un número o el parámetro no es válido
+        return ctx.reply(
+          "Las udreas se venden al 50% de su valor en el mercado.\nEspecifica cuantas quieres vender.\nEjemplo: /vender 2"
+        );
+      }
+
+      const cantidad = parseInt(params[1]);
+
+      // Ahora puedes usar la variable 'cantidad' en la lógica de venta
+      if (cantidad <= 0) {
+        return ctx.reply("Tú eres tonto");
+      }
+
+      const username = `@${ctx.from.username}`;
+      const userDoc = db.collection("usuarios").doc(username);
+      const userData = (await userDoc.get()).data();
+
+      if (userData.udreas >= cantidad) {
+        // Lógica para manejar la venta de la cantidad solicitada
+        userDoc.set({
+          ...userData,
+          dinero: (
+            parseFloat(userData.dinero) +
+            (parseFloat(userData.dinero) / 2) * cantidad
+          ).toFixed(2),
+          udreas: userData.udreas - cantidad,
+        });
+        if (cantidad == 1) await ctx.reply(`Has vendido una udrea`);
+        else await ctx.reply(`Has vendido ${cantidad} udreas`);
+      } else {
+        await ctx.reply(`No tienes udreas suficientes`);
+      }
+    } else {
+      await ctx.reply("No puedes vender a ciegas");
+      await ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
+      await ctx.reply("Y no seas un udrea");
+    }
+  } catch (error) {
+    console.error("Error al vender:", error);
+    await ctx.reply("Si alguien te vende udreas no le creas");
+  }
 });
 
 bot.command("comprar", async (ctx) => {
@@ -671,7 +721,7 @@ bot.command("comprar", async (ctx) => {
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
         return ctx.reply(
-          "A ver udrea, especifica cuántas udreas quieres comprar.\nEjemplo: /comprar 2"
+          "A ver udrea, especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2"
         );
       }
 
