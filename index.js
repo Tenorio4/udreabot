@@ -957,12 +957,12 @@ schedule.scheduleJob(rule, async () => {
           ganadoresMensaje += `- ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
-        // await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+        await bot.telegram.sendMessage(groupId, ganadoresMensaje);
       }
-      //await bot.telegram.sendMessage(
-      //groupId,
-      //"Pulse aquí -> /s si ya lo suponías"
-      //);
+      await bot.telegram.sendMessage(
+        groupId,
+        "Pulse aquí -> /s si ya lo suponías"
+      );
     }
 
     const batch = db.batch();
@@ -973,7 +973,8 @@ schedule.scheduleJob(rule, async () => {
       if (userData.porcentaje != null && userData.porcentaje < 100) {
         batch.update(userDoc, {
           dinero:
-            userData.dinero + ((100 - userData.porcentaje) / 100).toFixed(2),
+            parseFloat(userData.dinero) +
+            ((100 - userData.porcentaje) / 100).toFixed(2),
         });
       }
     });
