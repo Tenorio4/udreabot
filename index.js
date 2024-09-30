@@ -443,7 +443,7 @@ bot.command("cobardes", async (ctx) => {
     } else {
       let cobardesMensaje = "Estos son los cobardes:\n\n";
       cobardes.forEach((user, index) => {
-        cobardesMensaje += `- ${user.username}\n`;
+        cobardesMensaje += `· ${user.username}\n`;
       });
 
       await ctx.reply(cobardesMensaje);
@@ -496,7 +496,7 @@ bot.hears(
         } else {
           let ganadoresMensaje = `Los homos del día son:\n\n`;
           ganadores.forEach((user, index) => {
-            ganadoresMensaje += `- ${user.username}\n`;
+            ganadoresMensaje += `· ${user.username}\n`;
           });
           ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
           await ctx.reply(ganadoresMensaje);
@@ -688,7 +688,7 @@ bot.command("vender", async (ctx) => {
           ...userData,
           dinero: (
             parseFloat(userData.dinero) +
-            (parseFloat(userData.dinero) / 2) * cantidad
+            (parseFloat(precioData.precio) / 2) * cantidad
           ).toFixed(2),
           udreas: userData.udreas - cantidad,
         });
@@ -767,7 +767,7 @@ bot.command("balance", async (ctx) => {
     const dinero = parseFloat(userData.dinero);
 
     await ctx.reply(
-      `${username} tienes:\n- Dinero: ${dinero}€\n- Udreas: ${userData.udreas}`
+      `${username} tienes:\n\n· Dinero: ${dinero}€\n· Udreas: ${userData.udreas}`
     );
   } catch (error) {
     console.error("Error en obtener balance:", error);
@@ -962,7 +962,7 @@ schedule.scheduleJob(rule, async () => {
       let cobardesMensaje = `Los homos del día son:\n\n`;
       cobardes.forEach((user, index) => {
         sumarPuntosAGanador(user);
-        cobardesMensaje += `- ${user}\n`;
+        cobardesMensaje += `· ${user}\n`;
       });
       await bot.telegram.sendMessage(groupId, cobardesMensaje);
       await bot.telegram.sendMessage(groupId, "Por cobardes");
@@ -1004,7 +1004,7 @@ schedule.scheduleJob(rule, async () => {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
           sumarPuntosAGanador(user.username);
-          ganadoresMensaje += `- ${user.username}\n`;
+          ganadoresMensaje += `· ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
         await bot.telegram.sendMessage(groupId, ganadoresMensaje);
