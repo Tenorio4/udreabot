@@ -1206,19 +1206,6 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
   }
 });
 
-const rulePrueba = new schedule.RecurrenceRule();
-rulePrueba.hour = 00;
-rulePrueba.minute = 10;
-rulePrueba.second = 01;
-rulePrueba.date = 2;
-rulePrueba.tz = TIMEZONE;
-
-// Tarea de prueba para testear
-schedule.scheduleJob(rulePrueba, async () => {
-  console.log("Tarea de prueba ejecutada");
-  await bot.telegram.sendMessage(groupId, `/nivel`);
-});
-
 // Comando /addmensaje para iniciar el modo de agregar mensajes
 bot.command("addmensaje", (ctx) => {
   if (ctx.chat.type == "private") {
