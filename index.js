@@ -321,7 +321,7 @@ bot.command("ranking", async (ctx) => {
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
-      let posiciones = ["🥇", "🥈", "🥉", "4.", "5.", "6.", "7.", "8."];
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
       if (index != 0 && user.porcentaje != ranking[index - 1].porcentaje)
         x += 1;
@@ -362,7 +362,7 @@ bot.command("rankingmensual", async (ctx) => {
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
-      let posiciones = ["🥇", "🥈", "🥉", "4.", "5.", "6.", "7.", "8."];
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
       if (
         index != 0 &&
@@ -404,7 +404,7 @@ bot.command("rankinganual", async (ctx) => {
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
-      let posiciones = ["🥇", "🥈", "🥉", "4.", "5.", "6.", "7.", "8."];
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
       if (index != 0 && user.puntosAnuales != ranking[index - 1].puntosAnuales)
         x += 1;
@@ -1177,6 +1177,31 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
   } catch (error) {
     console.error("Error en la tarea mensual:", error);
   }
+});
+
+function pruebaRule() {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 18;
+  rule.minute = 22;
+  rule.second = 52;
+
+  // Obtenemos el último día del mes actual
+  const now = moment.tz(TIMEZONE);
+  const lastDay = now.clone().endOf("month").date(); // Último día del mes
+  rule.date = 1; // Especificamos que sea el último día del mes
+
+  console.log(
+    "Tarea mensual programada para: ",
+    rule.date,
+    rule.month,
+    rule.hour
+  );
+  return rule;
+}
+
+// Tarea de prueba para testear
+schedule.scheduleJob(pruebaRule(), async () => {
+  console.log("Tarea de prueba ejecutada");
 });
 
 // Comando /addmensaje para iniciar el modo de agregar mensajes
