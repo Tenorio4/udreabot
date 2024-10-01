@@ -1199,8 +1199,15 @@ function pruebaRule() {
   return rule;
 }
 
+const rulePrueba = new schedule.RecurrenceRule();
+rulePrueba.hour = 18;
+rulePrueba.minute = 43;
+rulePrueba.second = 01;
+rulePrueba.date = 1;
+rulePrueba.tz = TIMEZONE;
+
 // Tarea de prueba para testear
-schedule.scheduleJob(pruebaRule(), async () => {
+schedule.scheduleJob(rulePrueba, async () => {
   console.log("Tarea de prueba ejecutada");
 });
 
