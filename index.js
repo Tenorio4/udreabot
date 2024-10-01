@@ -1182,7 +1182,7 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
 function pruebaRule() {
   const rule = new schedule.RecurrenceRule();
   rule.hour = 18;
-  rule.minute = 22;
+  rule.minute = 26;
   rule.second = 52;
 
   // Obtenemos el último día del mes actual
