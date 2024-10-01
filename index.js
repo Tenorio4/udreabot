@@ -834,7 +834,7 @@ bot.command("meme", async (ctx) => {
 // Función para obtener un meme aleatorio desde MemeAPI
 async function obtenerMeme() {
   try {
-    const response = await axios.get("https://meme-api.com/gimme/SpanishMeme");
+    const response = await axios.get("https://meme-api.com/gimme/shitposting");
     const data = response.data;
     return {
       title: data.title,
