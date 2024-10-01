@@ -811,7 +811,50 @@ bot.command("reroll", async (ctx) => {
       ctx.reply(`${username} no tienes udreas suficientes`);
     }
   } catch (error) {
-    console.error("Error en obtener el mercado:", error);
+    console.error("Error al hacer reroll:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("heteropocion1", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.udreas >= mercadoData.heteropocion1) {
+      userDoc.update({
+        porcentaje: userData.porcentaje - 10,
+        udreas: userData.udreas - mercadoData.heteropocion1,
+      });
+    } else {
+      ctx.reply(`${username} no tienes udreas suficientes`);
+    }
+  } catch (error) {
+    console.error("Error al hacer heteropocion1:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("picaduradelacobragay", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.udreas >= mercadoData.picaduradelacobragay) {
+      userDoc.update({
+        udreas: userData.udreas - mercadoData.picaduradelacobragay,
+      });
+    } else {
+      ctx.reply(`${username} no tienes udreas suficientes`);
+    }
+  } catch (error) {
+    console.error("Error al hacer picaduradelacobragay:", error);
     await ctx.reply("Udrea!");
   }
 });
@@ -880,31 +923,15 @@ rule.minute = 59;
 rule.second = 50;
 rule.tz = TIMEZONE;
 
-// Convertir la hora a la zona horaria especificada
-function getTimeInTimezone(hour, minute, second = 0) {
-  const now = moment.tz(TIMEZONE);
-  return now.set({ hour, minute, second, millisecond: 0 }).toDate();
-}
-
-function getLastDayOfMonthRule() {
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = 23;
-  rule.minute = 59;
-  rule.second = 52;
-
-  // Obtenemos el último día del mes actual
-  const now = moment.tz(TIMEZONE);
-  const lastDay = now.clone().endOf("month").date(); // Último día del mes
-  rule.date = lastDay; // Especificamos que sea el último día del mes
-
-  console.log(
-    "Tarea mensual programada para: ",
-    rule.date,
-    rule.month,
-    rule.hour
-  );
-  return rule;
-}
+const monthRule = new schedule.RecurrenceRule();
+monthRule.hour = 23;
+monthRule.minute = 59;
+monthRule.second = 52;
+monthRule.tz = TIMEZONE;
+// Obtenemos el último día del mes actual
+const now = moment.tz(TIMEZONE);
+const lastDay = now.clone().endOf("month").date(); // Último día del mes
+monthRule.date = lastDay; // Especificamos que sea el último día del mes
 
 // Función para obtener la fecha del último día del mes a una hora específica
 function getLastDayOfMonth(hour, minute, second = 0) {
@@ -1047,7 +1074,7 @@ schedule.scheduleJob(rule, async () => {
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
-schedule.scheduleJob(getLastDayOfMonthRule(), async () => {
+schedule.scheduleJob(monthRule, async () => {
   console.log("Ejecutando tarea mensual...");
   try {
     // Obtener el chat_id del grupo desde Firestore
@@ -1179,36 +1206,17 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
   }
 });
 
-function pruebaRule() {
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = 18;
-  rule.minute = 34;
-  rule.second = 52;
-
-  // Obtenemos el último día del mes actual
-  const now = moment.tz(TIMEZONE);
-  const lastDay = now.clone().endOf("month").date(); // Último día del mes
-  rule.date = 1; // Especificamos que sea el último día del mes
-
-  console.log(
-    "Tarea mensual programada para: ",
-    rule.date,
-    rule.month,
-    rule.hour
-  );
-  return rule;
-}
-
 const rulePrueba = new schedule.RecurrenceRule();
-rulePrueba.hour = 18;
-rulePrueba.minute = 43;
+rulePrueba.hour = 00;
+rulePrueba.minute = 10;
 rulePrueba.second = 01;
-rulePrueba.date = 1;
+rulePrueba.date = 2;
 rulePrueba.tz = TIMEZONE;
 
 // Tarea de prueba para testear
 schedule.scheduleJob(rulePrueba, async () => {
   console.log("Tarea de prueba ejecutada");
+  await bot.telegram.sendMessage(groupId, `/nivel`);
 });
 
 // Comando /addmensaje para iniciar el modo de agregar mensajes
