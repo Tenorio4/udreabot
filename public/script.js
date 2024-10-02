@@ -16,8 +16,8 @@ var canvas = document.createElement("canvas");
 canvas.style.position = "absolute"; // Asegúrate de que el canvas esté posicionado absolutamente
 canvas.style.top = "0"; // Alineado al top
 canvas.style.left = "0"; // Alineado a la izquierda
-canvas.style.width = "100vw"; // Ocupa el 100% del ancho de la ventana
-canvas.style.height = "100vh"; // Ocupa el 100% de la altura de la ventana
+canvas.style.width = "100%"; // Ocupa el 100% del ancho de la ventana
+canvas.style.height = "100%"; // Ocupa el 100% de la altura de la ventana
 document.body.appendChild(canvas);
 var gl = canvas.getContext("webgl");
 

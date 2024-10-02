@@ -30,7 +30,7 @@ canvas {
   position: absolute; /* Posiciona el canvas sobre el body */
   top: 0;
   left: 0;
-  width: 100vw; /* Ocupa el 100% del ancho de la ventana */
-  height: 100vh; /* Ocupa el 100% de la altura de la ventana */
+  width: 100%; /* Ocupa el 100% del ancho de la ventana */
+  height: 100%; /* Ocupa el 100% de la altura de la ventana */
   z-index: 0; /* Asegúrate de que el canvas esté detrás del texto */
 }
