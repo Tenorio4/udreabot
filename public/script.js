@@ -13,16 +13,23 @@ async function obtenerPrecioUdrea() {
 window.onload = obtenerPrecioUdrea;
 
 var canvas = document.createElement("canvas");
-var width = (canvas.width = window.innerWidth * 0.75);
-var height = (canvas.height = window.innerHeight * 0.75);
+canvas.style.position = "absolute"; // Asegúrate de que el canvas esté posicionado absolutamente
+canvas.style.top = "0"; // Alineado al top
+canvas.style.left = "0"; // Alineado a la izquierda
+canvas.style.width = "100vw"; // Ocupa el 100% del ancho de la ventana
+canvas.style.height = "100vh"; // Ocupa el 100% de la altura de la ventana
 document.body.appendChild(canvas);
 var gl = canvas.getContext("webgl");
+
+canvas.width = window.innerWidth; // Establecer el ancho del canvas
+canvas.height = window.innerHeight; // Establecer la altura del canvas
 
 var mouse = { x: 0, y: 0 };
 
 var numMetaballs = 30;
 var metaballs = [];
-
+var width = (canvas.width = window.innerWidth * 0.75);
+var height = (canvas.height = window.innerHeight * 0.75);
 for (var i = 0; i < numMetaballs; i++) {
   var radius = Math.random() * 60 + 10;
   metaballs.push({
