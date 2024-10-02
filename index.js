@@ -764,7 +764,7 @@ bot.command("balance", async (ctx) => {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
-    const dinero = parseFloat(userData.dinero);
+    const dinero = parseFloat(userData.dinero.toFixed(2));
 
     await ctx.reply(
       `${username} tienes:\n\n· Dinero: ${dinero}€\n· Udreas: ${userData.udreas}`
