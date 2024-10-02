@@ -24,9 +24,8 @@ app.listen(port, () => {
 });
 
 app.get("/precio-actual", async (req, res) => {
-  const today = obtenerFechaHoy(); // Función que ya tienes para obtener la fecha
   try {
-    const precioDoc = await db.collection("precios").doc(today).get();
+    const precioDoc = await db.collection("precios").doc("precioActual").get();
     const precioData = precioDoc.data();
 
     if (precioData && precioData.precio) {
@@ -153,10 +152,6 @@ async function inicializarUsuarios() {
 app.get("/ping", (req, res) => {
   res.send("Bot is running");
 });
-
-/*app.listen(process.env.PORT || 3000, () => {
-  console.log("Server is running");
-});*/
 
 // Comando /start
 bot.start((ctx) => ctx.reply("muy bien"));
