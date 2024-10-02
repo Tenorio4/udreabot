@@ -6,6 +6,42 @@ const moment = require("moment-timezone"); // Para manejo de zona horaria
 const axios = require("axios"); // Para memes
 
 const app = express();
+// Página web
+const path = require("path");
+const port = process.env.PORT || 3000; // Puerto configurado por Render
+
+// Middleware para servir archivos estáticos (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Ruta principal para servir un archivo HTML estático
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Iniciar el servidor
+app.listen(port, () => {
+  console.log(`Servidor web corriendo en el puerto ${port}`);
+});
+
+app.get("/precio-actual", async (req, res) => {
+  const today = obtenerFechaHoy(); // Función que ya tienes para obtener la fecha
+  try {
+    const precioDoc = await db.collection("precios").doc(today).get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.precio) {
+      res.json({ precio: precioData.precio });
+    } else {
+      res.status(404).send("No se encontró el precio para hoy.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+// Aquí va el resto del código del bot...
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // Configurar la zona horaria
 const TIMEZONE = "Europe/Madrid";
