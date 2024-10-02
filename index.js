@@ -159,6 +159,11 @@ bot.start((ctx) => ctx.reply("muy bien"));
 // Comando /help
 bot.help((ctx) => ctx.reply("jajajajjajjaajaj"));
 
+// Comando para devolver la Web
+bot.command("web", async (ctx) => {
+  ctx.reply("https://udreabot.onrender.com/");
+});
+
 // Función para obtener un porcentaje "aleatorio"
 function obtenerPorcentajeAleatorio() {
   if (Math.random() <= 0.1) {
