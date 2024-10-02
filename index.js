@@ -154,15 +154,15 @@ app.get("/ping", (req, res) => {
   res.send("Bot is running");
 });
 
-app.listen(process.env.PORT || 3000, () => {
+/*app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running");
-});
+});*/
 
 // Comando /start
-bot.start((ctx) => ctx.reply("Hola, soy tu bot de Telegram!"));
+bot.start((ctx) => ctx.reply("muy bien"));
 
 // Comando /help
-bot.help((ctx) => ctx.reply("Envía un mensaje y te responderé!"));
+bot.help((ctx) => ctx.reply("jajajajjajjaajaj"));
 
 // Función para obtener un porcentaje "aleatorio"
 function obtenerPorcentajeAleatorio() {
