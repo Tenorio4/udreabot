@@ -3,39 +3,44 @@ body {
   font-family: 'Alatsi', sans-serif;
   margin: 0;
   padding: 0;
-  height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
-  background-image: url('https://example.com/tu-imagen-de-fondo.jpg'); /* URL de tu fondo */
-  background-size: cover; /* Hace que el fondo cubra toda la pantalla */
-  background-position: center; /* Centra la imagen de fondo */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  background-attachment: fixed; /* Hace que el fondo no se mueva con el scroll */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* Para que los textos e imagenes queden uno debajo del otro */
+  height: 100vh; /* Toda la altura visible */
+  overflow: hidden;
+  position: relative; /* Para asegurar que el fondo esté detrás del contenido */
 }
 
-/* Estilos del texto y otros elementos */
+.background {
+  position: fixed; /* Fija el fondo para que no se mueva con el scroll */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Cubre todo el ancho de la pantalla */
+  height: 100vh; /* Cubre toda la altura de la pantalla */
+  background-image: url('https://example.com/tu-imagen-de-fondo.jpg'); /* URL de tu fondo */
+  background-size: cover; /* Cubre toda la pantalla */
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0; /* Asegura que el fondo quede detrás */
+}
+
+/* Estilos del contenido */
+.container {
+  z-index: 1; /* Pone el contenido por encima del fondo */
+  position: relative;
+  text-align: center;
+  padding-top: 50px;
+}
+
 h1 {
-  color: #ffffff; /* Asegúrate de que los textos sean visibles sobre el fondo */
-  z-index: 1; /* Coloca los textos sobre el fondo */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Sombra para mejorar la legibilidad */
+  color: #ffffff; /* Color blanco para el texto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Añade sombra al texto para mejorar visibilidad */
 }
 
 #precio {
   font-size: 24px;
   font-weight: bold;
   color: #ffffff;
-  z-index: 1;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 img {
-  z-index: 1; /* La imagen también se queda por encima del fondo */
-  width: 200px; /* Ajusta el tamaño de la imagen según lo necesites */
-}
-
-.container {
-  z-index: 1; /* Asegura que el contenido esté por encima del fondo */
-  position: relative; /* Esto permite que los elementos hijos respeten su posición relativa */
+  width: 200px; /* Ajusta según el tamaño necesario */
 }
