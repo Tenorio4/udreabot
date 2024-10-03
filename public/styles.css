@@ -61,7 +61,7 @@ canvas {
   object-fit: cover; 
   z-index: 1;
   opacity: 0.5; /* 50% de transparencia */
-  transform: scale(2.8); /* Aplicamos zoom */
+  transform: scale(3); /* Aplicamos zoom */
   pointer-events: none; /* El video no interferirá con la interacción del usuario */
 }
 
