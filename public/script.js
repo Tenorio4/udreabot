@@ -33,7 +33,7 @@ var metaballs = [];
 var width = (canvas.width = window.innerWidth * 0.75);
 var height = (canvas.height = window.innerHeight * 0.75);
 for (var i = 0; i < numMetaballs; i++) {
-  var radius = Math.random() * 60 + 10;
+  var radius = Math.random() * 30 + 10;
   metaballs.push({
     x: Math.random() * (width - 2 * radius) + radius,
     y: Math.random() * (height - 2 * radius) + radius,

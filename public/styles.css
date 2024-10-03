@@ -49,3 +49,20 @@ canvas {
   height: 100%; /* Ocupa el 100% de la altura de la ventana */
   z-index: 0; /* Asegúrate de que el canvas esté detrás del texto */
 }
+
+/* Estilos para el video de fondo */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.video-background iframe {
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* El video no interferirá con la interacción del usuario */
+}
