@@ -192,12 +192,19 @@ canvas.onmousemove = function (e) {
   mouse.y = e.clientY;
 };
 
-function openMenu() {
-  document.getElementById("sideMenu").style.width = "250px";
-  document.querySelector(".main-content").style.marginLeft = "250px";
-}
+let menuOpen = false;
 
-function closeMenu() {
-  document.getElementById("sideMenu").style.width = "0";
-  document.querySelector(".main-content").style.marginLeft = "0";
+function toggleMenu() {
+  const sideMenu = document.getElementById("sideMenu");
+  const mainContent = document.querySelector(".main-content");
+
+  if (menuOpen) {
+    sideMenu.style.width = "0";
+    mainContent.style.marginRight = "0";
+  } else {
+    sideMenu.style.width = "250px";
+    mainContent.style.marginRight = "250px";
+  }
+
+  menuOpen = !menuOpen;
 }

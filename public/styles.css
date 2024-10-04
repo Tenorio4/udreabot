@@ -69,13 +69,13 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
-/* Menú lateral */
+/* Menú lateral a la derecha */
 .side-menu {
   height: 100%;
   width: 0;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   background-color: #111;
   overflow-x: hidden;
   transition: 0.3s;
@@ -96,13 +96,6 @@ canvas {
   background-color: #575757;
 }
 
-.side-menu .close-btn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-}
-
 /* Botón de menú */
 .menu-btn {
   font-size: 30px;
@@ -111,12 +104,12 @@ canvas {
   padding: 10px 15px;
   position: fixed;
   top: 15px;
-  left: 15px;
+  right: 15px;
   z-index: 1000;
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding-left: 20px;
+    padding-right: 20px;
   }
 }
