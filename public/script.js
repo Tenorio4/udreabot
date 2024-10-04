@@ -191,3 +191,13 @@ canvas.onmousemove = function (e) {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 };
+
+function openMenu() {
+  document.getElementById("sideMenu").style.width = "250px";
+  document.querySelector(".main-content").style.marginLeft = "250px";
+}
+
+function closeMenu() {
+  document.getElementById("sideMenu").style.width = "0";
+  document.querySelector(".main-content").style.marginLeft = "0";
+}

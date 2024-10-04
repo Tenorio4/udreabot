@@ -69,3 +69,53 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
+/* Menú lateral */
+.side-menu {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
+}
+
+.side-menu a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.side-menu a:hover {
+  background-color: #575757;
+}
+
+.side-menu .close-btn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+}
+
+/* Botón de menú */
+.menu-btn {
+  font-size: 30px;
+  cursor: pointer;
+  color: #111;
+  padding: 10px 15px;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-left: 20px;
+  }
+}
