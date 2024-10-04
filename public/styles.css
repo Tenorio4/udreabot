@@ -80,6 +80,7 @@ canvas {
   overflow-x: hidden;
   transition: 0.3s;
   padding-top: 60px;
+  z-index: 3;
 }
 
 .side-menu a {
