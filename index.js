@@ -147,7 +147,7 @@ async function inicializarUsuarios() {
 }
 
 // Registrar comandos
-bot.setMyCommands([
+bot.telegram.setMyCommands([
   { command: "/start", description: "Inicia el bot" },
   { command: "/help", description: "Muestra la ayuda" },
   { command: "/nivel", description: "Muestra tu vasto incremento" },
