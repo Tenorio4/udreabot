@@ -883,12 +883,38 @@ bot.command("picaduradelacobragay", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    if (userData.udreas >= mercadoData.picaduradelacobragay) {
-      userDoc.update({
-        udreas: userData.udreas - mercadoData.picaduradelacobragay,
-      });
+    // Extraer el parámetro después del comando
+    const messageText = ctx.message.text; // El texto completo del mensaje
+    const params = messageText.split(" "); // Dividimos el texto en partes por espacio
+
+    if (params.length < 2 || !usuarios.includes(params[1])) {
+      // Si no se especificó un número o el parámetro no es válido
+      return ctx.reply(
+        "A ver udrea, especifica a quién quieres picar.\nEjemplo: /picaduradelacobragay @RangoLV"
+      );
+    }
+
+    const victima = parseInt(params[1]);
+
+    if (userData.porcentaje >= 100) {
+      if (userData.udreas >= mercadoData.picaduradelacobragay) {
+        const victimaDoc = db.collection("usuarios").doc(victima);
+        const victimaData = (await victimaDoc.get()).data();
+
+        victimaDoc.update({
+          porcentaje: userData.porcentaje,
+        });
+
+        userDoc.update({
+          udreas: userData.udreas - mercadoData.picaduradelacobragay,
+        });
+      } else {
+        ctx.reply(`${username} no tienes udreas suficientes`);
+      }
     } else {
-      ctx.reply(`${username} no tienes udreas suficientes`);
+      ctx.reply(
+        `${username} tienes que ser gay para poder picar a otro usuario`
+      );
     }
   } catch (error) {
     console.error("Error al hacer picaduradelacobragay:", error);
