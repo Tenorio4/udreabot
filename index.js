@@ -611,7 +611,7 @@ bot.hears(regexAno, async (ctx) => {
 const regexInco = /(inco|5)\b$/i;
 bot.hears(regexInco, async (ctx) => {
   // Responde citando el mensaje original
-  ctx.reply("Pues por el culo de la hinco", {
+  ctx.reply("Pues por el culo te la hinco", {
     reply_to_message_id: ctx.message.message_id,
   });
 });

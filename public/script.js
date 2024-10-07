@@ -199,8 +199,8 @@ function toggleMenu() {
   const mainContent = document.querySelector(".main-content");
 
   if (menuOpen) {
-    sideMenu.style.width = "0";
-    mainContent.style.marginRight = "0";
+    sideMenu.style.width = "0px";
+    mainContent.style.marginRight = "0px";
   } else {
     sideMenu.style.width = "250px";
     mainContent.style.marginRight = "250px";
