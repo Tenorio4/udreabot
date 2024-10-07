@@ -146,6 +146,38 @@ async function inicializarUsuarios() {
   }
 }
 
+// Registrar comandos
+bot.setMyCommands([
+  { command: "/start", description: "Inicia el bot" },
+  { command: "/help", description: "Muestra la ayuda" },
+  { command: "/nivel", description: "Muestra tu vasto incremento" },
+  { command: "/desempatar", description: "Para desempatar" },
+  { command: "/ranking", description: "Muestra el ranking del día" },
+  { command: "/rankingmensual", description: "Muestra el ranking del mes" },
+  { command: "/rankinganual", description: "Muestra el ranking del año" },
+  { command: "/cobardes", description: "Muestra a los cobardes del día" },
+  { command: "/precio", description: "Muestra el precio actual" },
+  { command: "/comprar", description: "Para comprar" },
+  { command: "/vender", description: "Para vender" },
+  { command: "/mercado", description: "Muestra el mercado actual" },
+  { command: "/reroll", description: "Para hacer otra tirada de nivel" },
+  { command: "/heteropocion1", description: "Para bajar tu vasto incremento" },
+  {
+    command: "/picaduradelacobragay",
+    description: "Para convertir en gay a otro usuario",
+  },
+  { command: "/balance", description: "Muestra tus dineros y tus udreas" },
+  { command: "/udrea", description: "Udrea" },
+  { command: "/superudrea", description: "Para superudrear" },
+  { command: "/a", description: "aaaAAaaaAAAaaaAaaAAAaHhh" },
+  { command: "/utsu", description: "utsuuuuraleeaa" },
+  { command: "/s", description: "Para suponer" },
+  { command: "/c", description: "Claro" },
+  { command: "/p", description: "Lo peor" },
+  { command: "/m", description: "Para audio aleatorio graciosísimo" },
+  { command: "/meme", description: "Muestra un meme aleatorio" },
+]);
+
 //inicializarUsuarios(); // Llamar una vez al inicio
 
 // Ruta de ping
@@ -590,7 +622,7 @@ bot.command("c", async (ctx) => {
   await enviarMensajeAleatorio(ctx, "claro");
 });
 bot.command("superudrea", async (ctx) => {
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 11; i++) {
     enviarMensajeAleatorio(ctx, "udreaMessages");
   }
 });
