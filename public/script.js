@@ -193,7 +193,7 @@ canvas.onmousemove = function (e) {
 };
 
 const toggleButton = document.getElementById("toggle-button");
-const menu = document.getElementById("side-menu");
+const menu = document.getElementById("menu");
 
 toggleButton.addEventListener("click", () => {
   // Cambia la visibilidad del menú
