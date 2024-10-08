@@ -82,6 +82,7 @@ canvas {
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+  z-index: 101;
 }
 
 .menu {
