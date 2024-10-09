@@ -70,57 +70,6 @@ canvas {
   height: 100vh;
 }
 
-.menu-container {
-  position: relative;
-  z-index: 100;
-}
-
-.menu-button {
-  font-size: 18px;
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  z-index: 101;
-}
-
-.menu {
-  display: none; /* El menú está oculto por defecto */
-  background-color: #333;
-  position: absolute;
-  right: 0;
-  top: 40px; /* Se despliega desde el botón */
-  width: 200px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.menu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu ul li {
-  text-align: center;
-}
-
-.menu ul li a {
-  display: block;
-  padding: 10px 0;
-  color: #fff;
-  text-decoration: none;
-  background-color: #333;
-  transition: background-color 0.3s;
-}
-
-.menu ul li a:hover {
-  background-color: #444;
-}
-
-
-
-
 button {
   position: absolute;
   top: 0;
@@ -132,7 +81,8 @@ button {
   }
   
     /* Icon */
-    .bar {position: relative;}
+    .bar {position: relative;
+          z-index: 200;}
   
       .bar:before, 
       .bar:after {
@@ -189,7 +139,7 @@ button {
     border-radius: 0 100% 100% 0;
     transition: all .25s cubic-bezier(1,0.05,1,1.5);
     transition-delay: .5s;
-  
+    z-index: 100;
     }
   
     .in .inside {

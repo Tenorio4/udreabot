@@ -195,15 +195,6 @@ canvas.onmousemove = function (e) {
 const toggleButton = document.getElementById("toggle-button");
 const menu = document.getElementById("menu");
 
-toggleButton.addEventListener("click", () => {
-  // Cambia la visibilidad del menú
-  if (menu.style.display === "none" || menu.style.display === "") {
-    menu.style.display = "block"; // Muestra el menú
-  } else {
-    menu.style.display = "none"; // Oculta el menú
-  }
-});
-
 $(".close").click(function () {
   $(".outside").toggleClass("in");
   $(".bar").toggleClass("active");
