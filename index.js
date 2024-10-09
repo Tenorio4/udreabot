@@ -155,6 +155,7 @@ bot.telegram.setMyCommands([
   { command: "/ranking", description: "Muestra el ranking del día" },
   { command: "/rankingmensual", description: "Muestra el ranking del mes" },
   { command: "/rankinganual", description: "Muestra el ranking del año" },
+  { command: "/quiendeaqui", description: "Muestra quién de aquí" },
   { command: "/cobardes", description: "Muestra a los cobardes del día" },
   { command: "/precio", description: "Muestra el precio actual" },
   { command: "/comprar", description: "Para comprar" },
@@ -343,8 +344,11 @@ bot.command("desempatar", async (ctx) => {
               });
             }
           });
-          ctx.reply("Desempate realizado con éxito");
-          ctx.reply("Pulse aquí -> /ranking para ver el nuevo ranking");
+          const ganadorData = (await userGanadorDoc.get()).data();
+          const anteriorPorcentaje = ganadorData.porcentaje + 1;
+          await ctx.reply(
+            `${ganadorData.username} ha ganado el desempate y su vasto incremento se ha reducido en un 1%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
+          );
         } else {
           empatados.forEach((empatado) => {
             let userEmpatadoDoc = db
@@ -354,7 +358,8 @@ bot.command("desempatar", async (ctx) => {
               desempate: null,
             });
           });
-          ctx.reply("Empate en el desempate, qué ironía!");
+          await ctx.reply("Empate en el desempate, qué ironía");
+          await ctx.reply("Pulse aquí -> /desempatar para intentarlo de nuevo");
         }
       }
     } else if (userData.desempate !== null) {
@@ -577,7 +582,7 @@ bot.hears(
             `Aún no dispongo de los datos suficientes pero puedo afirmar que ${cobardeElegido} es un cobarde y por tanto un homo`
           );
           await ctx.reply(
-            "Pulsa aquí -> /cobardes para ver quiénes son los cobardes"
+            "Pulse aquí -> /cobardes para ver quiénes son los cobardes"
           );
         } else {
           ctx.reply("Parece que todos han hecho su tirada de nivel.");
@@ -690,7 +695,7 @@ async function enviarMensajeAleatorio(ctx, coleccion) {
 
 // Función para obtener un precio aleatorio entre 0.01€ y 4.99€
 function obtenerPrecioAleatorio() {
-  return (Math.random() * (4.99 - 0.01) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
+  return (Math.random() * (4.99 - 0.5) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
 }
 
 // Comando /precio
@@ -767,7 +772,7 @@ bot.command("vender", async (ctx) => {
       }
     } else {
       await ctx.reply("No puedes vender a ciegas");
-      await ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
+      await ctx.reply("Pulse aquí -> /precio para consultar el precio de hoy");
       await ctx.reply("Y no seas un udrea");
     }
   } catch (error) {
@@ -789,7 +794,7 @@ bot.command("comprar", async (ctx) => {
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
         return ctx.reply(
-          "A ver udrea, especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2"
+          "Especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2"
         );
       }
 
@@ -818,7 +823,7 @@ bot.command("comprar", async (ctx) => {
       }
     } else {
       await ctx.reply("No puedes comprar a ciegas");
-      await ctx.reply("Pulsa aquí -> /precio para consultar el precio de hoy");
+      await ctx.reply("Pulse aquí -> /precio para consultar el precio de hoy");
       await ctx.reply("Y no seas un udrea");
     }
   } catch (error) {
@@ -892,14 +897,17 @@ bot.command("heteropocion1", async (ctx) => {
     const userData = (await userDoc.get()).data();
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
-
+    const anteriorPorcentaje = userData.porcentaje;
     if (userData.udreas >= mercadoData.heteropocion1) {
       userDoc.update({
         porcentaje: userData.porcentaje - 10,
         udreas: userData.udreas - mercadoData.heteropocion1,
       });
+      await ctx.reply(
+        `${username} ha usado heteropocion1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+      );
     } else {
-      ctx.reply(`${username} no tienes udreas suficientes`);
+      await ctx.reply(`${username} no tienes udreas suficientes`);
     }
   } catch (error) {
     console.error("Error al hacer heteropocion1:", error);
@@ -922,7 +930,7 @@ bot.command("picaduradelacobragay", async (ctx) => {
     if (params.length < 2 || !usuarios.includes(params[1])) {
       // Si no se especificó un número o el parámetro no es válido
       return ctx.reply(
-        "A ver udrea, especifica a quién quieres picar.\nEjemplo: /picaduradelacobragay @RangoLV"
+        "Especifica a quién quieres picar.\nEjemplo: /picaduradelacobragay @RangoLV"
       );
     }
 
@@ -932,19 +940,24 @@ bot.command("picaduradelacobragay", async (ctx) => {
       if (userData.udreas >= mercadoData.picaduradelacobragay) {
         const victimaDoc = db.collection("usuarios").doc(victima);
         const victimaData = (await victimaDoc.get()).data();
-
+        const today = obtenerFechaHoy();
         victimaDoc.update({
           porcentaje: userData.porcentaje,
+          ultimaActualizacion: today,
         });
 
         userDoc.update({
           udreas: userData.udreas - mercadoData.picaduradelacobragay,
         });
+        await ctx.reply(`${username} ha picado a ${victima}`);
+        await ctx.reply(
+          `Ahora ${victima} tiene un vasto incremento del ${victimaData.porcentaje}`
+        );
       } else {
-        ctx.reply(`${username} no tienes udreas suficientes`);
+        await ctx.reply(`${username} no tienes udreas suficientes`);
       }
     } else {
-      ctx.reply(
+      await ctx.reply(
         `${username} tienes que ser gay para poder picar a otro usuario`
       );
     }
