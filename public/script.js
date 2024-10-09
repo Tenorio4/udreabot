@@ -203,3 +203,9 @@ toggleButton.addEventListener("click", () => {
     menu.style.display = "none"; // Oculta el menú
   }
 });
+
+$(".close").click(function () {
+  $(".outside").toggleClass("in");
+  $(".bar").toggleClass("active");
+  $(this).toggleClass("is-showing");
+});
