@@ -69,43 +69,53 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
-/* Menú lateral a la derecha */
-.side-menu {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  top: 0;
-  right: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 0.3s;
-  padding-top: 60px;
-  z-index: 3;
+
+.menu-container {
+  position: relative;
+  z-index: 100;
 }
 
-.side-menu a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: white;
-  display: block;
-  transition: 0.3s;
-}
-
-.side-menu a:hover {
-  background-color: #575757;
-}
-
-/* Botón de menú */
-.menu-btn {
-  font-size: 30px;
+.menu-button {
+  font-size: 18px;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
   cursor: pointer;
-  color: #ffffff;
-  padding: 10px 15px;
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1000;
+  z-index: 101;
+}
+
+.menu {
+  display: none; /* El menú está oculto por defecto */
+  background-color: #333;
+  position: absolute;
+  right: 0;
+  top: 40px; /* Se despliega desde el botón */
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu ul li {
+  text-align: center;
+}
+
+.menu ul li a {
+  display: block;
+  padding: 10px 0;
+  color: #fff;
+  text-decoration: none;
+  background-color: #333;
+  transition: background-color 0.3s;
+}
+
+.menu ul li a:hover {
+  background-color: #444;
 }
 
 @media (max-width: 768px) {

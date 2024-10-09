@@ -192,19 +192,14 @@ canvas.onmousemove = function (e) {
   mouse.y = e.clientY;
 };
 
-let menuOpen = false;
+const toggleButton = document.getElementById("toggle-button");
+const menu = document.getElementById("menu");
 
-function toggleMenu() {
-  const sideMenu = document.getElementById("sideMenu");
-  const mainContent = document.querySelector(".main-content");
-
-  if (menuOpen) {
-    sideMenu.style.width = "0px";
-    mainContent.style.marginRight = "0px";
+toggleButton.addEventListener("click", () => {
+  // Cambia la visibilidad del menú
+  if (menu.style.display === "none" || menu.style.display === "") {
+    menu.style.display = "block"; // Muestra el menú
   } else {
-    sideMenu.style.width = "250px";
-    mainContent.style.marginRight = "250px";
+    menu.style.display = "none"; // Oculta el menú
   }
-
-  menuOpen = !menuOpen;
-}
+});
