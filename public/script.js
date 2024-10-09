@@ -192,9 +192,6 @@ canvas.onmousemove = function (e) {
   mouse.y = e.clientY;
 };
 
-const toggleButton = document.getElementById("toggle-button");
-const menu = document.getElementById("menu");
-
 $(".close").click(function () {
   $(".outside").toggleClass("in");
   $(".bar").toggleClass("active");
