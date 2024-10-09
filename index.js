@@ -331,7 +331,7 @@ bot.command("desempatar", async (ctx) => {
             .collection("usuarios")
             .doc(ganadoresTirada[0].username);
           await userGanadorDoc.update({
-            porcentaje: ganadoresTirada[0].porcentaje - 1,
+            porcentaje: ganadoresTirada[0].porcentaje - desempate,
             desempate: null,
           });
           empatados.forEach((empatado) => {
