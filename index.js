@@ -346,9 +346,9 @@ bot.command("desempatar", async (ctx) => {
             }
           });
           const ganadorData = (await userGanadorDoc.get()).data();
-          const anteriorPorcentaje = ganadorData.porcentaje + 1;
+          const anteriorPorcentaje = ganadorData.porcentaje + maxTirada;
           await ctx.reply(
-            `${ganadorData.username} ha ganado el desempate y su vasto incremento se ha reducido en un 1%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
+            `${ganadorData.username} ha ganado el desempate y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
           );
         } else {
           empatados.forEach((empatado) => {
