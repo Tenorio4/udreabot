@@ -174,7 +174,7 @@ button {
     width: 2100px;
     height: 2100px;
     display: block;
-    background-color: white;
+    background-color: #e6ab52;
     position: absolute;
       top: -50%;
       left: -100%;
@@ -206,7 +206,7 @@ button {
   }
   
   .menu li {
-  background: #e6ab52;
+  background: whitesmoke;
   opacity: 0;
   padding: 12px 22px;
   border-bottom: 1px solid rgba(255,255,255,.5);
