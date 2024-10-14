@@ -214,6 +214,40 @@ button {
   .in .inside {
     -webkit-animation: bounce 1s both;
   }
+
+  /* Efecto chulo para los enlaces del menú */
+.fa {
+  text-decoration: none;
+  font-size: 18px;
+  color: #333;
+  position: relative;
+  display: inline-block;
+  padding: 10px 0;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Animación del subrayado en hover */
+.fa::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  display: block;
+  margin-top: 5px;
+  right: 0;
+  background: #4CAF50; /* Color del subrayado */
+  transition: width 0.4s ease, right 0.4s ease;
+}
+
+/* Cambios en hover */
+.fa:hover {
+  color: #4CAF50;
+}
+
+.fa:hover::after {
+  width: 100%;
+  right: 0;
+}
   
   
   /* Generated with Bounce.js. Edit at https://goo.gl/zdjCb0 */
