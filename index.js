@@ -935,7 +935,7 @@ bot.command("picaduradelacobragay", async (ctx) => {
       );
     }
 
-    const victima = parseInt(params[1]);
+    const victima = params[1];
     console.log(victima);
 
     if (userData.porcentaje >= 100) {
