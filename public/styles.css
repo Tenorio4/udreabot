@@ -52,18 +52,35 @@ img {
 /*} 
 
 /* Estilos para el video de fondo */
-.video-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 150vw;
-  height: 100vh;
-  overflow: hidden;
-  object-fit: cover; 
-  z-index: 1;
-  opacity: 0.5; /* 50% de transparencia */
-  transform: scale(3.5); /* Aplicamos zoom */
-  pointer-events: none; /* El video no interferirá con la interacción del usuario */
+@media (orientation: portrait) {
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150vw;
+    height: 100vh;
+    overflow: hidden;
+    object-fit: cover; 
+    z-index: 1;
+    opacity: 0.5; /* 50% de transparencia */
+    transform: scale(3.5); /* Aplicamos zoom */
+    pointer-events: none; /* El video no interferirá con la interacción del usuario */
+  }
+}
+
+@media (orientation: landscape) {
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    object-fit: cover; 
+    z-index: 1;
+    opacity: 0.5; /* 50% de transparencia */
+    pointer-events: none; /* El video no interferirá con la interacción del usuario */
+  }
 }
 
 .video-background iframe {
@@ -235,7 +252,7 @@ button {
   display: block;
   margin-top: 5px;
   right: 0;
-  background: #4CAF50; /* Color del subrayado */
+  background: #2821ec; /* Color del subrayado */
   transition: width 0.4s ease, right 0.4s ease;
 }
 
