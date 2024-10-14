@@ -79,6 +79,7 @@ img {
     object-fit: cover; 
     z-index: 1;
     opacity: 0.5; /* 50% de transparencia */
+    transform: scale(3.5); /* Aplicamos zoom */
     pointer-events: none; /* El video no interferirá con la interacción del usuario */
   }
 }
@@ -252,13 +253,13 @@ button {
   display: block;
   margin-top: 5px;
   right: 0;
-  background: #2821ec; /* Color del subrayado */
+  background: #e6ab52; /* Color del subrayado */
   transition: width 0.4s ease, right 0.4s ease;
 }
 
 /* Cambios en hover */
 .menu-link:hover {
-  color: #2821ec;
+  color: #e6ab52;
 }
 
 .menu-link:hover::after {

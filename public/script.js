@@ -12,6 +12,13 @@ async function obtenerPrecioUdrea() {
 
 window.onload = obtenerPrecioUdrea;
 
+$(".close").click(function () {
+  $(".outside").toggleClass("in");
+  $(".bar").toggleClass("active");
+  $(this).toggleClass("is-showing");
+});
+
+/*
 var canvas = document.createElement("canvas");
 canvas.style.position = "absolute"; // Asegúrate de que el canvas esté posicionado absolutamente
 canvas.style.top = "0"; // Alineado al top
@@ -190,10 +197,4 @@ function getAttribLocation(program, name) {
 canvas.onmousemove = function (e) {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
-};
-
-$(".close").click(function () {
-  $(".outside").toggleClass("in");
-  $(".bar").toggleClass("active");
-  $(this).toggleClass("is-showing");
-});
+};*/
