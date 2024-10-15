@@ -874,8 +874,8 @@ bot.command("mercado", async (ctx) => {
     let mercadoMensaje = `Mercado:\n\n`;
     mercadoMensaje += `· /reroll: ${mercadoData.reroll} udrea(s)\n`;
     mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
-    mercadoMensaje += `· /heteropocion2: ${mercadoData.heteropocion1} udrea(s)\n`;
-    mercadoMensaje += `· /heteropocion3: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· /heteropocion2: ${mercadoData.heteropocion2} udrea(s)\n`;
+    mercadoMensaje += `· /heteropocion3: ${mercadoData.heteropocion3} udrea(s)\n`;
     mercadoMensaje += `· /picaduradelacobragay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     await ctx.reply(mercadoMensaje);
   } catch (error) {
