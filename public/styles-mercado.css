@@ -23,6 +23,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
+    display: table;
     margin: 10px;
     padding: 20px;
     background-color: #fff;
@@ -62,6 +63,11 @@
     flex: 1;
   }
   
+  h1  {
+    color: #e6ab52;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
   h3 {
     font-size: 20px;
     margin-bottom: 8px;
