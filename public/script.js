@@ -16,7 +16,7 @@ async function obtenerPrecioItem(item) {
   try {
     const response = await fetch(`${item}`);
     const data = await response.json();
-    document.getElementById(`${item}`).textContent = `${data} udrea(s)`;
+    document.getElementById(`${item}`).textContent = `${data.precio} udrea(s)`;
   } catch (error) {
     document.getElementById(`${item}`).textContent =
       "Error al cargar el precio";
