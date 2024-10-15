@@ -65,7 +65,7 @@
   
   h1  {
     color: #e6ab52;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   h3 {
