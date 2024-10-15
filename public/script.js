@@ -12,7 +12,7 @@ async function obtenerPrecioUdrea() {
 
 window.onload = obtenerPrecioUdrea;
 
-async function obtenerPrecioItem(item) {
+/*async function obtenerPrecioItem(item) {
   try {
     const response = await fetch(`${item}`);
     const data = await response.json();
@@ -23,7 +23,7 @@ async function obtenerPrecioItem(item) {
   }
 }
 
-window.onload = obtenerPrecioItem("/reroll");
+window.onload = obtenerPrecioItem("/reroll");*/
 
 $(".close").click(function () {
   $(".outside").toggleClass("in");

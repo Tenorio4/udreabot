@@ -874,6 +874,8 @@ bot.command("mercado", async (ctx) => {
     let mercadoMensaje = `Mercado:\n\n`;
     mercadoMensaje += `· /reroll: ${mercadoData.reroll} udrea(s)\n`;
     mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· /heteropocion2: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· /heteropocion3: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· /picaduradelacobragay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     await ctx.reply(mercadoMensaje);
   } catch (error) {
@@ -928,6 +930,56 @@ bot.command("heteropocion1", async (ctx) => {
     }
   } catch (error) {
     console.error("Error al hacer heteropocion1:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("heteropocion2", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+    const anteriorPorcentaje = userData.porcentaje;
+    if (userData.udreas >= mercadoData.heteropocion2) {
+      userDoc.update({
+        porcentaje: userData.porcentaje - 50,
+        udreas: userData.udreas - mercadoData.heteropocion2,
+      });
+      await ctx.reply(
+        `${username} ha usado heteropocion2 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+      );
+    } else {
+      await ctx.reply(`${username} no tienes udreas suficientes`);
+    }
+  } catch (error) {
+    console.error("Error al hacer heteropocion2:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("heteropocion3", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+    const anteriorPorcentaje = userData.porcentaje;
+    if (userData.udreas >= mercadoData.heteropocion3) {
+      userDoc.update({
+        porcentaje: userData.porcentaje - 100,
+        udreas: userData.udreas - mercadoData.heteropocion3,
+      });
+      await ctx.reply(
+        `${username} ha usado heteropocion3 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+      );
+    } else {
+      await ctx.reply(`${username} no tienes udreas suficientes`);
+    }
+  } catch (error) {
+    console.error("Error al hacer heteropocion3:", error);
     await ctx.reply("Udrea!");
   }
 });
