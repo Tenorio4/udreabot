@@ -39,6 +39,22 @@ app.get("/precio-actual", async (req, res) => {
   }
 });
 
+app.get("/reroll", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.reroll) {
+      res.json({ precio: precioData.reroll });
+    } else {
+      res.status(404).send("No se encontró el precio para reroll.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 // Aquí va el resto del código del bot...
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
