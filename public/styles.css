@@ -23,6 +23,10 @@ h1 {
   font-weight: bold;
   color: white; /* Ajusta el color según el fondo */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative; /* Permite superposición */
   z-index: 1; /* Asegúrate de que el texto esté por encima del canvas */
 }
