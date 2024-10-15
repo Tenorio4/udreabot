@@ -6,9 +6,10 @@ body, html {
   overflow: hidden; /* Para evitar barras de desplazamiento */
 }
 
-texto {
+.texto {
   height: 100%;
   display: flex;
+  flex-direction: column; /* Alinea elementos de arriba hacia abajo */
   justify-content: center;
   align-items: center;
   position: relative; /* Permite superposición */
