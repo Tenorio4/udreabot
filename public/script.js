@@ -36,7 +36,7 @@ $(".close").click(function () {
   $(this).toggleClass("is-showing");
 });
 
-const button = document.getElementById("udrea");
+const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
 
 button.addEventListener("click", function () {

@@ -962,10 +962,10 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-
+      await ctx.reply(`${username} ha usado reroll...`);
       nivel(username, ctx);
     } else {
-      ctx.reply(`${username} no tienes udreas suficientes`);
+      await ctx.reply(`${username} no tienes udreas suficientes`);
     }
   } catch (error) {
     console.error("Error al hacer reroll:", error);
@@ -987,7 +987,7 @@ bot.command("heteropocion1", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion1,
       });
       await ctx.reply(
-        `${username} ha usado heteropocion1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1012,7 +1012,7 @@ bot.command("heteropocion2", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion2,
       });
       await ctx.reply(
-        `${username} ha usado heteropocion2 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 2 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1037,7 +1037,7 @@ bot.command("heteropocion3", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion3,
       });
       await ctx.reply(
-        `${username} ha usado heteropocion3 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 3 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
