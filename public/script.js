@@ -30,10 +30,10 @@ window.onload = obtenerPrecioItem("/heteropocion3");
 window.onload = obtenerPrecioItem("/picaduradelacobragay");
 window.onload = obtenerPrecioUdrea;
 
-const button = document.getElementById("close");
+/*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
 
-/*button.addEventListener("click", function () {
+button.addEventListener("click", function () {
   // Cambiar la URL del iframe para desactivar el mute y activar el sonido
   const videoSrc =
     "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
