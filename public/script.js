@@ -41,9 +41,6 @@ const videoIframe = document.getElementById("video-background");
 });*/
 
 $(".close").click(function () {
-  const videoSrc =
-    "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
-  videoIframe.src = videoSrc;
   $(".outside").toggleClass("in");
   $(".bar").toggleClass("active");
   $(this).toggleClass("is-showing");
