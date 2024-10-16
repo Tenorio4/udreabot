@@ -14,7 +14,9 @@ async function obtenerPrecioItem(item) {
   try {
     const response = await fetch(`${item}`);
     const data = await response.json();
-    document.getElementById(`${item}`).textContent = `${data.precio} udrea(s)`;
+    document.getElementById(
+      `${item}`
+    ).textContent = `Precio: ${data.precio} udrea(s)`;
   } catch (error) {
     document.getElementById(`${item}`).textContent =
       "Error al cargar el precio";
@@ -22,6 +24,10 @@ async function obtenerPrecioItem(item) {
 }
 
 window.onload = obtenerPrecioItem("/reroll");
+window.onload = obtenerPrecioItem("/heteropocion1");
+window.onload = obtenerPrecioItem("/heteropocion2");
+window.onload = obtenerPrecioItem("/heteropocion3");
+window.onload = obtenerPrecioItem("/picaduradelacobragay");
 window.onload = obtenerPrecioUdrea;
 
 $(".close").click(function () {

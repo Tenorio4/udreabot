@@ -55,7 +55,71 @@ app.get("/reroll", async (req, res) => {
   }
 });
 
-// Aquí va el resto del código del bot...
+app.get("/heteropocion1", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.heteropocion1) {
+      res.json({ precio: precioData.heteropocion1 });
+    } else {
+      res.status(404).send("No se encontró el precio para heteropocion1.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+app.get("/heteropocion2", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.heteropocion2) {
+      res.json({ precio: precioData.heteropocion2 });
+    } else {
+      res.status(404).send("No se encontró el precio para heteropocion2.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+app.get("/heteropocion3", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.heteropocion3) {
+      res.json({ precio: precioData.heteropocion3 });
+    } else {
+      res.status(404).send("No se encontró el precio para heteropocion3.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+app.get("/picaduradelacobragay", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.picaduradelacobragay) {
+      res.json({ precio: precioData.picaduradelacobragay });
+    } else {
+      res
+        .status(404)
+        .send("No se encontró el precio para picaduradelacobragay.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // Configurar la zona horaria
