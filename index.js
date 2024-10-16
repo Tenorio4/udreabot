@@ -717,7 +717,7 @@ bot.command("m", async (ctx) => {
 });
 
 // Regex para detectar palabras que terminan en "ano"
-const regexAno = /ano\.?\b$/i;
+const regexAno = /ano[\.\b]*$/i;
 bot.hears(regexAno, async (ctx) => {
   // Responde citando el mensaje original
   ctx.reply("Pues me la agarras con la mano", {
