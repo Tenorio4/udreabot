@@ -28,13 +28,6 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  position: relative; /* Permite superposición */
-  z-index: 1; /* Asegúrate de que la imagen esté por encima del canvas */
-}
-
 .container {
   display: flex;
   justify-content: center;

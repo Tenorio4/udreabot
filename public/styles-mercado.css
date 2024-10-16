@@ -9,7 +9,7 @@
     background-color: #f4f4f9;
     color: #333;
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .contenido {
