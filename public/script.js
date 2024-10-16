@@ -16,7 +16,7 @@ async function obtenerPrecioUdrea() {
       "precio"
     ).textContent = `El precio de la udrea hoy está a ${data.precio}€ la unidad`;
     const videoSrc =
-      "https://www.youtube.com/embed/QUcTsFe1PVs?mute=0&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1";
+      "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
     videoIframe.src = videoSrc;
   } catch (error) {
     document.getElementById("precio").textContent = "Error al cargar el precio";
