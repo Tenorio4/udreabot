@@ -1,3 +1,13 @@
+const button = document.getElementById("close");
+const videoIframe = document.getElementById("video-background");
+
+button.addEventListener("click", function () {
+  // Cambiar la URL del iframe para desactivar el mute y activar el sonido
+  const videoSrc =
+    "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
+  videoIframe.src = videoSrc;
+});
+
 async function obtenerPrecioUdrea() {
   try {
     const response = await fetch("/precio-actual");
@@ -5,6 +15,9 @@ async function obtenerPrecioUdrea() {
     document.getElementById(
       "precio"
     ).textContent = `El precio de la udrea hoy está a ${data.precio}€ la unidad`;
+    const videoSrc =
+      "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
+    videoIframe.src = videoSrc;
   } catch (error) {
     document.getElementById("precio").textContent = "Error al cargar el precio";
   }
@@ -34,16 +47,6 @@ $(".close").click(function () {
   $(".outside").toggleClass("in");
   $(".bar").toggleClass("active");
   $(this).toggleClass("is-showing");
-});
-
-const button = document.getElementById("close");
-const videoIframe = document.getElementById("video-background");
-
-button.addEventListener("click", function () {
-  // Cambiar la URL del iframe para desactivar el mute y activar el sonido
-  const videoSrc =
-    "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
-  videoIframe.src = videoSrc;
 });
 
 /*
