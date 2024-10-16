@@ -717,7 +717,7 @@ bot.command("m", async (ctx) => {
 });
 
 // Regex para detectar palabras que terminan en "ano"
-const regexAno = /ano[.]?\b$/i;
+const regexAno = /ano\.?\b$/i;
 bot.hears(regexAno, async (ctx) => {
   // Responde citando el mensaje original
   ctx.reply("Pues me la agarras con la mano", {
@@ -726,7 +726,7 @@ bot.hears(regexAno, async (ctx) => {
 });
 
 // Regex para detectar palabras que terminan en "inco o 5"
-const regexInco = /(inco|5)[.]?\b$/i;
+const regexInco = /(inco|5)\.?\b$/i;
 bot.hears(regexInco, async (ctx) => {
   // Responde citando el mensaje original
   ctx.reply("Pues por el culo te la hinco", {
