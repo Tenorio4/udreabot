@@ -48,6 +48,7 @@ button {
     overflow: hidden;
     position: absolute;
     overflow-y: auto;
+    text-align: center;
     }
     
       .in {

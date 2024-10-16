@@ -9,6 +9,10 @@
     background-color: #f4f4f9;
     color: #333;
     height: 100%;
+    overflow: hidden;
+  }
+
+  .contenido {
     overflow-y: auto; /* Permite scrollear */
     display: flex;
     flex-direction: column; /* Alinea elementos de arriba hacia abajo */
