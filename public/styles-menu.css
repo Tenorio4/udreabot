@@ -210,6 +210,7 @@ button {
   
 .udrea {
         max-width: 100%;
+        width: 100%;
         height: auto;
         position: relative; /* Permite superposición */
         z-index: 1; /* Asegúrate de que la imagen esté por encima del canvas */
