@@ -14,6 +14,8 @@
 
   .contenido {
     overflow-y: auto; /* Permite scrollear */
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column; /* Alinea elementos de arriba hacia abajo */
     justify-content: center;
