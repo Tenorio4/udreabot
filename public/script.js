@@ -30,6 +30,16 @@ $(".close").click(function () {
   $(this).toggleClass("is-showing");
 });
 
+const button = document.getElementById("udrea");
+const videoIframe = document.getElementById("video-background");
+
+button.addEventListener("click", function () {
+  // Cambiar la URL del iframe para desactivar el mute y activar el sonido
+  const videoSrc =
+    "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&mute=0&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1";
+  videoIframe.src = videoSrc;
+});
+
 /*
 var canvas = document.createElement("canvas");
 canvas.style.position = "absolute"; // Asegúrate de que el canvas esté posicionado absolutamente
