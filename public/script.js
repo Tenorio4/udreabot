@@ -1,3 +1,12 @@
+// Cargar el menú de un archivo HTML externo
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("menu.html")
+    .then((response) => response.text())
+    .then((data) => {
+      document.getElementById("menu-lateral").innerHTML = data;
+    });
+});
+
 async function obtenerPrecioUdrea() {
   try {
     const response = await fetch("/precio-actual");
