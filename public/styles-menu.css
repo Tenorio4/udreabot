@@ -1,3 +1,7 @@
+* {
+  width: 100%;
+}
+
 button {
     position: fixed;
     top: 0;
