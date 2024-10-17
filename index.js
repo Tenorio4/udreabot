@@ -1084,7 +1084,7 @@ bot.command("picaduradelacobragay", async (ctx) => {
         });
         await ctx.reply(`${username} ha picado a ${victima}`);
         await ctx.reply(
-          `Ahora ${victima} tiene un vasto incremento del ${victimaData.porcentaje}`
+          `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
         );
       } else {
         await ctx.reply(`${username} no tienes udreas suficientes`);
