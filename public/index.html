@@ -24,6 +24,12 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById('menu-lateral').innerHTML = data;
+
+                $(".close").click(function () {
+                $(".outside").toggleClass("in");
+                $(".bar").toggleClass("active");
+                 $(this).toggleClass("is-showing");
+                });
             });
     });
 </script>
