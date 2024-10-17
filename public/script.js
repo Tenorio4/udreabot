@@ -40,10 +40,19 @@ button.addEventListener("click", function () {
   videoIframe.src = videoSrc;
 });*/
 
-$(".close").click(function () {
-  $(".outside").toggleClass("in");
-  $(".bar").toggleClass("active");
-  $(this).toggleClass("is-showing");
+// Cargar el menú de un archivo HTML externo
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("menu.html")
+    .then((response) => response.text())
+    .then((data) => {
+      document.getElementById("menu-lateral").innerHTML = data;
+
+      $(".close").click(function () {
+        $(".outside").toggleClass("in");
+        $(".bar").toggleClass("active");
+        $(this).toggleClass("is-showing");
+      });
+    });
 });
 
 /*

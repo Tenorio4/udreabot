@@ -17,22 +17,6 @@
     </iframe>
   </div>
   <div id="menu-lateral"></div>
-  <script>
-    // Cargar el menú de un archivo HTML externo
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('menu.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('menu-lateral').innerHTML = data;
-
-                $(".close").click(function () {
-                $(".outside").toggleClass("in");
-                $(".bar").toggleClass("active");
-                 $(this).toggleClass("is-showing");
-                });
-            });
-    });
-</script>
   <div class="texto">
     <h1>Bienvenido a la página de UdreaBot</h1>
     <p id="precio">Cargando precio...</p>
