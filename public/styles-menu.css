@@ -106,6 +106,7 @@ button {
     .menu {
       position: relative;
       z-index: 100;
+      
     }
   
     ul.menu {
