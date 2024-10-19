@@ -1091,7 +1091,19 @@ bot.command("picaduradelacobragay", async (ctx) => {
 
     const victima = params[1];
 
-    if (userData.porcentaje >= 100) {
+    const usersSnapshot = await db.collection("usuarios").get();
+    let lista = [];
+
+    usersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.porcentaje !== null) {
+        lista.push({ porcentaje: data.porcentaje });
+      }
+    });
+    let maxPorcentaje = 0;
+    maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
+
+    if (userData.porcentaje >= maxPorcentaje) {
       if (userData.udreas >= mercadoData.picaduradelacobragay) {
         const victimaDoc = db.collection("usuarios").doc(victima);
         const victimaData = (await victimaDoc.get()).data();
