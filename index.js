@@ -269,6 +269,7 @@ bot.telegram.setMyCommands([
     command: "/picaduradelacobragay",
     description: "Para convertir en gay a otro usuario",
   },
+  { command: "/cobra", description: "Para convertir en gay a otro usuario" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
   { command: "/udrea", description: "Udrea" },
   { command: "/superudrea", description: "Para superudrear" },
@@ -1070,7 +1071,7 @@ bot.command("heteropocion3", async (ctx) => {
   }
 });
 
-bot.command("picaduradelacobragay", async (ctx) => {
+async function picaduradelacobragay(ctx) {
   try {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
@@ -1106,7 +1107,6 @@ bot.command("picaduradelacobragay", async (ctx) => {
     if (userData.porcentaje >= maxPorcentaje) {
       if (userData.udreas >= mercadoData.picaduradelacobragay) {
         const victimaDoc = db.collection("usuarios").doc(victima);
-        const victimaData = (await victimaDoc.get()).data();
         const today = obtenerFechaHoy();
         victimaDoc.update({
           porcentaje: userData.porcentaje,
@@ -1132,6 +1132,14 @@ bot.command("picaduradelacobragay", async (ctx) => {
     console.error("Error al hacer picaduradelacobragay:", error);
     await ctx.reply("Udrea!");
   }
+}
+
+bot.command("picaduradelacobragay", async (ctx) => {
+  picaduradelacobragay(ctx);
+});
+
+bot.command("cobra", async (ctx) => {
+  picaduradelacobragay(ctx);
 });
 
 // Comando /memedeldia para obtener un meme aleatorio
