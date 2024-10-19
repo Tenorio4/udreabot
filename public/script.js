@@ -23,12 +23,39 @@ async function obtenerPrecioItem(item) {
   }
 }
 
+async function obtenerRanking() {
+  try {
+    const response = await fetch("/ranking");
+    const data = await response.json();
+
+    const listaElement = document.getElementById("data-list");
+
+    // Limpia la lista antes de agregar datos
+    listaElement.innerHTML = "";
+
+    data.forEach((doc) => {
+      const data = doc.data();
+
+      // Crear un nuevo elemento de lista <li>
+      const li = document.createElement("li");
+      li.textContent = `ID: ${doc.id}, Usuario: ${data.username}, Porcentaje: ${data.porcentaje}%`;
+
+      // Agregar el elemento a la lista
+      listaElement.appendChild(li);
+    });
+  } catch (error) {
+    document.getElementById("ranking").textContent =
+      "Error al cargar el ranking";
+  }
+}
+
 window.onload = obtenerPrecioItem("/reroll");
 window.onload = obtenerPrecioItem("/heteropocion1");
 window.onload = obtenerPrecioItem("/heteropocion2");
 window.onload = obtenerPrecioItem("/heteropocion3");
 window.onload = obtenerPrecioItem("/picaduradelacobragay");
 window.onload = obtenerPrecioUdrea;
+window.onload = obtenerRanking;
 
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");

@@ -121,6 +121,28 @@ app.get("/picaduradelacobragay", async (req, res) => {
   }
 });
 
+app.get("/ranking", async (req, res) => {
+  try {
+    const usersSnapshot = await db.collection("usuarios").get();
+    let ranking = [];
+
+    usersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.porcentaje !== null) {
+        ranking.push({ username: data.username, porcentaje: data.porcentaje });
+      }
+    });
+
+    ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
+
+    if (ranking.length > 0) res.json(ranking);
+    else res.json("Ahora mismo solo hay cobardes");
+  } catch (error) {
+    console.error("Error al obtener el ranking:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // Configurar la zona horaria
 const TIMEZONE = "Europe/Madrid";
