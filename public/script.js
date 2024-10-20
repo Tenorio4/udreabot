@@ -46,14 +46,15 @@ async function obtenerRanking() {
       "Error al cargar el ranking";
   }
 }
-
-window.onload = obtenerPrecioItem("/reroll");
-window.onload = obtenerPrecioItem("/heteropocion1");
-window.onload = obtenerPrecioItem("/heteropocion2");
-window.onload = obtenerPrecioItem("/heteropocion3");
-window.onload = obtenerPrecioItem("/picaduradelacobragay");
-window.onload = obtenerRanking;
-//window.onload = obtenerPrecioUdrea;
+window.onload = function () {
+  obtenerPrecioItem("/reroll");
+  obtenerPrecioItem("/heteropocion1");
+  obtenerPrecioItem("/heteropocion2");
+  obtenerPrecioItem("/heteropocion3");
+  obtenerPrecioItem("/picaduradelacobragay");
+  obtenerRanking();
+  obtenerPrecioUdrea();
+};
 
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
