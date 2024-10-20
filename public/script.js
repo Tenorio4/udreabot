@@ -52,8 +52,8 @@ window.onload = obtenerPrecioItem("/heteropocion1");
 window.onload = obtenerPrecioItem("/heteropocion2");
 window.onload = obtenerPrecioItem("/heteropocion3");
 window.onload = obtenerPrecioItem("/picaduradelacobragay");
-//window.onload = obtenerRanking;
-window.onload = obtenerPrecioUdrea;
+window.onload = obtenerRanking;
+//window.onload = obtenerPrecioUdrea;
 
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
