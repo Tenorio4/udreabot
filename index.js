@@ -360,7 +360,7 @@ async function nivel(username, ctx) {
         await ctx.reply("Udrea!");
       } else if (nuevoPorcentaje == 100) {
         await ctx.reply(
-          `🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} tiene un vasto incremento del\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈  ${nuevoPorcentaje}%  🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`
+          `🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} tiene un vasto incremento del ${nuevoPorcentaje}% \n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`
         );
       } else if (nuevoPorcentaje == 1000000) {
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
@@ -1116,7 +1116,7 @@ async function picaduradelacobragay(ctx) {
         userDoc.update({
           udreas: userData.udreas - mercadoData.picaduradelacobragay,
         });
-        await ctx.reply(`${username} ha picado a ${victima}`);
+        await ctx.reply(`🐍 ${username} ha picado a ${victima} 🐍`);
         await ctx.reply(
           `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
         );
