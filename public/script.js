@@ -28,7 +28,7 @@ async function obtenerRanking() {
     const response = await fetch("/ranking");
     const data = await response.json();
 
-    const listaElement = document.getElementById("data-list");
+    const listaElement = document.getElementById("lista");
 
     // Limpia la lista antes de agregar datos
     listaElement.innerHTML = "";
@@ -52,8 +52,8 @@ window.onload = obtenerPrecioItem("/heteropocion1");
 window.onload = obtenerPrecioItem("/heteropocion2");
 window.onload = obtenerPrecioItem("/heteropocion3");
 window.onload = obtenerPrecioItem("/picaduradelacobragay");
-window.onload = obtenerPrecioUdrea;
 window.onload = obtenerRanking;
+window.onload = obtenerPrecioUdrea;
 
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
