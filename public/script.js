@@ -46,7 +46,28 @@ async function obtenerRanking() {
       "Error al cargar el ranking";
   }
 }
+
+async function cargarMenu() {
+  try {
+    fetch("menu.html")
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("menu-lateral").innerHTML = data;
+
+        $(".close").click(function () {
+          $(".outside").toggleClass("in");
+          $(".bar").toggleClass("active");
+          $(this).toggleClass("is-showing");
+        });
+      });
+  } catch (error) {
+    document.getElementById("menu-lateral").textContent =
+      "Error al cargar el menú";
+  }
+}
+
 window.onload = function () {
+  cargarMenu();
   obtenerPrecioItem("/reroll");
   obtenerPrecioItem("/heteropocion1");
   obtenerPrecioItem("/heteropocion2");
@@ -67,19 +88,7 @@ button.addEventListener("click", function () {
 });*/
 
 // Cargar el menú de un archivo HTML externo
-document.addEventListener("DOMContentLoaded", function () {
-  fetch("menu.html")
-    .then((response) => response.text())
-    .then((data) => {
-      document.getElementById("menu-lateral").innerHTML = data;
-
-      $(".close").click(function () {
-        $(".outside").toggleClass("in");
-        $(".bar").toggleClass("active");
-        $(this).toggleClass("is-showing");
-      });
-    });
-});
+document.addEventListener("DOMContentLoaded", function () {});
 
 /*
 var canvas = document.createElement("canvas");
