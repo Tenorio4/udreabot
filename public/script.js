@@ -6,7 +6,7 @@ async function obtenerPrecioUdrea() {
       "precio"
     ).textContent = `El precio de la udrea hoy está a ${data.precio}€ la unidad`;
   } catch (error) {
-    // document.getElementById("precio").textContent = "Error al cargar el precio";
+    document.getElementById("precio").textContent = "Error al cargar el precio";
   }
 }
 
@@ -36,14 +36,14 @@ async function obtenerRanking() {
     data.forEach((data) => {
       // Crear un nuevo elemento de lista <li>
       const li = document.createElement("li");
-      li.textContent = `${data.username}:${data.porcentaje}%`;
+      li.textContent = `${data.username}: ${data.porcentaje}%`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);
     });
   } catch (error) {
-    //document.getElementById("ranking").textContent =
-    //"Error al cargar el ranking";
+    document.getElementById("ranking").textContent =
+      "Error al cargar el ranking";
   }
 }
 
@@ -53,7 +53,7 @@ window.onload = obtenerPrecioItem("/heteropocion2");
 window.onload = obtenerPrecioItem("/heteropocion3");
 window.onload = obtenerPrecioItem("/picaduradelacobragay");
 window.onload = obtenerRanking;
-window.onload = obtenerPrecioUdrea;
+//window.onload = obtenerPrecioUdrea;
 
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
