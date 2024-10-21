@@ -1024,7 +1024,7 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`🔄 ${username} ha usado reroll... 🔄`);
+      await ctx.reply(`${username} ha usado reroll... 🔄`);
       nivel(username, ctx);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
