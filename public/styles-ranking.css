@@ -14,16 +14,14 @@
 
 #lista {
     list-style-type: none;
-    list-style-type: decimal !ie; /*IE 7- hack*/
-     
+    list-style-type: decimal !ie; /* IE 7 hack */
     margin: 0;
     margin-left: 3em;
     padding: 0;
-     
     counter-reset: li-counter;
 }
 
-#lista > li{
+#lista > li {
     position: relative;
     margin-bottom: 20px;
     padding: 1em;
@@ -31,24 +29,41 @@
     background-color: #f5f5f5;
 }
 
+/* Pseudo-elemento para los números de la lista */
 #lista > li:before {
     position: absolute;
     top: 0;
     left: -0.95em;
     width: 1em;
- 
     font-size: 4em;
     line-height: 1;
     font-weight: bold;
     text-align: right;
     color: #464646;
-     
     transform: rotate(-25deg);
-    -ms-transform: rotate(-25deg);
-    -webkit-transform: rotate(-25deg);
     z-index: -99;
     overflow: hidden;
-     
     content: counter(li-counter);
     counter-increment: li-counter;
+}
+
+/* Estilo para el primer lugar (oro) */
+#lista > li:nth-child(1):before {
+    content: "🥇"; /* Emoji de medalla de oro */
+    transform: none; /* Sin rotación */
+    left: -1.5em; /* Ajuste de posición para emoji */
+}
+
+/* Estilo para el segundo lugar (plata) */
+#lista > li:nth-child(2):before {
+    content: "🥈"; /* Emoji de medalla de plata */
+    transform: none;
+    left: -1.5em;
+}
+
+/* Estilo para el tercer lugar (bronce) */
+#lista > li:nth-child(3):before {
+    content: "🥉"; /* Emoji de medalla de bronce */
+    transform: none;
+    left: -1.5em;
 }
