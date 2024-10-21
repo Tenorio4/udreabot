@@ -51,19 +51,16 @@
 #lista > li:nth-child(1):before {
     content: "🥇"; /* Emoji de medalla de oro */
     transform: none; /* Sin rotación */
-    left: -1.5em; /* Ajuste de posición para emoji */
 }
 
 /* Estilo para el segundo lugar (plata) */
 #lista > li:nth-child(2):before {
     content: "🥈"; /* Emoji de medalla de plata */
     transform: none;
-    left: -1.5em;
 }
 
 /* Estilo para el tercer lugar (bronce) */
 #lista > li:nth-child(3):before {
     content: "🥉"; /* Emoji de medalla de bronce */
     transform: none;
-    left: -1.5em;
 }

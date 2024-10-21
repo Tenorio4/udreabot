@@ -129,11 +129,27 @@ app.get("/ranking", async (req, res) => {
     usersSnapshot.forEach((doc) => {
       const data = doc.data();
       if (data.porcentaje !== null) {
-        ranking.push({ username: data.username, porcentaje: data.porcentaje });
+        ranking.push({
+          icono: null,
+          username: data.username,
+          porcentaje: data.porcentaje,
+        });
       }
     });
 
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
+
+    let icono = "";
+    let x = 0;
+    ranking.forEach((user, index) => {
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
+
+      if (index != 0 && user.porcentaje != ranking[index - 1].porcentaje)
+        x += 1;
+      icono = posiciones[x];
+
+      ranking[index].icono = icono;
+    });
 
     if (ranking.length > 0) res.json(ranking);
     else res.json("Ahora mismo solo hay cobardes");
