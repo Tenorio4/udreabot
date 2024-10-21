@@ -1,11 +1,10 @@
+/* Mantén tu estilo para la lista */
 #lista ol {
     counter-reset: li; 
     list-style: none; 
-    *list-style: decimal; 
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
 
 #lista ol {
@@ -14,13 +13,12 @@
 
 #lista {
     list-style-type: none;
-    list-style-type: decimal !ie; /* IE 7 hack */
     margin: 0;
-    margin-left: 3em;
-    padding: 0;
-    counter-reset: li-counter;
+    max-width: 80%;
+    /*padding: 0;*/
 }
 
+/* Estilo para los elementos de la lista */
 #lista > li {
     position: relative;
     margin-bottom: 20px;
@@ -29,38 +27,16 @@
     background-color: #f5f5f5;
 }
 
-/* Pseudo-elemento para los números de la lista */
-#lista > li:before {
-    position: absolute;
-    top: 0;
-    left: -0.95em;
-    width: 1em;
-    font-size: 4em;
-    line-height: 1;
+/* Estilo para el icono (medalla o número) */
+#lista > li .rank {
+    font-size: 2em;
     font-weight: bold;
-    text-align: right;
+    margin-right: 10px; /* Separar el icono del nombre */
     color: #464646;
-    transform: rotate(-25deg);
-    z-index: -99;
-    overflow: hidden;
-    content: counter(li-counter);
-    counter-increment: li-counter;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
 
-/* Estilo para el primer lugar (oro) */
-#lista > li:nth-child(1):before {
-    content: "🥇"; /* Emoji de medalla de oro */
-    transform: none; /* Sin rotación */
-}
-
-/* Estilo para el segundo lugar (plata) */
-#lista > li:nth-child(2):before {
-    content: "🥈"; /* Emoji de medalla de plata */
-    transform: none;
-}
-
-/* Estilo para el tercer lugar (bronce) */
-#lista > li:nth-child(3):before {
-    content: "🥉"; /* Emoji de medalla de bronce */
-    transform: none;
+/* Puedes añadir algún hover o efecto adicional si es necesario */
+#lista > li:hover {
+    background-color: #e0e0e0;
 }
