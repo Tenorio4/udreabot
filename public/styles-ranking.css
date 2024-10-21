@@ -1,5 +1,6 @@
 body {
-    overflow: auto;
+    overflow-x: hidden;  /* Evita el desplazamiento horizontal */
+    overflow-y: auto;    /* Mantén el desplazamiento vertical */
 }/* Mantén tu estilo para la lista */
 #lista ol {
     counter-reset: li; 
