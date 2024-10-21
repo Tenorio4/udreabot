@@ -799,7 +799,7 @@ async function enviarMensajeAleatorio(ctx, coleccion) {
 
 // Función para obtener un precio aleatorio entre 0.01€ y 4.99€
 function obtenerPrecioAleatorio() {
-  return (Math.random() * (4.99 - 0.5) + 0.01).toFixed(2); // Devuelve un número con 2 decimales
+  return (Math.random() * (4.99 - 0.5) + 0.5).toFixed(2); // Devuelve un número con 2 decimales
 }
 
 // Comando /precio
@@ -1010,7 +1010,9 @@ bot.command("heteropocion1", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion1,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${
+          userData.porcentaje - 10
+        }%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1035,7 +1037,9 @@ bot.command("heteropocion2", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion2,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 2 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 2 y su vasto incremento ha disminuido en un 50%:\n(${anteriorPorcentaje}% => ${
+          userData.porcentaje - 50
+        }%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1060,7 +1064,9 @@ bot.command("heteropocion3", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion3,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 3 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${userData.porcentaje}%)`
+        `${username} ha usado Hetero-poción LVL 3 y su vasto incremento ha disminuido en un 100%:\n(${anteriorPorcentaje}% => ${
+          userData.porcentaje - 100
+        }%)`
       );
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
