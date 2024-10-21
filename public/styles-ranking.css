@@ -33,12 +33,12 @@ body {
 /* Estilo para los elementos destacados (medalla de oro) */
 #lista > li.medalla-oro {
     font-size: 1.5em;
+    font-weight: 600;
     background-color: #f7e7b5; /* Fondo dorado claro */
     border-left-color: #FFD700; /* Línea dorada */
-    background-image: url('/public/lo-suponia.jpg'); /* Imagen de medalla si la tienes */
-    background-size: 50px 50px;
+    background-image: url(/lo-suponia.jpg);
+    background-size: 100% 100%;
     background-position: top right;
-    background-repeat: no-repeat;
 }
 
 /* Estilo para el icono (medalla o número) */
