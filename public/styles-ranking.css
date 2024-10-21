@@ -36,7 +36,7 @@ body {
     font-weight: 600;
     background-color: #f7e7b5; /* Fondo dorado claro */
     border-left-color: #FFD700; /* Línea dorada */
-    background-image: url(/lo-suponia.jpg);
+    background-image: url('/lo-suponia.jpg');
     background-size: 100% 100%;
     background-position: top right;
 }
