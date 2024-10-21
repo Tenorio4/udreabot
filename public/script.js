@@ -36,7 +36,7 @@ async function obtenerRanking() {
     data.forEach((data) => {
       // Crear un nuevo elemento de lista <li>
       const li = document.createElement("li");
-      li.textContent = `<span>${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);

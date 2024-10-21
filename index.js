@@ -885,13 +885,23 @@ bot.command("vender", async (ctx) => {
           ).toFixed(2),
           udreas: userData.udreas - cantidad,
         });
-        if (cantidad == 1) await ctx.reply(`Has vendido una udrea`);
-        else await ctx.reply(`Has vendido ${cantidad} udreas`);
+        if (cantidad == 1)
+          await ctx.reply(`Has vendido una udrea`, {
+            reply_to_message_id: ctx.message.message_id,
+          });
+        else
+          await ctx.reply(`Has vendido ${cantidad} udreas`, {
+            reply_to_message_id: ctx.message.message_id,
+          });
       } else {
-        await ctx.reply(`No tienes udreas suficientes`);
+        await ctx.reply(`No tienes udreas suficientes`, {
+          reply_to_message_id: ctx.message.message_id,
+        });
       }
     } else {
-      await ctx.reply("No puedes vender a ciegas");
+      await ctx.reply("No puedes vender a ciegas", {
+        reply_to_message_id: ctx.message.message_id,
+      });
       await ctx.reply("Pulse aquí -> /precio para consultar el precio de hoy");
       await ctx.reply("Y no seas un udrea");
     }
@@ -914,7 +924,10 @@ bot.command("comprar", async (ctx) => {
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
         return ctx.reply(
-          "Especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2"
+          "Especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2",
+          {
+            reply_to_message_id: ctx.message.message_id,
+          }
         );
       }
 
@@ -936,13 +949,23 @@ bot.command("comprar", async (ctx) => {
           dinero: (userData.dinero - precioData.precio * cantidad).toFixed(2),
           udreas: userData.udreas + cantidad,
         });
-        if (cantidad == 1) await ctx.reply(`Has comprado una udrea`);
-        else await ctx.reply(`Has comprado ${cantidad} udreas`);
+        if (cantidad == 1)
+          await ctx.reply(`Has comprado una udrea`, {
+            reply_to_message_id: ctx.message.message_id,
+          });
+        else
+          await ctx.reply(`Has comprado ${cantidad} udreas`, {
+            reply_to_message_id: ctx.message.message_id,
+          });
       } else {
-        await ctx.reply(`No hago tratos con pobres`);
+        await ctx.reply(`No hago tratos con pobres`, {
+          reply_to_message_id: ctx.message.message_id,
+        });
       }
     } else {
-      await ctx.reply("No puedes comprar a ciegas");
+      await ctx.reply("No puedes comprar a ciegas", {
+        reply_to_message_id: ctx.message.message_id,
+      });
       await ctx.reply("Pulse aquí -> /precio para consultar el precio de hoy");
       await ctx.reply("Y no seas un udrea");
     }
@@ -1001,7 +1024,7 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`${username} ha usado reroll...`);
+      await ctx.reply(`🔄 ${username} ha usado reroll... 🔄`);
       nivel(username, ctx);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1026,7 +1049,7 @@ bot.command("heteropocion1", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion1,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 1 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${
+        `${username} ha usado Hetero-poción LVL 1 🧪 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${
           userData.porcentaje - 10
         }%)`
       );
@@ -1053,7 +1076,7 @@ bot.command("heteropocion2", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion2,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 2 y su vasto incremento ha disminuido en un 50%:\n(${anteriorPorcentaje}% => ${
+        `${username} ha usado Hetero-poción LVL 2 🧪y su vasto incremento ha disminuido en un 50%:\n(${anteriorPorcentaje}% => ${
           userData.porcentaje - 50
         }%)`
       );
@@ -1080,7 +1103,7 @@ bot.command("heteropocion3", async (ctx) => {
         udreas: userData.udreas - mercadoData.heteropocion3,
       });
       await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 3 y su vasto incremento ha disminuido en un 100%:\n(${anteriorPorcentaje}% => ${
+        `${username} ha usado Hetero-poción LVL 3 🧪 y su vasto incremento ha disminuido en un 100%:\n(${anteriorPorcentaje}% => ${
           userData.porcentaje - 100
         }%)`
       );
