@@ -175,7 +175,7 @@ app.get("/rankingmensual", async (req, res) => {
       }
     });
 
-    ranking.sort((a, b) => b.puntosMensuales - a.puntosMensuales); // Ordenar por porcentaje descendente
+    ranking.sort((a, b) => b.puntos - a.puntos);
 
     let icono = "";
     let x = 0;
@@ -212,7 +212,7 @@ app.get("/rankinganual", async (req, res) => {
       }
     });
 
-    ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
+    ranking.sort((a, b) => b.puntos - a.puntos);
 
     let icono = "";
     let x = 0;
