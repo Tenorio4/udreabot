@@ -25,26 +25,27 @@ async function obtenerPrecioItem(item) {
 
 async function obtenerRanking() {
   try {
-    document.getElementById("diario");
-    const response = await fetch("/ranking");
-    const data = await response.json();
+    if (document.getElementById("diario") != null) {
+      const response = await fetch("/ranking");
+      const data = await response.json();
 
-    const listaElement = document.getElementById("lista");
+      const listaElement = document.getElementById("lista");
 
-    // Limpia la lista antes de agregar datos
-    listaElement.innerHTML = "";
+      // Limpia la lista antes de agregar datos
+      listaElement.innerHTML = "";
 
-    data.forEach((data) => {
-      // Crear un nuevo elemento de lista <li>
-      const li = document.createElement("li");
-      if (data.icono === "🥇") {
-        li.classList.add("medalla-oro");
-      }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+      data.forEach((data) => {
+        // Crear un nuevo elemento de lista <li>
+        const li = document.createElement("li");
+        if (data.icono === "🥇") {
+          li.classList.add("medalla-oro");
+        }
+        li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
 
-      // Agregar el elemento a la lista
-      listaElement.appendChild(li);
-    });
+        // Agregar el elemento a la lista
+        listaElement.appendChild(li);
+      });
+    }
   } catch (error) {
     document.getElementById("lista").textContent = "Error al cargar el ranking";
   }
@@ -52,57 +53,57 @@ async function obtenerRanking() {
 
 async function obtenerRankingMensual() {
   try {
-    document.getElementById("mensual");
-    const response = await fetch("/rankingmensual");
-    const data = await response.json();
+    if (document.getElementById("mensual") != null) {
+      const response = await fetch("/rankingmensual");
+      const data = await response.json();
 
-    const listaElement = document.getElementById("lista");
+      const listaElement = document.getElementById("lista");
 
-    // Limpia la lista antes de agregar datos
-    listaElement.innerHTML = "";
+      // Limpia la lista antes de agregar datos
+      listaElement.innerHTML = "";
 
-    data.forEach((data) => {
-      // Crear un nuevo elemento de lista <li>
-      const li = document.createElement("li");
-      if (data.icono === "🥇") {
-        li.classList.add("medalla-oro");
-      }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
+      data.forEach((data) => {
+        // Crear un nuevo elemento de lista <li>
+        const li = document.createElement("li");
+        if (data.icono === "🥇") {
+          li.classList.add("medalla-oro");
+        }
+        li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
 
-      // Agregar el elemento a la lista
-      listaElement.appendChild(li);
-    });
+        // Agregar el elemento a la lista
+        listaElement.appendChild(li);
+      });
+    }
   } catch (error) {
-    document.getElementById("listamensual").textContent =
-      "Error al cargar el ranking";
+    document.getElementById("lista").textContent = "Error al cargar el ranking";
   }
 }
 
 async function obtenerRankingAnual() {
   try {
-    document.getElementById("anual");
-    const response = await fetch("/rankinganual");
-    const data = await response.json();
+    if (document.getElementById("anual") != null) {
+      const response = await fetch("/rankinganual");
+      const data = await response.json();
 
-    const listaElement = document.getElementById("lista");
+      const listaElement = document.getElementById("lista");
 
-    // Limpia la lista antes de agregar datos
-    listaElement.innerHTML = "";
+      // Limpia la lista antes de agregar datos
+      listaElement.innerHTML = "";
 
-    data.forEach((data) => {
-      // Crear un nuevo elemento de lista <li>
-      const li = document.createElement("li");
-      if (data.icono === "🥇") {
-        li.classList.add("medalla-oro");
-      }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
+      data.forEach((data) => {
+        // Crear un nuevo elemento de lista <li>
+        const li = document.createElement("li");
+        if (data.icono === "🥇") {
+          li.classList.add("medalla-oro");
+        }
+        li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
 
-      // Agregar el elemento a la lista
-      listaElement.appendChild(li);
-    });
+        // Agregar el elemento a la lista
+        listaElement.appendChild(li);
+      });
+    }
   } catch (error) {
-    document.getElementById("listaanual").textContent =
-      "Error al cargar el ranking";
+    document.getElementById("lista").textContent = "Error al cargar el ranking";
   }
 }
 
