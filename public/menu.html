@@ -10,7 +10,25 @@
         <li><a href="comandos.html" class="menu-link"><span class="fa fa-credit-card"></span> Comandos</a></li>
         <li><a href="about.html" class="menu-link"><span class="fa fa-leaf"></span> Acerca de</a></li>
         <li><a href="index.html" class="menu-link"><img src="/StickerUdrea1.png" class="udrea"/></a></li>
+        <script>
+          const links = document.querySelectorAll(".menu-link");
+
+links.forEach((link) => {
+  link.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    // Añadir un efecto de transición
+    document.body.classList.add("fade-out");
+
+    // Espera a que la transición termine y luego navega
+    setTimeout(() => {
+      window.location.href = this.href;
+    }, 500); // Duración de la transición
+  });
+});
+        </script>
       </ul>
     </div>
   </div>
+
  

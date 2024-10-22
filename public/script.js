@@ -124,7 +124,6 @@ async function cargarMenu() {
 }
 
 window.onload = function () {
-  transicion();
   cargarMenu();
   obtenerPrecioItem("/reroll");
   obtenerPrecioItem("/heteropocion1");
@@ -147,25 +146,6 @@ button.addEventListener("click", function () {
 
 // Cargar el menú de un archivo HTML externo
 document.addEventListener("DOMContentLoaded", function () {});
-
-// Función para cargar contenido de una nueva vista HTML
-async function transicion() {
-  const links = document.querySelectorAll(".menu-link");
-
-  links.forEach((link) => {
-    link.addEventListener("click", function (event) {
-      event.preventDefault();
-
-      // Añadir un efecto de transición
-      document.body.classList.add("fade-out");
-
-      // Espera a que la transición termine y luego navega
-      setTimeout(() => {
-        window.location.href = this.href;
-      }, 500); // Duración de la transición
-    });
-  });
-}
 
 // Ejemplo: cuando haces clic en un enlace
 document.querySelectorAll("a").forEach((link) => {
