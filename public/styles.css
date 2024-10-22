@@ -4,6 +4,7 @@ body, html {
   text-align: center;
   margin: 0;
   overflow: hidden; /* Para evitar barras de desplazamiento */
+  transition: opacity 0.5s ease-in-out;
 }
 
 .texto {
@@ -94,12 +95,6 @@ h1 {
   }
 }
 
-/* Estilo de transición */
-.fade-enter {
+.fade-out {
   opacity: 0;
-  transition: opacity 0.5s ease-in;
-}
-
-.fade-enter-active {
-  opacity: 1;
 }
