@@ -25,6 +25,7 @@ async function obtenerPrecioItem(item) {
 
 async function obtenerRanking() {
   try {
+    document.getElementById("diario");
     const response = await fetch("/ranking");
     const data = await response.json();
 
@@ -51,10 +52,11 @@ async function obtenerRanking() {
 
 async function obtenerRankingMensual() {
   try {
+    document.getElementById("mensual");
     const response = await fetch("/rankingmensual");
     const data = await response.json();
 
-    const listaElement = document.getElementById("listamensual");
+    const listaElement = document.getElementById("lista");
 
     // Limpia la lista antes de agregar datos
     listaElement.innerHTML = "";
@@ -78,10 +80,11 @@ async function obtenerRankingMensual() {
 
 async function obtenerRankingAnual() {
   try {
+    document.getElementById("anual");
     const response = await fetch("/rankinganual");
     const data = await response.json();
 
-    const listaElement = document.getElementById("listaanual");
+    const listaElement = document.getElementById("lista");
 
     // Limpia la lista antes de agregar datos
     listaElement.innerHTML = "";
