@@ -45,8 +45,7 @@ async function obtenerRanking() {
       listaElement.appendChild(li);
     });
   } catch (error) {
-    document.getElementById("ranking").textContent =
-      "Error al cargar el ranking";
+    document.getElementById("lista").textContent = "Error al cargar el ranking";
   }
 }
 
@@ -66,13 +65,13 @@ async function obtenerRankingMensual() {
       if (data.icono === "🥇") {
         li.classList.add("medalla-oro");
       }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}%`;
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);
     });
   } catch (error) {
-    document.getElementById("ranking").textContent =
+    document.getElementById("listamensual").textContent =
       "Error al cargar el ranking";
   }
 }
@@ -93,13 +92,13 @@ async function obtenerRankingAnual() {
       if (data.icono === "🥇") {
         li.classList.add("medalla-oro");
       }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}%`;
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);
     });
   } catch (error) {
-    document.getElementById("ranking").textContent =
+    document.getElementById("listaanual").textContent =
       "Error al cargar el ranking";
   }
 }
@@ -131,6 +130,8 @@ window.onload = function () {
   obtenerPrecioItem("/heteropocion3");
   obtenerPrecioItem("/picaduradelacobragay");
   obtenerRanking();
+  obtenerRankingMensual();
+  obtenerRankingAnual();
   obtenerPrecioUdrea();
 };
 
