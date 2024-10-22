@@ -48,6 +48,7 @@ button {
     overflow: hidden;
     position: fixed;
     text-align: center;
+    transition: opacity 0.5s ease-in-out;
     }
     
       .in {
@@ -217,3 +218,6 @@ button {
         z-index: 1; /* Asegúrate de que la imagen esté por encima del canvas */
       }
       
+.fade-out {
+      opacity: 0;
+}

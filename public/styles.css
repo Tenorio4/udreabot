@@ -4,7 +4,6 @@ body, html {
   text-align: center;
   margin: 0;
   overflow: hidden; /* Para evitar barras de desplazamiento */
-  transition: opacity 0.5s ease-in-out;
 }
 
 .texto {
@@ -93,8 +92,4 @@ h1 {
   .main-content {
     padding-right: 20px;
   }
-}
-
-.fade-out {
-  opacity: 0;
 }

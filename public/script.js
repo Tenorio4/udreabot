@@ -55,7 +55,7 @@ async function obtenerRankingMensual() {
     const response = await fetch("/rankingmensual");
     const data = await response.json();
 
-    const listaElement = document.getElementById("lista");
+    const listaElement = document.getElementById("listamensual");
 
     // Limpia la lista antes de agregar datos
     listaElement.innerHTML = "";
@@ -82,7 +82,7 @@ async function obtenerRankingAnual() {
     const response = await fetch("/rankinganual");
     const data = await response.json();
 
-    const listaElement = document.getElementById("lista");
+    const listaElement = document.getElementById("listaanual");
 
     // Limpia la lista antes de agregar datos
     listaElement.innerHTML = "";
