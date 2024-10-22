@@ -52,7 +52,7 @@ async function obtenerRanking() {
 
 async function obtenerRankingMensual() {
   try {
-    const response = await fetch("/ranking");
+    const response = await fetch("/rankingmensual");
     const data = await response.json();
 
     const listaElement = document.getElementById("lista");
@@ -66,7 +66,7 @@ async function obtenerRankingMensual() {
       if (data.icono === "🥇") {
         li.classList.add("medalla-oro");
       }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}%`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);
@@ -79,7 +79,7 @@ async function obtenerRankingMensual() {
 
 async function obtenerRankingAnual() {
   try {
-    const response = await fetch("/ranking");
+    const response = await fetch("/rankinganual");
     const data = await response.json();
 
     const listaElement = document.getElementById("lista");
@@ -93,7 +93,7 @@ async function obtenerRankingAnual() {
       if (data.icono === "🥇") {
         li.classList.add("medalla-oro");
       }
-      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.puntos}%`;
 
       // Agregar el elemento a la lista
       listaElement.appendChild(li);

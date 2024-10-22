@@ -159,6 +159,80 @@ app.get("/ranking", async (req, res) => {
   }
 });
 
+app.get("/rankingmensual", async (req, res) => {
+  try {
+    const usersSnapshot = await db.collection("usuarios").get();
+    let ranking = [];
+
+    usersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.puntosMensuales !== null) {
+        ranking.push({
+          icono: null,
+          username: data.username,
+          puntos: data.puntosMensuales,
+        });
+      }
+    });
+
+    ranking.sort((a, b) => b.puntosMensuales - a.puntosMensuales); // Ordenar por porcentaje descendente
+
+    let icono = "";
+    let x = 0;
+    ranking.forEach((user, index) => {
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
+
+      if (index != 0 && user.puntos != ranking[index - 1].puntos) x += 1;
+      icono = posiciones[x];
+
+      ranking[index].icono = icono;
+    });
+
+    if (ranking.length > 0) res.json(ranking);
+    else res.json("Ahora mismo no hay datos");
+  } catch (error) {
+    console.error("Error al obtener el ranking mensual:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+app.get("/rankinganual", async (req, res) => {
+  try {
+    const usersSnapshot = await db.collection("usuarios").get();
+    let ranking = [];
+
+    usersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.puntosAnuales !== null) {
+        ranking.push({
+          icono: null,
+          username: data.username,
+          puntos: data.puntosAnuales,
+        });
+      }
+    });
+
+    ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
+
+    let icono = "";
+    let x = 0;
+    ranking.forEach((user, index) => {
+      let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
+
+      if (index != 0 && user.puntos != ranking[index - 1].puntos) x += 1;
+      icono = posiciones[x];
+
+      ranking[index].icono = icono;
+    });
+
+    if (ranking.length > 0) res.json(ranking);
+    else res.json("Ahora mismo no hay datos");
+  } catch (error) {
+    console.error("Error al obtener el ranking anual:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // Configurar la zona horaria
 const TIMEZONE = "Europe/Madrid";
