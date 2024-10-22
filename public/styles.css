@@ -93,3 +93,13 @@ h1 {
     padding-right: 20px;
   }
 }
+
+/* Estilo de transición */
+.fade-enter {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.fade-enter-active {
+  opacity: 1;
+}

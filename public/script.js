@@ -147,6 +147,38 @@ button.addEventListener("click", function () {
 // Cargar el menú de un archivo HTML externo
 document.addEventListener("DOMContentLoaded", function () {});
 
+// Función para cargar contenido de una nueva vista HTML
+function cargarVista(url) {
+  const contentDiv = document.getElementById("content");
+
+  // Añadir clase de transición de salida
+  contentDiv.classList.add("fade-enter");
+
+  // Realizar la petición para obtener la nueva vista
+  fetch(url)
+    .then((response) => response.text())
+    .then((html) => {
+      setTimeout(() => {
+        // Reemplazar el contenido actual
+        contentDiv.innerHTML = html;
+
+        // Añadir clase de transición activa para la nueva vista
+        contentDiv.classList.add("fade-enter-active");
+
+        // Remover la clase de salida para futuras transiciones
+        contentDiv.classList.remove("fade-enter");
+      }, 500); // Tiempo de la transición
+    });
+}
+
+// Ejemplo: cuando haces clic en un enlace
+document.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    cargarVista(event.target.href); // Llama a la función de cargar vista
+  });
+});
+
 /*
 var canvas = document.createElement("canvas");
 canvas.style.position = "absolute"; // Asegúrate de que el canvas esté posicionado absolutamente
