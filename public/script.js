@@ -50,6 +50,60 @@ async function obtenerRanking() {
   }
 }
 
+async function obtenerRankingMensual() {
+  try {
+    const response = await fetch("/ranking");
+    const data = await response.json();
+
+    const listaElement = document.getElementById("lista");
+
+    // Limpia la lista antes de agregar datos
+    listaElement.innerHTML = "";
+
+    data.forEach((data) => {
+      // Crear un nuevo elemento de lista <li>
+      const li = document.createElement("li");
+      if (data.icono === "🥇") {
+        li.classList.add("medalla-oro");
+      }
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+
+      // Agregar el elemento a la lista
+      listaElement.appendChild(li);
+    });
+  } catch (error) {
+    document.getElementById("ranking").textContent =
+      "Error al cargar el ranking";
+  }
+}
+
+async function obtenerRankingAnual() {
+  try {
+    const response = await fetch("/ranking");
+    const data = await response.json();
+
+    const listaElement = document.getElementById("lista");
+
+    // Limpia la lista antes de agregar datos
+    listaElement.innerHTML = "";
+
+    data.forEach((data) => {
+      // Crear un nuevo elemento de lista <li>
+      const li = document.createElement("li");
+      if (data.icono === "🥇") {
+        li.classList.add("medalla-oro");
+      }
+      li.innerHTML = `<span class="rank">${data.icono}</span> ${data.username}: ${data.porcentaje}%`;
+
+      // Agregar el elemento a la lista
+      listaElement.appendChild(li);
+    });
+  } catch (error) {
+    document.getElementById("ranking").textContent =
+      "Error al cargar el ranking";
+  }
+}
+
 async function cargarMenu() {
   try {
     fetch("menu.html")

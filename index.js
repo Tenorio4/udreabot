@@ -385,6 +385,9 @@ async function nivel(username, ctx) {
         );
         await ctx.reply(`🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`);
         sumarPuntosAGanador(username);
+        await ctx.reply(
+          `Se le ha sumado un punto más a ${username} en el ranking mensual`
+        );
       } else {
         await ctx.reply(
           `${username} tiene un ${nuevoPorcentaje}% de vasto incremento`
@@ -1024,7 +1027,9 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`${username} ha usado reroll... 🔄`);
+      await ctx.reply(`has usado reroll... 🔄`, {
+        reply_to_message_id: ctx.message.message_id,
+      });
       nivel(username, ctx);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
@@ -1190,10 +1195,13 @@ bot.command("cobra", async (ctx) => {
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command("meme", async (ctx) => {
   try {
-    const meme = await obtenerMeme();
+    ctx.reply(`Tú sí que eres un meme`, {
+      reply_to_message_id: ctx.message.message_id,
+    });
+    /*const meme = await obtenerMeme();
     ctx.replyWithPhoto(meme.url, {
       caption: `${meme.title}\nFuente: ${meme.postLink}`,
-    }); // Enviar el meme como una imagen
+    }); // Enviar el meme como una imagen*/
   } catch (error) {
     console.error("Error obteniendo meme:", error);
     ctx.reply(
