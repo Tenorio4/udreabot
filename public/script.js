@@ -147,7 +147,7 @@ document.getElementById("udrea").addEventListener("click", function () {
     "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
   videoIframe.src = videoSrc;
   const contenedor = document.getElementById("inicio");
-  contenedor.style.opacity = "0.5"; // Cambia la opacidad a 0.5
+  contenedor.style.opacity = "0"; // Cambia la opacidad a 0.5
 });
 
 /*const button = document.getElementById("close");
