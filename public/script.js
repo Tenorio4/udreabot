@@ -145,9 +145,12 @@ document.getElementById("udrea").addEventListener("click", function () {
   const videoIframe = document.getElementById("video-background");
   const videoSrc =
     "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
-  videoIframe.src = videoSrc;
+  //videoIframe.src = videoSrc;
+  videoIframe.muted = false;
+  videoIframe.play();
   const contenedor = document.getElementById("inicio");
   contenedor.style.opacity = "0"; // Cambia la opacidad a 0.5
+  contenedor.style.zIndex = "0";
 });
 
 /*const button = document.getElementById("close");
