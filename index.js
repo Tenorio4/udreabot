@@ -757,11 +757,11 @@ bot.hears(
         if (ganadores.length === 1) {
           if (ganadores[0].username === "@ireeneeri")
             await ctx.reply(
-              `${ganadores[0].username} es la más homo con un ${ganadores[0].porcentaje}% de vasto incremento`
+              `${ganadores[0].username} es la más homo con un vasto incremento del ${ganadores[0].porcentaje}%`
             );
           else
             await ctx.reply(
-              `${ganadores[0].username} es el más homo con un ${ganadores[0].porcentaje}% de vasto incremento`
+              `${ganadores[0].username} es el más homo con un vasto incremento del ${ganadores[0].porcentaje}%`
             );
         } else {
           let ganadoresMensaje = `Los homos del día son:\n\n`;
@@ -797,7 +797,7 @@ const udreaRegex = /\budrea(a|aa|aaa|aaaa|aaaaa|s|ría|ríe|)\b/i;
 
 // Listener para palabras derivadas de "udrea" o el comando /udrea
 bot.hears(udreaRegex, async (ctx) => {
-  await enviarMensajeAleatorio(ctx, "udreaMessages");
+  //await enviarMensajeAleatorio(ctx, "udreaMessages");
 });
 
 bot.command("udrea", async (ctx) => {
@@ -1021,19 +1021,31 @@ bot.command("comprar", async (ctx) => {
 
       if (userData.dinero >= precioData.precio * cantidad) {
         // Lógica para manejar la compra de la cantidad solicitada
+        const nuevoDinero = (
+          userData.dinero -
+          precioData.precio * cantidad
+        ).toFixed(2);
+        const nuevasUdreas = userData.udreas + cantidad;
         userDoc.set({
           ...userData,
-          dinero: (userData.dinero - precioData.precio * cantidad).toFixed(2),
-          udreas: userData.udreas + cantidad,
+          dinero: nuevoDinero,
+          udreas: nuevasUdreas,
         });
-        if (cantidad == 1)
-          await ctx.reply(`Has comprado una udrea`, {
-            reply_to_message_id: ctx.message.message_id,
-          });
-        else
-          await ctx.reply(`Has comprado ${cantidad} udreas`, {
-            reply_to_message_id: ctx.message.message_id,
-          });
+        if (cantidad == 1) {
+          await ctx.reply(
+            `Has comprado una udrea.\n Ahora tienes:\n\n · Dinero: ${nuevoDinero}€\n ·Udreas: ${nuevasUdreas}`,
+            {
+              reply_to_message_id: ctx.message.message_id,
+            }
+          );
+        } else {
+          await ctx.reply(
+            `Has comprado ${cantidad} udreas.\n Ahora tienes:\n\n · Dinero: ${nuevoDinero}€\n ·Udreas: ${nuevasUdreas}`,
+            {
+              reply_to_message_id: ctx.message.message_id,
+            }
+          );
+        }
       } else {
         await ctx.reply(`No hago tratos con pobres`, {
           reply_to_message_id: ctx.message.message_id,
@@ -1240,7 +1252,7 @@ async function picaduradelacobragay(ctx) {
         userDoc.update({
           udreas: userData.udreas - mercadoData.picaduradelacobragay,
         });
-        await ctx.reply(`🐍 ${username} ha picado a ${victima} 🐍`);
+        await ctx.reply(`${username} ha picado a ${victima} 🐍`);
         await ctx.reply(
           `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
         );
