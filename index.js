@@ -1329,7 +1329,7 @@ async function superpicaduradelacobragay(ctx) {
     if (userData.porcentaje >= maxPorcentaje) {
       if (userData.udreas >= mercadoData.superpicaduradelacobragay) {
         const today = obtenerFechaHoy();
-        let picados;
+        let picados = "";
         usersSnapshot.forEach((doc) => {
           const victimaData = doc.data();
           const victimaDoc = db
