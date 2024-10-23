@@ -954,22 +954,30 @@ bot.command("vender", async (ctx) => {
 
       if (userData.udreas >= cantidad) {
         // Lógica para manejar la venta de la cantidad solicitada
+        const nuevoDinero = (
+          parseFloat(userData.dinero) +
+          (parseFloat(precioData.precio) / 2) * cantidad
+        ).toFixed(2);
+        const nuevasUdreas = userData.udreas - cantidad;
         userDoc.set({
           ...userData,
-          dinero: (
-            parseFloat(userData.dinero) +
-            (parseFloat(precioData.precio) / 2) * cantidad
-          ).toFixed(2),
-          udreas: userData.udreas - cantidad,
+          dinero: nuevoDinero,
+          udreas: nuevasUdreas,
         });
         if (cantidad == 1)
-          await ctx.reply(`Has vendido una udrea`, {
-            reply_to_message_id: ctx.message.message_id,
-          });
+          await ctx.reply(
+            `Has vendido una udrea\nAhora tienes:\n\n· Dinero: ${nuevoDinero}€\n· Udreas: ${nuevasUdreas}`,
+            {
+              reply_to_message_id: ctx.message.message_id,
+            }
+          );
         else
-          await ctx.reply(`Has vendido ${cantidad} udreas`, {
-            reply_to_message_id: ctx.message.message_id,
-          });
+          await ctx.reply(
+            `Has vendido ${cantidad} udreas\nAhora tienes:\n\n· Dinero: ${nuevoDinero}€\n· Udreas: ${nuevasUdreas}`,
+            {
+              reply_to_message_id: ctx.message.message_id,
+            }
+          );
       } else {
         await ctx.reply(`No tienes udreas suficientes`, {
           reply_to_message_id: ctx.message.message_id,
@@ -1033,14 +1041,14 @@ bot.command("comprar", async (ctx) => {
         });
         if (cantidad == 1) {
           await ctx.reply(
-            `Has comprado una udrea.\n Ahora tienes:\n\n · Dinero: ${nuevoDinero}€\n ·Udreas: ${nuevasUdreas}`,
+            `Has comprado una udrea\nAhora tienes:\n\n· Dinero: ${nuevoDinero}€\n· Udreas: ${nuevasUdreas}`,
             {
               reply_to_message_id: ctx.message.message_id,
             }
           );
         } else {
           await ctx.reply(
-            `Has comprado ${cantidad} udreas.\n Ahora tienes:\n\n · Dinero: ${nuevoDinero}€\n ·Udreas: ${nuevasUdreas}`,
+            `Has comprado ${cantidad} udreas\nAhora tienes:\n\n· Dinero: ${nuevoDinero}€\n· Udreas: ${nuevasUdreas}`,
             {
               reply_to_message_id: ctx.message.message_id,
             }
@@ -1270,12 +1278,75 @@ async function picaduradelacobragay(ctx) {
   }
 }
 
+async function superpicaduradelacobragay(ctx) {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    const usersSnapshot = await db.collection("usuarios").get();
+    let lista = [];
+
+    usersSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.porcentaje !== null) {
+        lista.push({ porcentaje: data.porcentaje });
+      }
+    });
+    let maxPorcentaje = 0;
+    maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
+
+    if (userData.porcentaje >= maxPorcentaje) {
+      if (userData.udreas >= mercadoData.superpicaduradelacobragay) {
+        const today = obtenerFechaHoy();
+        let picados = [];
+        usersSnapshot.forEach((doc) => {
+          const victimaData = doc.data();
+          if (victimaData.username != userData.username) {
+            doc.update({
+              porcentaje: userData.porcentaje,
+              ultimaActualizacion: today,
+            });
+            picados.push({ username: victimaData.username });
+          }
+        });
+        userDoc.update({
+          udreas: userData.udreas - mercadoData.superpicaduradelacobragay,
+        });
+        await ctx.reply(`${username} ha picado a todos los usuarios 🐍`);
+        await ctx.reply(
+          `${picados} tienen un vasto incremento del ${userData.porcentaje}%`
+        );
+      } else {
+        await ctx.reply(`${username} no tienes udreas suficientes`);
+      }
+    } else {
+      await ctx.reply(
+        `${username} tienes que ser gay para poder picar a los demás usuarios`
+      );
+    }
+  } catch (error) {
+    console.error("Error al hacer superpicaduradelacobragay:", error);
+    await ctx.reply("Udrea!");
+  }
+}
+
 bot.command("picaduradelacobragay", async (ctx) => {
   picaduradelacobragay(ctx);
 });
 
 bot.command("cobra", async (ctx) => {
   picaduradelacobragay(ctx);
+});
+
+bot.command("superpicaduradelacobragay", async (ctx) => {
+  superpicaduradelacobragay(ctx);
+});
+
+bot.command("supercobra", async (ctx) => {
+  superpicaduradelacobragay(ctx);
 });
 
 // Comando /memedeldia para obtener un meme aleatorio
@@ -1487,7 +1558,7 @@ schedule.scheduleJob(rule, async () => {
     // Resetear porcentajes para el siguiente día
     usersSnapshot.forEach((doc) => {
       const userDoc = db.collection("usuarios").doc(doc.id);
-      batch.update(userDoc, { porcentaje: null });
+      batch.update(userDoc, { porcentaje: null, desempate: null });
     });
     await batch.commit();
   } catch (error) {
