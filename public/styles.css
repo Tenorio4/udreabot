@@ -4,6 +4,7 @@ body, html {
   text-align: center;
   margin: 0;
   overflow: hidden; /* Para evitar barras de desplazamiento */
+  background-color: black;
 }
 
 .texto {
@@ -86,6 +87,8 @@ h1 {
 .video-background iframe {
   width: 100vw;
   height: 100vh;
+  transition: opacity 1s ease;
+  opacity: 0;
 }
 
 @media (max-width: 768px) {
