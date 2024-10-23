@@ -823,9 +823,9 @@ bot.hears(
 const udreaRegex = /\budrea(a|aa|aaa|aaaa|aaaaa|s|ría|ríe|)\b/i;
 
 // Listener para palabras derivadas de "udrea" o el comando /udrea
-bot.hears(udreaRegex, async (ctx) => {
-  //await enviarMensajeAleatorio(ctx, "udreaMessages");
-});
+/*bot.hears(udreaRegex, async (ctx) => {
+  await enviarMensajeAleatorio(ctx, "udreaMessages");
+});*/
 
 bot.command("udrea", async (ctx) => {
   await enviarMensajeAleatorio(ctx, "udreaMessages");
