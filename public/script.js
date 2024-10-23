@@ -107,19 +107,19 @@ async function obtenerRankingAnual() {
   }
 }
 
+let menuLateral = etch("menu.html").then((response) => response.text());
+
 async function cargarMenu() {
   try {
-    fetch("menu.html")
-      .then((response) => response.text())
-      .then((data) => {
-        document.getElementById("menu-lateral").innerHTML = data;
+    menuLateral.then((data) => {
+      document.getElementById("menu-lateral").innerHTML = data;
 
-        $(".close").click(function () {
-          $(".outside").toggleClass("in");
-          $(".bar").toggleClass("active");
-          $(this).toggleClass("is-showing");
-        });
+      $(".close").click(function () {
+        $(".outside").toggleClass("in");
+        $(".bar").toggleClass("active");
+        $(this).toggleClass("is-showing");
       });
+    });
   } catch (error) {
     document.getElementById("menu-lateral").textContent =
       "Error al cargar el menú";
