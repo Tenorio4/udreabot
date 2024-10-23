@@ -140,6 +140,16 @@ window.onload = function () {
   obtenerPrecioUdrea();
 };
 
+document.getElementById("udrea").addEventListener("click", function () {
+  // Cambiar la URL del iframe para desactivar el mute y activar el sonido
+  const videoIframe = document.getElementById("video-background");
+  const videoSrc =
+    "https://www.youtube.com/embed/QUcTsFe1PVs?autoplay=1&start=55&loop=1&playlist=QUcTsFe1PVs&controls=0&showinfo=0&modestbranding=1&mute=0";
+  videoIframe.src = videoSrc;
+  const contenedor = document.getElementById("inicio");
+  contenedor.style.opacity = "0.5"; // Cambia la opacidad a 0.5
+});
+
 /*const button = document.getElementById("close");
 const videoIframe = document.getElementById("video-background");
 
