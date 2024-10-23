@@ -1301,7 +1301,7 @@ async function superpicaduradelacobragay(ctx) {
     if (userData.porcentaje >= maxPorcentaje) {
       if (userData.udreas >= mercadoData.superpicaduradelacobragay) {
         const today = obtenerFechaHoy();
-        let picados = [];
+        let picados;
         usersSnapshot.forEach((doc) => {
           const victimaData = doc.data();
           const victimaDoc = db
@@ -1312,7 +1312,7 @@ async function superpicaduradelacobragay(ctx) {
               porcentaje: userData.porcentaje,
               ultimaActualizacion: today,
             });
-            picados.push({ username: victimaData.username });
+            picados += `${victimaData.username} `;
           }
         });
         userDoc.update({
@@ -1320,7 +1320,7 @@ async function superpicaduradelacobragay(ctx) {
         });
         await ctx.reply(`${username} ha picado a todos los usuarios 🐍`);
         await ctx.reply(
-          `${picados} tienen un vasto incremento del ${userData.porcentaje}%`
+          `${picados}ahora tienen un vasto incremento del ${userData.porcentaje}%`
         );
       } else {
         await ctx.reply(`${username} no tienes udreas suficientes`);
