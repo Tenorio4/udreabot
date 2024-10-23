@@ -133,6 +133,7 @@ window.onload = function () {
   obtenerPrecioItem("/heteropocion2");
   obtenerPrecioItem("/heteropocion3");
   obtenerPrecioItem("/picaduradelacobragay");
+  obtenerPrecioItem("/superpicaduradelacobragay");
   obtenerRanking();
   obtenerRankingMensual();
   obtenerRankingAnual();
