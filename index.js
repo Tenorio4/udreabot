@@ -1305,7 +1305,7 @@ async function superpicaduradelacobragay(ctx) {
         usersSnapshot.forEach((doc) => {
           const victimaData = doc.data();
           if (victimaData.username != userData.username) {
-            doc.update({
+            victimaData.update({
               porcentaje: userData.porcentaje,
               ultimaActualizacion: today,
             });
