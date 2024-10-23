@@ -342,6 +342,7 @@ async function inicializarUsuarios() {
 bot.telegram.setMyCommands([
   { command: "/start", description: "Inicia el bot" },
   { command: "/help", description: "Muestra la ayuda" },
+  { command: "/web", description: "Muestra la web de UdreaBot" },
   { command: "/nivel", description: "Muestra tu vasto incremento" },
   { command: "/desempatar", description: "Para desempatar" },
   { command: "/ranking", description: "Muestra el ranking del día" },
@@ -360,6 +361,14 @@ bot.telegram.setMyCommands([
     description: "Para convertir en gay a otro usuario",
   },
   { command: "/cobra", description: "Para convertir en gay a otro usuario" },
+  {
+    command: "/superpicaduradelacobragay",
+    description: "Para convertir en gay a los demás usuarios",
+  },
+  {
+    command: "/supercobra",
+    description: "Para convertir en gay a los demás usuarios",
+  },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
   { command: "/udrea", description: "Udrea" },
   { command: "/superudrea", description: "Para superudrear" },
@@ -1099,7 +1108,8 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· /heteropocion2: ${mercadoData.heteropocion2} udrea(s)\n`;
     mercadoMensaje += `· /heteropocion3: ${mercadoData.heteropocion3} udrea(s)\n`;
-    mercadoMensaje += `· /picaduradelacobragay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
+    mercadoMensaje += `· /picaduradelacobragay o /cobra: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
+    mercadoMensaje += `· /superpicaduradelacobragay o /supercobra: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
     await ctx.reply(mercadoMensaje);
   } catch (error) {
     console.error("Error en obtener el mercado:", error);
