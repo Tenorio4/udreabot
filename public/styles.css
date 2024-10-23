@@ -4,7 +4,6 @@ body, html {
   text-align: center;
   margin: 0;
   overflow: hidden; /* Para evitar barras de desplazamiento */
-  background-color: black;
 }
 
 .texto {
