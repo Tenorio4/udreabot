@@ -14,6 +14,8 @@
     flex-direction: column; /* Alinea elementos de arriba hacia abajo */
     justify-content: center;
     align-items: center;
+    transition: opacity 3s ease;
+    opacity: 0;
   }
 
   .container {
