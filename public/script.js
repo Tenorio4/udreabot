@@ -138,6 +138,8 @@ window.onload = function () {
   obtenerRankingMensual();
   obtenerRankingAnual();
   obtenerPrecioUdrea();
+
+  document.body.style.opacity = "1";
 };
 
 document.getElementById("udrea").addEventListener("click", function () {

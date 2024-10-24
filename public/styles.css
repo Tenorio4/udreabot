@@ -4,6 +4,8 @@ body, html {
   text-align: center;
   margin: 0;
   overflow: hidden; /* Para evitar barras de desplazamiento */
+  transition: opacity 1s ease;
+  opacity: 0;
 }
 
 .texto {
