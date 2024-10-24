@@ -139,6 +139,7 @@ window.onload = function () {
   obtenerRankingAnual();
   obtenerPrecioUdrea();
 
+  document.documentElement.style.opacity = "1";
   document.body.style.opacity = "1";
 };
 
