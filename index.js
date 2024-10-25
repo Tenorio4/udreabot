@@ -922,6 +922,16 @@ function obtenerPrecioAleatorio() {
   return (Math.random() * (4.99 - 0.5) + 0.5).toFixed(2); // Devuelve un número con 2 decimales
 }
 
+// Función para obtener un precio aleatorio entre 1.50€ y 14.99€
+function obtenerPrecioUtsuAleatorio() {
+  return (Math.random() * (14.99 - 1.5) + 1.5).toFixed(2); // Devuelve un número con 2 decimales
+}
+
+// Función para obtener un precio aleatorio entre 49.99€ y 69.99€
+function obtenerPrecioAaahsAleatorio() {
+  return (Math.random() * (69.99 - 49.99) + 49.99).toFixed(2); // Devuelve un número con 2 decimales
+}
+
 // Comando /precio
 bot.command("precio", async (ctx) => {
   const today = obtenerFechaHoy();
@@ -939,9 +949,13 @@ bot.command("precio", async (ctx) => {
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
       const nuevoPrecio = obtenerPrecioAleatorio();
+      const nuevoPrecioUtsu = obtenerPrecioUtsuAleatorio();
+      const nuevoPrecioAaahs = obtenerPrecioAaahsAleatorio();
       await precioDoc.set({
         precio: nuevoPrecio,
         fecha: today,
+        utsu: nuevoPrecioUtsu,
+        aaah: nuevoPrecioAaahs,
       });
       ctx.reply(`El precio de la udrea hoy está a ${nuevoPrecio}€ la unidad`);
     }
