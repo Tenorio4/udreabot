@@ -540,20 +540,21 @@ bot.command("desempatar", async (ctx) => {
       // Comprobar los desempates
       if (empatado.desempate != null) {
         let ganadorTirada = null;
+        let maxTirada = 0;
         if (empatado.desempate > resultado) {
           ganadorTirada = empatado;
+          maxTirada = empatado.desempate;
         } else if (empatado.desempate < resultado) {
           ganadorTirada = userData;
+          maxTirada = resultado;
         }
 
         if (ganadorTirada) {
-          const maxTirada = ganadorTirada.desempate;
-
           const userGanadorDoc = db
             .collection("usuarios")
             .doc(ganadorTirada.username);
           await userGanadorDoc.update({
-            porcentaje: ganadorTirada.porcentaje - ganadorTirada.desempate,
+            porcentaje: ganadorTirada.porcentaje - maxTirada,
             desempate: null,
           });
 
