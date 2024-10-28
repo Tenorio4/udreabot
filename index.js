@@ -514,24 +514,16 @@ bot.command("desempatar", async (ctx) => {
     const usuarios = await db.collection("usuarios").get();
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
-    let ultimaTirada = true;
+    let ultimaTirada = false;
     let empatados = [];
-    usuarios.forEach((doc) => {
-      const data = doc.data();
-      if (
-        username !== data.username &&
-        userData.porcentaje === data.porcentaje
-      ) {
-        empatados.push({
-          username: data.username,
-          porcentaje: data.porcentaje,
-          desempate: data.desempate,
-        });
-        if (data.desempate == null) ultimaTirada = false;
-      }
-    });
 
-    if (empatados.length > 0 && userData.desempate == null) {
+    const empatado = usuarios.find(
+      (doc) =>
+        doc.data().username !== username &&
+        doc.data().porcentaje === userData.porcentaje
+    );
+
+    if (empatado && userData.desempate == null) {
       const resultado = Math.floor(Math.random() * 11); // Entre 0 y 10
       await userDoc.update({
         desempate: resultado,
@@ -539,49 +531,45 @@ bot.command("desempatar", async (ctx) => {
       await ctx.reply(`${username} has sacado un ${resultado}`);
 
       // Comprobar los desempates
-      if (ultimaTirada) {
-        empatados.push({
-          username: username,
-          porcentaje: userData.porcentaje,
-          desempate: resultado,
-        });
-        const maxTirada = Math.max(...empatados.map((user) => user.desempate));
-        const ganadoresTirada = empatados.filter(
-          (user) => user.desempate === maxTirada
-        );
-        if (ganadoresTirada.length == 1) {
-          const userGanadorDoc = db
-            .collection("usuarios")
-            .doc(ganadoresTirada[0].username);
+      if (empatado.desempate != null) {
+        let ganadorTirada = null;
+        if (empatado.desempate > resultado) {
+          ganadorTirada = empatado;
+        } else if (empatado.desempate < resultado) {
+          ganadorTirada = userData;
+        }
+
+        if (ganadorTirada) {
+          const maxTirada = ganadorTirada.desempate;
+
+          const userGanadorDoc = db.collection("usuarios").doc(ganadorTirada);
           await userGanadorDoc.update({
-            porcentaje:
-              ganadoresTirada[0].porcentaje - ganadoresTirada[0].desempate,
+            porcentaje: ganadorTirada.porcentaje - ganadorTirada.desempate,
             desempate: null,
           });
-          empatados.forEach((empatado) => {
-            if (ganadoresTirada[0].username !== empatado.username) {
-              let userPerdedorDoc = db
-                .collection("usuarios")
-                .doc(empatado.username);
-              userPerdedorDoc.update({
-                desempate: null,
-              });
-            }
+
+          let userPerdedorDoc = db
+            .collection("usuarios")
+            .doc(empatado.username);
+          userPerdedorDoc.update({
+            desempate: null,
           });
+
           const ganadorData = (await userGanadorDoc.get()).data();
           const anteriorPorcentaje = ganadorData.porcentaje + maxTirada;
           await ctx.reply(
             `${ganadorData.username} ha ganado el desempate y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
           );
         } else {
-          empatados.forEach((empatado) => {
-            let userEmpatadoDoc = db
-              .collection("usuarios")
-              .doc(empatado.username);
-            userEmpatadoDoc.update({
-              desempate: null,
-            });
+          await userDoc.update({
+            desempate: null,
           });
+
+          let empatadoDoc = db.collection("usuarios").doc(empatado.username);
+          empatadoDoc.update({
+            desempate: null,
+          });
+
           await ctx.reply("Empate en el desempate, qué ironía");
           await ctx.reply("Pulse aquí -> /desempatar para intentarlo de nuevo");
         }
