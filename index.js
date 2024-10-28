@@ -516,10 +516,19 @@ bot.command("desempatar", async (ctx) => {
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
 
-    const empatado = usuarios.find(
+    let empatado = usuarios.find(
       (doc) =>
-        doc.username !== username && doc.porcentaje === userData.porcentaje
+        doc.username !== username &&
+        doc.porcentaje === userData.porcentaje &&
+        doc.desempate != null
     );
+
+    if (!empatado) {
+      empatado = usuarios.find(
+        (doc) =>
+          doc.username !== username && doc.porcentaje === userData.porcentaje
+      );
+    }
 
     if (empatado && userData.desempate == null) {
       const resultado = Math.floor(Math.random() * 11); // Entre 0 y 10
