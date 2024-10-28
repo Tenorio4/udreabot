@@ -518,8 +518,7 @@ bot.command("desempatar", async (ctx) => {
 
     const empatado = usuarios.find(
       (doc) =>
-        doc.data().username !== username &&
-        doc.data().porcentaje === userData.porcentaje
+        doc.username !== username && doc.porcentaje === userData.porcentaje
     );
 
     if (empatado && userData.desempate == null) {
