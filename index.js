@@ -511,11 +511,10 @@ bot.command("nivel", async (ctx) => {
 bot.command("desempatar", async (ctx) => {
   try {
     const username = `@${ctx.from.username}`;
-    const usuarios = await db.collection("usuarios").get();
+    const usersSnapshot = await db.collection("usuarios").get();
+    const usuarios = usersSnapshot.docs.map((doc) => doc.data());
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
-    let ultimaTirada = false;
-    let empatados = [];
 
     const empatado = usuarios.find(
       (doc) =>
