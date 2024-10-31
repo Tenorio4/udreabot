@@ -571,7 +571,7 @@ bot.command("desempatar", async (ctx) => {
           const ganadorData = (await userGanadorDoc.get()).data();
           const anteriorPorcentaje = ganadorData.porcentaje + maxTirada;
           await ctx.reply(
-            `${ganadorData.username} ha ganado el desempate y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
+            `${ganadorData.username} ha ganado el desempate contra `${perdedorTirada.username}` y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
           );
         } else {
           await userDoc.update({
@@ -958,7 +958,7 @@ bot.command("precio", async (ctx) => {
         utsu: nuevoPrecioUtsu,
         aaah: nuevoPrecioAaahs,
       });
-      ctx.reply(`El precio de la udrea hoy está a ${nuevoPrecio}€ la unidad`);
+      ctx.reply(`Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n-Utsu: ${nuevoPrecioUtsu}€ la unidad\n-Aaahs: ${nuevoPrecioAaahs}€ la unidad`);
     }
   } catch (error) {
     console.error("Error al guardar el precio en Firestore:", error);
@@ -1164,7 +1164,7 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`has usado reroll... 🔄`, {
+      await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
       nivel(username, ctx);
@@ -1595,7 +1595,7 @@ schedule.scheduleJob(rule, async () => {
       if (userData.porcentaje != null && userData.porcentaje < 100) {
         batch.update(userDoc, {
           dinero:
-            parseFloat(userData.dinero) +
+            parseFloat(userData.dinero.toFixed(2)) +
             parseFloat(((100 - userData.porcentaje) / 100).toFixed(2)),
         });
       }
