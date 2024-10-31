@@ -929,7 +929,7 @@ function obtenerPrecioUtsuAleatorio() {
 }
 
 // Función para obtener un precio aleatorio entre 49.99€ y 69.99€
-function obtenerPrecioAaahsAleatorio() {
+function obtenerPrecioAaahAleatorio() {
   return (Math.random() * (69.99 - 49.99) + 49.99).toFixed(2); // Devuelve un número con 2 decimales
 }
 
@@ -945,21 +945,21 @@ bot.command("precio", async (ctx) => {
     if (precioData && precioData.fecha === today) {
       // Si ya existe un precio para hoy, lo mostramos
       ctx.reply(
-        `El precio de la udrea hoy está a ${precioData.precio}€ la unidad`
+        `Precios:\n\n- Udrea: ${precioData.precio}€ la unidad\n- Utsu: ${precioData.utsu}€ la unidad\n- Aaah: ${precioData.aaah}€ la unidad`
       );
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
       const nuevoPrecio = obtenerPrecioAleatorio();
       const nuevoPrecioUtsu = obtenerPrecioUtsuAleatorio();
-      const nuevoPrecioAaahs = obtenerPrecioAaahsAleatorio();
+      const nuevoPrecioAaah = obtenerPrecioAaahAleatorio();
       await precioDoc.set({
         precio: nuevoPrecio,
         fecha: today,
         utsu: nuevoPrecioUtsu,
-        aaah: nuevoPrecioAaahs,
+        aaah: nuevoPrecioAaah,
       });
       ctx.reply(
-        `Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n-Utsu: ${nuevoPrecioUtsu}€ la unidad\n-Aaahs: ${nuevoPrecioAaahs}€ la unidad`
+        `Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n- Utsu: ${nuevoPrecioUtsu}€ la unidad\n- Aaah: ${nuevoPrecioAaah}€ la unidad`
       );
     }
   } catch (error) {
