@@ -571,7 +571,7 @@ bot.command("desempatar", async (ctx) => {
           const ganadorData = (await userGanadorDoc.get()).data();
           const anteriorPorcentaje = ganadorData.porcentaje + maxTirada;
           await ctx.reply(
-            `${ganadorData.username} ha ganado el desempate contra `${perdedorTirada.username}` y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
+            `${ganadorData.username} ha ganado el desempate contra ${perdedorTirada.username} y su vasto incremento se ha reducido en un ${maxTirada}%:\n(${anteriorPorcentaje}% => ${ganadorData.porcentaje}%)`
           );
         } else {
           await userDoc.update({
@@ -958,7 +958,9 @@ bot.command("precio", async (ctx) => {
         utsu: nuevoPrecioUtsu,
         aaah: nuevoPrecioAaahs,
       });
-      ctx.reply(`Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n-Utsu: ${nuevoPrecioUtsu}€ la unidad\n-Aaahs: ${nuevoPrecioAaahs}€ la unidad`);
+      ctx.reply(
+        `Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n-Utsu: ${nuevoPrecioUtsu}€ la unidad\n-Aaahs: ${nuevoPrecioAaahs}€ la unidad`
+      );
     }
   } catch (error) {
     console.error("Error al guardar el precio en Firestore:", error);
