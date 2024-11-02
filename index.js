@@ -1597,7 +1597,7 @@ schedule.scheduleJob(rule, async () => {
       if (userData.porcentaje != null && userData.porcentaje < 100) {
         batch.update(userDoc, {
           dinero:
-            parseFloat(userData.dinero.toFixed(2)) +
+            parseFloat((userData.dinero).toFixed(2)) + 
             parseFloat(((100 - userData.porcentaje) / 100).toFixed(2)),
         });
       }
