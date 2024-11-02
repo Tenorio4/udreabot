@@ -1116,6 +1116,79 @@ bot.command("comprar", async (ctx) => {
   }
 });
 
+bot.command('comprar2', (ctx) => {
+  ctx.reply('Selecciona la moneda que deseas comprar:', {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: "Comprar udreas", callback_data: "comprar_udrea" },
+          { text: "Comprar utsus", callback_data: "comprar_moneda1" },
+          { text: "Comprar aaahs", callback_data: "comprar_moneda2" }
+        ]
+      ]
+    }
+  });
+});
+
+// Maneja la selección de la moneda
+bot.on('callback_query', async (ctx) => {
+  const queryData = ctx.callbackQuery.data;
+  const moneda = queryData.split('_')[1]; // "udrea", "moneda1", o "moneda2"
+
+  // Obtener el precio de Firebase
+  const precioDoc = await db.collection("precios").doc("precioActual").get();
+  const precio = precioDoc.exists ? precioDoc.data().precio : null;
+
+  if (precio === null) {
+    return ctx.reply("Error: No se pudo obtener el precio de esta moneda.");
+  }
+
+  // Pregunta al usuario cuántas monedas quiere comprar
+  ctx.reply(`El precio actual de ${moneda} es ${precio}€ por unidad.\n¿Cuántas unidades deseas comprar?`, {
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "1", callback_data: `cantidad_1_${moneda}_${precio}` }],
+        [{ text: "5", callback_data: `cantidad_5_${moneda}_${precio}` }],
+        [{ text: "10", callback_data: `cantidad_10_${moneda}_${precio}` }]
+      ]
+    }
+  });
+});
+
+// Maneja la selección de cantidad y confirmación
+bot.on('callback_query', async (ctx) => {
+  const queryData = ctx.callbackQuery.data;
+  const [action, cantidad, moneda, precio] = queryData.split('_');
+
+  if (action === "cantidad") {
+    const totalPrecio = cantidad * precio;
+    ctx.reply(`Vas a comprar ${cantidad} ${moneda} por un total de ${totalPrecio}€.\n¿Confirmas la compra?`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "Confirmar", callback_data: `confirmar_${moneda}_${cantidad}_${totalPrecio}` }],
+          [{ text: "Cancelar", callback_data: "cancelar" }]
+        ]
+      }
+    });
+  }
+
+  if (action === "confirmar") {
+    const totalPrecio = parseFloat(precio) * parseInt(cantidad);
+
+    // Actualizar base de datos para añadir la moneda al usuario
+    const userId = ctx.from.id;
+    const userDoc = db.collection('usuarios').doc(userId.toString());
+
+    await userDoc.update({
+      [moneda]: admin.firestore.FieldValue.increment(parseInt(cantidad))
+    });
+
+    ctx.reply(`¡Compra confirmada! Has adquirido ${cantidad} ${moneda} por ${totalPrecio}€.`);
+  } else if (action === "cancelar") {
+    ctx.reply("Compra cancelada.");
+  }
+});
+
 bot.command("balance", async (ctx) => {
   try {
     const username = `@${ctx.from.username}`;
