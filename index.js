@@ -1121,9 +1121,9 @@ bot.command('comprar2', (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "Comprar udreas", callback_data: "comprar_udrea" },
-          { text: "Comprar utsus", callback_data: "comprar_moneda1" },
-          { text: "Comprar aaahs", callback_data: "comprar_moneda2" }
+          { text: "Udreas", callback_data: "comprar_udrea" },
+          { text: "Utsus", callback_data: "comprar_moneda1" },
+          { text: "Aaahs", callback_data: "comprar_moneda2" }
         ]
       ]
     }
@@ -1133,26 +1133,65 @@ bot.command('comprar2', (ctx) => {
 // Maneja la selección de la moneda
 bot.on('callback_query', async (ctx) => {
   const queryData = ctx.callbackQuery.data;
-  const moneda = queryData.split('_')[1]; // "udrea", "moneda1", o "moneda2"
 
-  // Obtener el precio de Firebase
-  const precioDoc = await db.collection("precios").doc("precioActual").get();
-  const precio = precioDoc.exists ? precioDoc.data().precio : null;
+  // Identificamos si es una compra o cantidad seleccionada
+  if (queryData.startsWith('comprar')) {
+    const moneda = queryData.split('_')[1]; // "udrea", "moneda1", o "moneda2"
 
-  if (precio === null) {
-    return ctx.reply("Error: No se pudo obtener el precio de esta moneda.");
+    // Obtener el precio de Firebase
+    const precioDoc = await db.collection("precios").doc("precioActual").get();
+    const precio = precioDoc.exists ? precioDoc.data().precio : null;
+
+    if (precio === null) {
+      return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
+    }
+
+    // Editamos el mensaje para preguntar la cantidad de monedas
+    ctx.editMessageText(`El precio actual de ${moneda} es ${precio}€ por unidad.\n¿Cuántas unidades deseas comprar?`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "1", callback_data: `cantidad_1_${moneda}_${precio}` }],
+          [{ text: "5", callback_data: `cantidad_5_${moneda}_${precio}` }],
+          [{ text: "10", callback_data: `cantidad_10_${moneda}_${precio}` }]
+        ]
+      }
+    });
   }
 
-  // Pregunta al usuario cuántas monedas quiere comprar
-  ctx.reply(`El precio actual de ${moneda} es ${precio}€ por unidad.\n¿Cuántas unidades deseas comprar?`, {
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: "1", callback_data: `cantidad_1_${moneda}_${precio}` }],
-        [{ text: "5", callback_data: `cantidad_5_${moneda}_${precio}` }],
-        [{ text: "10", callback_data: `cantidad_10_${moneda}_${precio}` }]
-      ]
-    }
-  });
+  if (queryData.startsWith('cantidad')) {
+    const [_, cantidad, moneda, precio] = queryData.split('_');
+
+    // Calculamos el precio total
+    const totalPrecio = cantidad * precio;
+
+    // Editamos el mensaje para confirmar la compra
+    ctx.editMessageText(`Vas a comprar ${cantidad} ${moneda} por un total de ${totalPrecio}€.\n¿Confirmas la compra?`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "Confirmar", callback_data: `confirmar_${moneda}_${cantidad}_${totalPrecio}` }],
+          [{ text: "Cancelar", callback_data: "cancelar" }]
+        ]
+      }
+    });
+  }
+
+  if (queryData.startsWith('confirmar')) {
+    const [_, moneda, cantidad, totalPrecio] = queryData.split('_');
+    const userId = ctx.from.id;
+    const userDoc = db.collection('usuarios').doc(userId.toString());
+
+    // Actualizamos la base de datos
+    await userDoc.update({
+      [moneda]: admin.firestore.FieldValue.increment(parseInt(cantidad))
+    });
+
+    // Editamos el mensaje para confirmar la compra final
+    ctx.editMessageText(`¡Compra confirmada! Has adquirido ${cantidad} ${moneda} por ${totalPrecio}€.`);
+  }
+
+  if (queryData === 'cancelar') {
+    ctx.editMessageText("Compra cancelada.");
+  }
 });
 
 // Maneja la selección de cantidad y confirmación
