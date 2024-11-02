@@ -1238,7 +1238,7 @@ bot.command("balance", async (ctx) => {
     dinero = dinero.toFixed(2);
 
     await ctx.reply(
-      `${username} tienes:\n\n· Dinero: ${dinero}€\n· Udreas: ${userData.udreas}`
+      `${username} tienes:\n\n· Dinero: ${dinero}€\n· Udreas: ${userData.udreas}\n· Utsus: ${userData.utsus}\n· Aaahs: ${userData.aaahs}`
     );
   } catch (error) {
     console.error("Error en obtener balance:", error);
