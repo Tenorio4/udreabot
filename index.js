@@ -1151,8 +1151,9 @@ bot.on('callback_query', async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: "1", callback_data: `cantidad_1_${moneda}_${precio}` }],
-          [{ text: "5", callback_data: `cantidad_5_${moneda}_${precio}` }],
-          [{ text: "10", callback_data: `cantidad_10_${moneda}_${precio}` }]
+          [{ text: "10", callback_data: `cantidad_5_${moneda}_${precio}` }],
+          [{ text: "100", callback_data: `cantidad_10_${moneda}_${precio}` }],
+          [{ text: "Todas", callback_data: `cantidad_10_${moneda}_${precio}` }]
         ]
       }
     });
@@ -1181,9 +1182,9 @@ bot.on('callback_query', async (ctx) => {
     const userDoc = db.collection('usuarios').doc(username);
 
     // Actualizamos la base de datos
-    await userDoc.update({
+  /*  await userDoc.update({
       [moneda]: admin.firestore.FieldValue.increment(parseInt(cantidad))
-    });
+    });*/
 
     // Editamos el mensaje para confirmar la compra final
     ctx.editMessageText(`¡Compra confirmada! Has adquirido ${cantidad} ${moneda} por ${totalPrecio}€.`);
