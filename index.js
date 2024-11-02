@@ -1121,9 +1121,9 @@ bot.command('comprar2', (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "Udreas", callback_data: "comprar_udrea" },
-          { text: "Utsus", callback_data: "comprar_moneda1" },
-          { text: "Aaahs", callback_data: "comprar_moneda2" }
+          { text: "Udreas", callback_data: "comprar_udreas" },
+          { text: "Utsus", callback_data: "comprar_utsus" },
+          { text: "Aaahs", callback_data: "comprar_aaahs" }
         ]
       ]
     }
@@ -1177,8 +1177,8 @@ bot.on('callback_query', async (ctx) => {
 
   if (queryData.startsWith('confirmar')) {
     const [_, moneda, cantidad, totalPrecio] = queryData.split('_');
-    const userId = ctx.from.id;
-    const userDoc = db.collection('usuarios').doc(userId.toString());
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection('usuarios').doc(username);
 
     // Actualizamos la base de datos
     await userDoc.update({
