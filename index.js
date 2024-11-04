@@ -1147,6 +1147,7 @@ bot.on('callback_query', async (ctx) => {
   const queryData = ctx.callbackQuery.data;
   const [action, moneda, targetUserId] = queryData.split('_');
   const userId = ctx.from.id;
+  const username = `@${ctx.from.username}`;
 
   // Solo permite al usuario que ejecutó el comando interactuar
   if (targetUserId !== userId.toString()) {
