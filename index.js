@@ -1178,6 +1178,83 @@ bot.on('callback_query', async (ctx) => {
         ]
       }
     });
+  } else {
+    const [action, value, targetUserId] = queryData.split('_');
+  const userId = ctx.from.id;
+
+  // Solo permite al usuario autorizado
+  if (targetUserId !== userId.toString()) {
+    return;
+  }
+
+  const purchase = activePurchases[userId];
+
+  // Suma a la cantidad seleccionada según el botón pulsado
+  if (action === 'add') {
+    purchase.cantidad += parseInt(value);
+    await ctx.editMessageText(`Cantidad actual para comprar: ${purchase.cantidad}`, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "+1", callback_data: `add_1_${userId}` },
+            { text: "+10", callback_data: `add_10_${userId}` },
+            { text: "+100", callback_data: `add_100_${userId}` },
+            { text: "Todas", callback_data: `all_${userId}` }
+          ],
+          [{ text: "Confirmar", callback_data: `confirmar_${userId}` }]
+        ]
+      }
+    });
+  }
+
+  // Selección de la opción "Todas" para comprar el máximo posible
+  if (action === 'all') {
+    // Obtener saldo del usuario
+    const userDoc = await db.collection("usuarios").doc(userId.toString()).get();
+    const saldo = userDoc.exists ? userDoc.data().saldo : 0;
+
+    // Cálculo del máximo que puede comprar
+    const maxCantidad = Math.floor(saldo / purchase.precio);
+    purchase.cantidad = maxCantidad;
+
+    await ctx.editMessageText(`Cantidad máxima posible: ${purchase.cantidad}`, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "+1", callback_data: `add_1_${userId}` },
+            { text: "+10", callback_data: `add_10_${userId}` },
+            { text: "+100", callback_data: `add_100_${userId}` },
+            { text: "Todas", callback_data: `all_${userId}` }
+          ],
+          [{ text: "Confirmar", callback_data: `confirmar_${userId}` }]
+        ]
+      }
+    });
+  }
+
+  // Confirmación de compra
+  if (action === 'confirmar') {
+    const totalPrecio = purchase.cantidad * purchase.precio;
+
+    // Verificar si el usuario tiene saldo suficiente
+    const userDoc = await db.collection("usuarios").doc(userId.toString()).get();
+    const saldo = userDoc.exists ? userDoc.data().saldo : 0;
+
+    if (saldo >= totalPrecio) {
+      // Actualiza el saldo y la cantidad de monedas
+      await db.collection("usuarios").doc(userId.toString()).update({
+        saldo: saldo - totalPrecio,
+        [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
+      });
+
+      ctx.editMessageText(`¡Compra confirmada! Has adquirido ${purchase.cantidad} ${purchase.moneda} por ${totalPrecio}€.`);
+    } else {
+      ctx.editMessageText("Saldo insuficiente para completar la compra.");
+    }
+
+    // Elimina la compra activa para el usuario
+    delete activePurchases[userId];
+  }
   }
 });
 
