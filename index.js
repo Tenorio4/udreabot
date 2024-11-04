@@ -1133,9 +1133,9 @@ bot.command('comprar3', async (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "Udreas", callback_data: `comprar_udrea_${userId}` },
-          { text: "Utsus", callback_data: `comprar_utsu_${userId}` },
-          { text: "Aaahs", callback_data: `comprar_aaah_${userId}` }
+          { text: "Udreas", callback_data: `comprar_udreas_${userId}` },
+          { text: "Utsus", callback_data: `comprar_utsus_${userId}` },
+          { text: "Aaahs", callback_data: `comprar_aaahs_${userId}` }
         ]
       ]
     }
