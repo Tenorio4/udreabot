@@ -1144,6 +1144,7 @@ bot.command('comprar3', async (ctx) => {
 
 // Escucha los botones de selección de moneda
 bot.on('callback_query', async (ctx) => {
+  try{
   const queryData = ctx.callbackQuery.data;
   const [action, moneda, targetUserId] = queryData.split('_');
   const userId = ctx.from.id;
@@ -1260,6 +1261,10 @@ bot.on('callback_query', async (ctx) => {
     delete activePurchases[userId];
   }
   }
+}catch(error){
+  console.error("Error en comprar:", error);
+  await ctx.reply("Hubo un error al comprar.");
+}
 });
 
 
