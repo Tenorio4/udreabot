@@ -1192,6 +1192,7 @@ bot.on('callback_query', async (ctx) => {
 
   // Suma a la cantidad seleccionada según el botón pulsado
   if (action === 'add') {
+    console.log("add");
     purchase.cantidad += parseInt(value);
     await ctx.editMessageText(`Cantidad actual para comprar: ${purchase.cantidad}`, {
       reply_markup: {
