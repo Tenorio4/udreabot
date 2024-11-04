@@ -1173,9 +1173,9 @@ bot.on('callback_query', async (ctx) => {
             { text: "+1", callback_data: `add_1_${userId}` },
             { text: "+10", callback_data: `add_10_${userId}` },
             { text: "+100", callback_data: `add_100_${userId}` },
-            { text: "Todas", callback_data: `all_${userId}` }
+            { text: "Todas", callback_data: `all_0_${userId}` }
           ],
-          [{ text: "Confirmar", callback_data: `confirmar_${userId}` }]
+          [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }]
         ]
       }
     });
