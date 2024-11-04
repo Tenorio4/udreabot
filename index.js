@@ -1209,7 +1209,7 @@ bot.on('callback_query', async (ctx) => {
   }
 
   // Selección de la opción "Todas" para comprar el máximo posible
-  if (action === 'all') {
+  else if (action === 'all') {
     console.log("botón todas");
     // Obtener saldo del usuario
     const userDoc = await db.collection("usuarios").doc(username).get();
@@ -1235,7 +1235,7 @@ bot.on('callback_query', async (ctx) => {
   }
 
   // Confirmación de compra
-  if (action === 'confirmar') {
+  else if (action === 'confirmar') {
     console.log("botón confirmar");
     const totalPrecio = purchase.cantidad * purchase.precio;
 
