@@ -1211,6 +1211,7 @@ bot.on('callback_query', async (ctx) => {
       }
     });
   }
+});
 
 // Almacenar los detalles de compra activa para cada usuario
 const activePurchases = {};
@@ -1249,7 +1250,7 @@ bot.on('callback_query', async (ctx) => {
 
   // Selección de moneda y obtención del precio
   if (action === 'comprar') {
-    const precioDoc = await db.collection("precios").doc("precioActual").get();
+    const precioDoc = await db.collection("precios").doc("precioActual").get(); // Obtener el precio actual
     const precio = precioDoc.exists ? precioDoc.data().precio : null;
 
     if (precio === null) {
@@ -1310,7 +1311,7 @@ bot.on('callback_query', async (ctx) => {
   if (action === 'all') {
     // Obtener saldo del usuario
     const userDoc = await db.collection("usuarios").doc(userId.toString()).get();
-    const saldo = userDoc.exists ? userDoc.data().dinero : 0;
+    const saldo = userDoc.exists ? userDoc.data().saldo : 0;
 
     // Cálculo del máximo que puede comprar
     const maxCantidad = Math.floor(saldo / purchase.precio);
@@ -1357,22 +1358,7 @@ bot.on('callback_query', async (ctx) => {
 });
 
 
-  if (action === "confirmar") {
-    const totalPrecio = parseFloat(precio) * parseInt(cantidad);
 
-    // Actualizar base de datos para añadir la moneda al usuario
-    const userId = ctx.from.id;
-    const userDoc = db.collection('usuarios').doc(userId.toString());
-
-    await userDoc.update({
-      [moneda]: admin.firestore.FieldValue.increment(parseInt(cantidad))
-    });
-
-    ctx.reply(`¡Compra confirmada! Has adquirido ${cantidad} ${moneda} por ${totalPrecio}€.`);
-  } else if (action === "cancelar") {
-    ctx.reply("Compra cancelada.");
-  }
-});
 
 bot.command("balance", async (ctx) => {
   try {
