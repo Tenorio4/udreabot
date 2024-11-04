@@ -1210,7 +1210,7 @@ bot.on('callback_query', async (ctx) => {
   // Selección de la opción "Todas" para comprar el máximo posible
   if (action === 'all') {
     // Obtener saldo del usuario
-    const userDoc = await db.collection("usuarios").doc(userId.toString()).get();
+    const userDoc = await db.collection("usuarios").doc(username).get();
     const saldo = userDoc.exists ? userDoc.data().dinero : 0;
 
     // Cálculo del máximo que puede comprar
@@ -1238,11 +1238,11 @@ bot.on('callback_query', async (ctx) => {
 
     // Verificar si el usuario tiene saldo suficiente
     const userDoc = await db.collection("usuarios").doc(username).get();
-    const saldo = userDoc.exists ? userDoc.data().dinero : 0;
+    const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
 
     if (saldo >= totalPrecio) {
       // Actualiza el saldo y la cantidad de monedas
-      await db.collection("usuarios").doc(userId.toString()).update({
+      await db.collection("usuarios").doc(username).update({
         dinero: saldo - totalPrecio,
         [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
       });
