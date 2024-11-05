@@ -1205,7 +1205,7 @@ bot.on('callback_query', async (ctx) => {
         // Suma a la cantidad seleccionada según el botón pulsado
         if (action === 'add') {
           purchase.cantidad += parseInt(value);
-          await ctx.editMessageText(`${username}\n\nCantidad de ${purchase.moneda} actual para comprar: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad de ${purchase.moneda} actual para comprar: ${purchase.cantidad}\n- Total a pagar: ${(purchase.cantidad * purchase.precio).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
                 [
@@ -1231,7 +1231,7 @@ bot.on('callback_query', async (ctx) => {
           const maxCantidad = Math.floor(saldo / purchase.precio);
           purchase.cantidad = maxCantidad;
 
-          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${purchase.cantidad}\n- Total a pagar: ${(purchase.cantidad * purchase.precio).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
                 [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
@@ -1244,7 +1244,7 @@ bot.on('callback_query', async (ctx) => {
         // Confirmación de compra
         else if (action === 'confirmar') {
           if (purrchase.cantidad > 0 && purchase.cantidad != 5) {
-          const totalPrecio = purchase.cantidad * purchase.precio;
+          const totalPrecio = (purchase.cantidad * purchase.precio).toFixed(2);
 
           // Verificar si el usuario tiene saldo suficiente
           const userDoc = await db.collection("usuarios").doc(username).get();
