@@ -1243,6 +1243,7 @@ bot.on('callback_query', async (ctx) => {
 
         // Confirmación de compra
         else if (action === 'confirmar') {
+          if (purrchase.cantidad > 0 && purchase.cantidad != 5) {
           const totalPrecio = purchase.cantidad * purchase.precio;
 
           // Verificar si el usuario tiene saldo suficiente
@@ -1260,7 +1261,12 @@ bot.on('callback_query', async (ctx) => {
           } else {
             ctx.editMessageText(`${username} no hago tratos con pobres`);
           }
-
+        } else {
+          if (purchase.cantidad == 5)
+            ctx.editMessageText(`${username} pues por el culo te la hinco`);
+          else
+            ctx.editMessageText(`${username} tu eres tonto`);
+        }
           // Elimina la compra activa para el usuario
           delete activePurchases[userId];
         } else if (action === 'cancelar') {
