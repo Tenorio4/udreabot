@@ -25,7 +25,7 @@ app.listen(port, () => {
 
 app.get("/precio-actual", async (req, res) => {
   try {
-    const precioDoc = await db.collection("precios").doc("precioActual").get();
+    const precioDoc = await db.collection("precios").doc("udreas").get();
     const precioData = precioDoc.data();
 
     if (precioData && precioData.precio) {
@@ -374,6 +374,8 @@ bot.telegram.setMyCommands([
   { command: "/mercado", description: "Muestra el mercado actual" },
   { command: "/reroll", description: "Para hacer otra tirada de nivel" },
   { command: "/heteropocion1", description: "Para bajar tu vasto incremento" },
+  { command: "/heteropocion2", description: "Para bajar tu vasto incremento" },
+  { command: "/heteropocion3", description: "Para bajar tu vasto incremento" },
   {
     command: "/picaduradelacobragay",
     description: "Para convertir en gay a otro usuario",
@@ -939,13 +941,17 @@ bot.command("precio", async (ctx) => {
 
   try {
     // Siempre usa un único documento para guardar el precio y la fecha
-    const precioDoc = db.collection("precios").doc("precioActual");
+    const precioDoc = db.collection("precios").doc("udreas");
     const precioData = (await precioDoc.get()).data();
+    const utsuDoc = db.collection("precios").doc("utsus");
+    const utsuData = (await utsuDoc.get()).data();
+    const aaahDoc = db.collection("precios").doc("aaahs");
+    const aaahData = (await aaahDoc.get()).data();
 
     if (precioData && precioData.fecha === today) {
       // Si ya existe un precio para hoy, lo mostramos
       ctx.reply(
-        `Precios:\n\n- Udrea: ${precioData.precio}€ la unidad\n- Utsu: ${precioData.utsu}€ la unidad\n- Aaah: ${precioData.aaah}€ la unidad`
+        `Precios:\n\n- Udrea: ${precioData.precio}€ la unidad\n\n- Utsu: ${utsuData.precio}€ la unidad\n\n- Aaah: ${aaahData.precio}€ la unidad`
       );
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
@@ -955,8 +961,12 @@ bot.command("precio", async (ctx) => {
       await precioDoc.set({
         precio: nuevoPrecio,
         fecha: today,
-        utsu: nuevoPrecioUtsu,
-        aaah: nuevoPrecioAaah,
+      });
+      await utsuDoc.set({
+        precio: nuevoPrecioUtsu,
+      });
+      await aaahDoc.set({
+        precio: nuevoPrecioAaah,
       });
       ctx.reply(
         `Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n- Utsu: ${nuevoPrecioUtsu}€ la unidad\n- Aaah: ${nuevoPrecioAaah}€ la unidad`
@@ -971,7 +981,7 @@ bot.command("precio", async (ctx) => {
 bot.command("vender", async (ctx) => {
   try {
     const today = obtenerFechaHoy();
-    const precioDoc = db.collection("precios").doc("precioActual");
+    const precioDoc = db.collection("precios").doc("udreas");
     const precioData = (await precioDoc.get()).data();
     if (precioData && precioData.fecha === today) {
       // Extraer el parámetro después del comando
@@ -1043,7 +1053,7 @@ bot.command("vender", async (ctx) => {
 bot.command("comprar", async (ctx) => {
   try {
     const today = obtenerFechaHoy();
-    const precioDoc = db.collection("precios").doc("precioActual");
+    const precioDoc = db.collection("precios").doc("udreas");
     const precioData = (await precioDoc.get()).data();
     if (precioData && precioData.fecha === today) {
       // Extraer el parámetro después del comando
@@ -1129,7 +1139,7 @@ bot.command('comprar3', async (ctx) => {
   // Inicia el flujo de compra para el usuario
   activePurchases[userId] = { username, moneda: null, cantidad: 0 };
 
-  ctx.reply('Selecciona la moneda que deseas comprar:', {
+  ctx.reply(`Hola ${username}\n\nSelecciona la moneda que deseas comprar:`, {
     reply_markup: {
       inline_keyboard: [
         [
@@ -1145,126 +1155,123 @@ bot.command('comprar3', async (ctx) => {
 // Escucha los botones de selección de moneda
 bot.on('callback_query', async (ctx) => {
   try{
-  const queryData = ctx.callbackQuery.data;
-  const [action, moneda, targetUserId] = queryData.split('_');
-  const userId = ctx.from.id;
-  const username = `@${ctx.from.username}`;
+    const queryData = ctx.callbackQuery.data;
+    const [action, moneda, targetUserId] = queryData.split('_');
+    const userId = ctx.from.id;
+    const username = `@${ctx.from.username}`;
 
-  // Solo permite al usuario que ejecutó el comando interactuar
-  if (targetUserId !== userId.toString()) {
-    return; // No hace nada para usuarios no autorizados
-  }
-
-  // Selección de moneda y obtención del precio
-  if (action === 'comprar') {
-    const precioDoc = await db.collection("precios").doc("precioActual").get(); // Obtener el precio actual
-    const precio = precioDoc.exists ? precioDoc.data().precio : null;
-
-    if (precio === null) {
-      return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
+    // Solo permite al usuario que ejecutó el comando interactuar
+    if (targetUserId !== userId.toString()) {
+      return; // No hace nada para usuarios no autorizados
     }
 
-    activePurchases[userId] = { ...activePurchases[userId], moneda, precio };
+    // Selección de moneda y obtención del precio
+    if (action === 'comprar' && moneda === 'udreas') {
+      const precioDoc = await db.collection("precios").doc(moneda).get(); // Obtener el precio actual
+      const precio = precioDoc.exists ? precioDoc.data().precio : null;
 
-    // Inicia la selección de cantidad
-    ctx.editMessageText(`El precio actual de ${moneda} es ${precio}€ por unidad.\nSelecciona la cantidad que deseas comprar:`, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: "+1", callback_data: `add_1_${userId}` },
-            { text: "+10", callback_data: `add_10_${userId}` },
-            { text: "+100", callback_data: `add_100_${userId}` },
-            { text: "Todas", callback_data: `all_0_${userId}` }
-          ],
-          [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }]
-        ]
+      if (precio === null) {
+        return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
       }
-    });
-  } else {
-    const [action, value, targetUserId] = queryData.split('_');
-  const userId = ctx.from.id;
 
-  // Solo permite al usuario autorizado
-  if (targetUserId !== userId.toString()) {
-    return;
-  }
+      activePurchases[userId] = { ...activePurchases[userId], moneda, precio };
 
-  const purchase = activePurchases[userId];
-
-  // Suma a la cantidad seleccionada según el botón pulsado
-  if (action === 'add') {
-    console.log("add");
-    purchase.cantidad += parseInt(value);
-    await ctx.editMessageText(`Cantidad actual para comprar: ${purchase.cantidad}`, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: "+1", callback_data: `add_1_${userId}` },
-            { text: "+10", callback_data: `add_10_${userId}` },
-            { text: "+100", callback_data: `add_100_${userId}` },
-            { text: "Todas", callback_data: `all_0_${userId}` }
-          ],
-          [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }]
-        ]
-      }
-    });
-  }
-
-  // Selección de la opción "Todas" para comprar el máximo posible
-  else if (action === 'all') {
-    console.log("botón todas");
-    // Obtener saldo del usuario
-    const userDoc = await db.collection("usuarios").doc(username).get();
-    const saldo = userDoc.exists ? userDoc.data().dinero : 0;
-
-    // Cálculo del máximo que puede comprar
-    const maxCantidad = Math.floor(saldo / purchase.precio);
-    purchase.cantidad = maxCantidad;
-
-    await ctx.editMessageText(`Cantidad máxima posible: ${purchase.cantidad}`, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: "+1", callback_data: `add_1_${userId}` },
-            { text: "+10", callback_data: `add_10_${userId}` },
-            { text: "+100", callback_data: `add_100_${userId}` },
-            { text: "Todas", callback_data: `all_0_${userId}` }
-          ],
-          [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }]
-        ]
-      }
-    });
-  }
-
-  // Confirmación de compra
-  else if (action === 'confirmar') {
-    console.log("botón confirmar");
-    const totalPrecio = purchase.cantidad * purchase.precio;
-
-    // Verificar si el usuario tiene saldo suficiente
-    const userDoc = await db.collection("usuarios").doc(username).get();
-    const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
-
-    if (saldo >= totalPrecio) {
-      // Actualiza el saldo y la cantidad de monedas
-      await db.collection("usuarios").doc(username).update({
-        dinero: saldo - totalPrecio,
-        [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
+      // Inicia la selección de cantidad
+      ctx.editMessageText(`Muy bien ${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad.\nSelecciona la cantidad que deseas comprar:`, {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: "+1", callback_data: `add_1_${userId}` },
+              { text: "+10", callback_data: `add_10_${userId}` },
+              { text: "+100", callback_data: `add_100_${userId}` },
+              { text: "Todas", callback_data: `all_0_${userId}` }
+            ],
+            [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+            [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+          ]
+        }
       });
-
-      ctx.editMessageText(`¡Compra confirmada! Has adquirido ${purchase.cantidad} ${purchase.moneda} por ${totalPrecio}€.`);
     } else {
-      ctx.editMessageText("Saldo insuficiente para completar la compra.");
-    }
+        const [action, value, targetUserId] = queryData.split('_');
+        const userId = ctx.from.id;
 
-    // Elimina la compra activa para el usuario
-    delete activePurchases[userId];
+        // Solo permite al usuario autorizado
+        if (targetUserId !== userId.toString()) {
+          return;
+        }
+
+        const purchase = activePurchases[userId];
+
+        // Suma a la cantidad seleccionada según el botón pulsado
+        if (action === 'add') {
+          purchase.cantidad += parseInt(value);
+          await ctx.editMessageText(`${username}\n\nCantidad de ${moneda} actual para comprar: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  { text: "+1", callback_data: `add_1_${userId}` },
+                  { text: "+10", callback_data: `add_10_${userId}` },
+                  { text: "+100", callback_data: `add_100_${userId}` },
+                  { text: "Todas", callback_data: `all_0_${userId}` }
+                ],
+                [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+              ]
+            }
+          });
+        }
+
+        // Selección de la opción "Todas" para comprar el máximo posible
+        else if (action === 'all') {
+          // Obtener saldo del usuario
+          const userDoc = await db.collection("usuarios").doc(username).get();
+          const saldo = userDoc.exists ? userDoc.data().dinero : 0;
+
+          // Cálculo del máximo que puede comprar
+          const maxCantidad = Math.floor(saldo / purchase.precio);
+          purchase.cantidad = maxCantidad;
+
+          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+              ]
+            }
+          });
+        }
+
+        // Confirmación de compra
+        else if (action === 'confirmar') {
+          const totalPrecio = purchase.cantidad * purchase.precio;
+
+          // Verificar si el usuario tiene saldo suficiente
+          const userDoc = await db.collection("usuarios").doc(username).get();
+          const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
+
+          if (saldo >= totalPrecio) {
+            // Actualiza el saldo y la cantidad de monedas
+            await db.collection("usuarios").doc(username).update({
+              dinero: saldo - totalPrecio,
+              [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
+            });
+
+            ctx.editMessageText(`Has comprado ${purchase.cantidad} ${purchase.moneda} por un total de ${totalPrecio}€`);
+          } else {
+            ctx.editMessageText("No hago tratos con pobres");
+          }
+
+          // Elimina la compra activa para el usuario
+          delete activePurchases[userId];
+        } else if (action === 'cancelar') {
+            ctx.editMessageText(`Has cancelado la compra`);
+            delete activePurchases[userId];
+        }
+      } 
+  } catch (error){
+      console.error("Error en comprar:", error);
+      await ctx.reply("Hubo un error al comprar.");
   }
-  }
-}catch(error){
-  console.error("Error en comprar:", error);
-  await ctx.reply("Hubo un error al comprar.");
-}
 });
 
 
@@ -1292,13 +1299,17 @@ bot.command("mercado", async (ctx) => {
     const mercadoData = (await mercadoDoc.get()).data();
 
     let mercadoMensaje = `Mercado:\n\n`;
-    mercadoMensaje += `· /reroll: ${mercadoData.reroll} udrea(s)\n`;
-    mercadoMensaje += `· /heteropocion1: ${mercadoData.heteropocion1} udrea(s)\n`;
-    mercadoMensaje += `· /heteropocion2: ${mercadoData.heteropocion2} udrea(s)\n`;
-    mercadoMensaje += `· /heteropocion3: ${mercadoData.heteropocion3} udrea(s)\n`;
-    mercadoMensaje += `· /picaduradelacobragay o /cobra: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
-    mercadoMensaje += `· /superpicaduradelacobragay o /supercobra: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
-    await ctx.reply(mercadoMensaje);
+    mercadoMensaje += `· Reroll: ${mercadoData.reroll} udrea(s)\n`;
+    mercadoMensaje += `· Heteropocion 1: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· Heteropocion 2: ${mercadoData.heteropocion2} udrea(s)\n`;
+    mercadoMensaje += `· Heteropocion 3: ${mercadoData.heteropocion3} udrea(s)\n`;
+    mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
+    mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
+    const message = await ctx.reply(mercadoMensaje);
+    setTimeout(async () => {
+      // Eliminar el mensaje usando su ID
+      await ctx.deleteMessage(message.message_id);
+  }, 5000); // Elimina el mensaje después de 5 segundos
   } catch (error) {
     console.error("Error en obtener el mercado:", error);
     await ctx.reply("Udrea!");
@@ -1319,10 +1330,11 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`Has usado reroll ... 🔄`, {
+      const message = await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
       nivel(username, ctx);
+      await ctx.deleteMessage(message.message_id);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
@@ -1448,23 +1460,32 @@ async function picaduradelacobragay(ctx) {
 
     if (userData.porcentaje >= maxPorcentaje) {
       if (userData.udreas >= mercadoData.picaduradelacobragay) {
-        const victimaDoc = db.collection("usuarios").doc(victima);
-        const today = obtenerFechaHoy();
-        victimaDoc.update({
-          porcentaje: userData.porcentaje,
-          ultimaActualizacion: today,
-        });
+        if (victima !== username) {
+          const victimaDoc = db.collection("usuarios").doc(victima);
+          const victimaData = (await victimaDoc.get()).data();
+          if (victimaData.porcentaje > 0) {
+            const today = obtenerFechaHoy();
+            victimaDoc.update({
+              porcentaje: userData.porcentaje,
+              ultimaActualizacion: today,
+            });
 
-        userDoc.update({
-          udreas: userData.udreas - mercadoData.picaduradelacobragay,
-        });
-        await ctx.reply(`${username} ha picado a ${victima} 🐍`);
-        await ctx.reply(
-          `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
-        );
+            userDoc.update({
+              udreas: userData.udreas - mercadoData.picaduradelacobragay,
+            });
+            await ctx.reply(`${username} ha picado a ${victima} 🐍`);
+            await ctx.reply(
+              `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
+            );
+          } else {
+            await ctx.reply(`${victima} es inmune a las picaduras`);
+          }
+        } else {
+          await ctx.reply(`${username} no te puedes picar a ti mismo, tonto`);
+        }     
       } else {
         await ctx.reply(`${username} no tienes udreas suficientes`);
-      }
+      }   
     } else {
       await ctx.reply(
         `${username} tienes que ser gay para poder picar a otro usuario`
