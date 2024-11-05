@@ -1132,7 +1132,7 @@ bot.command("comprar", async (ctx) => {
 const activePurchases = {};
 
 // Comando para iniciar la compra
-bot.command('comprar3', async (ctx) => {
+bot.command('comprar2', async (ctx) => {
   const userId = ctx.from.id;
   const username = `@${ctx.from.username}`;
   
@@ -1177,7 +1177,7 @@ bot.on('callback_query', async (ctx) => {
       activePurchases[userId] = { ...activePurchases[userId], moneda, precio };
 
       // Inicia la selección de cantidad
-      ctx.editMessageText(`Muy bien ${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad.\nSelecciona la cantidad que deseas comprar:`, {
+      ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad.\nSelecciona la cantidad que deseas comprar:`, {
         reply_markup: {
           inline_keyboard: [
             [
@@ -1205,7 +1205,7 @@ bot.on('callback_query', async (ctx) => {
         // Suma a la cantidad seleccionada según el botón pulsado
         if (action === 'add') {
           purchase.cantidad += parseInt(value);
-          await ctx.editMessageText(`${username}\n\nCantidad de ${moneda} actual para comprar: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad de ${purchase.moneda} actual para comprar: ${purchase.cantidad}\n- Total a pagar: ${purchase.cantidad * purchase.precio}€`, {
             reply_markup: {
               inline_keyboard: [
                 [
@@ -1256,15 +1256,15 @@ bot.on('callback_query', async (ctx) => {
               [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
             });
 
-            ctx.editMessageText(`Has comprado ${purchase.cantidad} ${purchase.moneda} por un total de ${totalPrecio}€`);
+            ctx.editMessageText(`${username} has comprado ${purchase.cantidad} ${purchase.moneda} por un total de ${totalPrecio}€`);
           } else {
-            ctx.editMessageText("No hago tratos con pobres");
+            ctx.editMessageText(`${username} no hago tratos con pobres`);
           }
 
           // Elimina la compra activa para el usuario
           delete activePurchases[userId];
         } else if (action === 'cancelar') {
-            ctx.editMessageText(`Has cancelado la compra`);
+            ctx.editMessageText(`${username} has cancelado la compra`);
             delete activePurchases[userId];
         }
       } 
