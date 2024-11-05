@@ -1252,7 +1252,7 @@ bot.on('callback_query', async (ctx) => {
           if (saldo >= totalPrecio) {
             // Actualiza el saldo y la cantidad de monedas
             await db.collection("usuarios").doc(username).update({
-              dinero: saldo - totalPrecio,
+              dinero: (saldo - totalPrecio).toFixed(2),
               [purchase.moneda]: admin.firestore.FieldValue.increment(purchase.cantidad)
             });
 
