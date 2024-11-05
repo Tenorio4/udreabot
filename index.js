@@ -1243,7 +1243,7 @@ bot.on('callback_query', async (ctx) => {
 
         // Confirmación de compra
         else if (action === 'confirmar') {
-          if (purrchase.cantidad > 0 && purchase.cantidad != 5) {
+          if (purchase.cantidad > 0 && purchase.cantidad != 5) {
           const totalPrecio = (purchase.cantidad * purchase.precio).toFixed(2);
 
           // Verificar si el usuario tiene saldo suficiente
