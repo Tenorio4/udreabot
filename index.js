@@ -446,12 +446,12 @@ bot.command('formato', async (ctx) => {
       \`Monoespaciado\`
       [Enlace a Google](https://www.google.com)
   `);
- await ctx.replyWithMarkdownV2(`\`\`\`Ejemplo de texto en recuadro\`\`\``);
+ await ctx.replyWithMarkdownV2(`\`\`\`Ejemplode texto en recuadro
+  ah si si
+  claro que si\`\`\``);
  await ctx.replyWithMarkdownV2(`\`Ejemplo de solo una comilla\``);
- await ctx.replyWithMarkdownV2("`línea 1 de código`\n`línea 2 de código`\n`línea 3 de código`");
- await ctx.replyWithHTML(`<code>Código\nah sisisisisisisisisisisisisisisisisisisisisisisisisisisisisisisi\nclaro</code>`);
- await ctx.replyWithHTML(`<pre>Código\nah sisisisisisisisisisisisisisisisisisisisisisisisisisisisisisisi\nclaro</pre>
-  <pre>Código\nah si\nclaro</pre>`);
+ await ctx.replyWithHTML(`<b>Títutlo</b><pre>Código\nah si\nclaro</pre>`);
+ await ctx.replyWithHTML(`<pre>Títutlo</pre><pre>Código\nah si\nclaro</pre>`);
 
 });
 function programarTareaDiaria() {
@@ -472,7 +472,7 @@ function programarTareaDiaria() {
   const diferenciaMs = fin.getTime() - inicio.getTime();
   const tiempoAleatorio = Math.floor(Math.random() * diferenciaMs);
   const horaEjecucion = new Date(inicio.getTime() + tiempoAleatorio);
-  console.log("Nueva hora programada para las ", horaEjecucion);
+  console.log("Hora de ahora ", ahora.getHours());
   // Verifica el tiempo hasta la ejecución y configura la primera ejecución
   const tiempoHastaEjecucion = horaEjecucion.getTime() - ahora.getTime();
   console.log(`La tarea se ejecutará hoy a las: ${horaEjecucion.toLocaleTimeString()}`);
