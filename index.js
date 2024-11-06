@@ -437,8 +437,8 @@ function obtenerFechaHoy() {
   return moment().tz(TIMEZONE).format("YYYY-MM-DD");
 }
 
-bot.command('formato1', (ctx) => {
-  ctx.replyWithMarkdownV2(`
+bot.command('formato', async (ctx) => {
+ await ctx.replyWithMarkdownV2(`\n
       *Negrita*
       _Cursiva_
       \`Código\`
@@ -446,25 +446,9 @@ bot.command('formato1', (ctx) => {
       \`Monoespaciado\`
       [Enlace a Google](https://www.google.com)
   `);
-  ctx.replyWithMarkdownV2(`
-    \`\`\`
-        Texto centrado
-    \`\`\`
-`);
-ctx.replyWithMarkdownV2(`
-  ░░░░░░░░░░░░░░░░
-  ░ *Mensaje centrado* ░
-  ░░░░░░░░░░░░░░░░
-  `);
-});
+ await ctx.replyWithMarkdownV2(`\`\`\`Ejemplo de texto en recuadro\`\`\``);
+ await ctx.replyWithMarkdownV2(`\`Ejemplo de  solo una comilla\``);
 
-bot.command('formato2', (ctx) => {
-  ctx.replyWithHTML(`
-      <b>Negrita</b>
-      <i>Cursiva</i>
-      <code>Código</code>
-      <a href="https://www.google.com">Enlace a Google</a>
-  `);
 });
 
 // Función para manejar el comando 'nivel'
