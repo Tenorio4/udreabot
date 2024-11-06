@@ -451,6 +451,19 @@ bot.command('formato', async (ctx) => {
 
 });
 
+const rulePrueba = new schedule.RecurrenceRule();
+rulePrueba.hour = 14;
+rulePrueba.minute = 59;
+rulePrueba.second = 50;
+rulePrueba.tz = TIMEZONE;
+
+schedule.scheduleJob(rulePrueba, async () => {
+  console.log("Ejecución tarea programada...");
+  rulePrueba.hour = 15;
+  rulePrueba.minute = 10;
+  console.log("Siguiente hora a ejecutar: ", rulePrueba.hour, rulePrueba.minute);
+});
+
 // Función para manejar el comando 'nivel'
 async function nivel(username, ctx) {
   const today = obtenerFechaHoy();
