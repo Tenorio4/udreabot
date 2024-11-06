@@ -487,13 +487,13 @@ function programarTareaDiaria() {
 }
 
 function ejecutarTarea() {
-  console.log("Tarea automatica aleatoria ejecutada");
+ // console.log("Tarea automatica aleatoria ejecutada");
   // Coloca aquí el código de la tarea que quieres ejecutar
 
 }
 
 // Inicia el proceso
-programarTareaDiaria();
+//programarTareaDiaria();
 
 
 // Función para manejar el comando 'nivel'
