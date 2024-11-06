@@ -447,7 +447,7 @@ bot.command('formato', async (ctx) => {
       [Enlace a Google](https://www.google.com)
   `);
  await ctx.replyWithMarkdownV2(`\`\`\`Ejemplo de texto en recuadro\`\`\``);
- await ctx.replyWithMarkdownV2(`\`Ejemplo de  solo una comilla\``);
+ await ctx.replyWithMarkdownV2(`\`Ejemplo de solo una comilla\``);
 
 });
 
@@ -977,8 +977,8 @@ bot.command("precio", async (ctx) => {
 
     if (precioData && precioData.fecha === today) {
       // Si ya existe un precio para hoy, lo mostramos
-      ctx.reply(
-        `Precios:\n\n- Udrea: ${precioData.precio}€ la unidad\n\n- Utsu: ${utsuData.precio}€ la unidad\n\n- Aaah: ${aaahData.precio}€ la unidad`
+      await ctx.replyWithMarkdownV2(
+        `\`\`\`Precios:\n- Udrea: ${precioData.precio}€ la unidad\n\n- Utsu: ${utsuData.precio}€ la unidad\n\n- Aaah: ${aaahData.precio}€ la unidad\`\`\``
       );
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
