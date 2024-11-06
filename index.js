@@ -1012,9 +1012,7 @@ bot.command("precio", async (ctx) => {
       await ctx.replyWithMarkdownV2(
         `\`\`\`Precios:
 - Udrea: ${precioData.precio}€ la unidad
-
 - Utsu: ${utsuData.precio}€ la unidad
-
 - Aaah: ${aaahData.precio}€ la unidad\`\`\``);
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
