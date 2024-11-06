@@ -487,7 +487,7 @@ function programarTareaDiaria() {
 }
 
 function ejecutarTarea() {
-  console.log("Tarea diaria ejecutada a las ", horaEjecucion);
+  console.log("Tarea automatica aleatoria ejecutada");
   // Coloca aquí el código de la tarea que quieres ejecutar
 
 }
