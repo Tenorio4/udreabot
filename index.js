@@ -446,23 +446,24 @@ bot.command('formato', async (ctx) => {
       \`Monoespaciado\`
       [Enlace a Google](https://www.google.com)
   `);
- await ctx.replyWithMarkdownV2(`\`\`\`Ejemplode texto en recuadro
-  ah si si
-  claro que si\`\`\``);
+ await ctx.replyWithMarkdownV2(`\`\`\`Ejemplo
+Texto en recuadro
+ah si si
+claro que si\`\`\``);
  await ctx.replyWithMarkdownV2(`\`Ejemplo de solo una comilla\``);
  await ctx.replyWithHTML(`<b>Títutlo</b><pre>Código\nah si\nclaro</pre>`);
- await ctx.replyWithHTML(`<pre>Títutlo</pre><pre>Código\nah si\nclaro</pre>`);
+ await ctx.replyWithHTML(`<pre>Títutlo</pre><pre>Códigooooooooooooooooooooo  o o \nah si\nclaro aaaaa aaaaaa a</pre>`);
 
 });
 function programarTareaDiaria() {
 
   // Obtén la fecha actual y ajusta a la zona horaria deseada
-  const ahora = new Date(new Intl.DateTimeFormat('en-US', { timeZone: TIMEZONE }).format(new Date()));
+  const ahora = moment().tz(TIMEZONE).toDate();
   const hoy = ahora.toDateString();
 
   // Define el rango de tiempo entre las 23:30 y las 23:59
-  const inicio = new Date(`${hoy} 18:00:00`);
-  const fin = new Date(`${hoy} 18:15:50`);
+  const inicio = new Date(`${hoy} 18:30:00`);
+  const fin = new Date(`${hoy} 18:45:50`);
 
   // Asegúrate de que ambas horas estén en la zona horaria correcta
   inicio.setMinutes(inicio.getMinutes() - inicio.getTimezoneOffset());
