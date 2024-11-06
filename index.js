@@ -448,21 +448,52 @@ bot.command('formato', async (ctx) => {
   `);
  await ctx.replyWithMarkdownV2(`\`\`\`Ejemplo de texto en recuadro\`\`\``);
  await ctx.replyWithMarkdownV2(`\`Ejemplo de solo una comilla\``);
+ await ctx.replyWithMarkdownV2("`línea 1 de código`\n`línea 2 de código`\n`línea 3 de código`");
+ await ctx.replyWithHTML(`<code>Código\nah sisisisisisisisisisisisisisisisisisisisisisisisisisisisisisisi\nclaro</code>`);
+ await ctx.replyWithHTML(`<pre>Código\nah sisisisisisisisisisisisisisisisisisisisisisisisisisisisisisisi\nclaro</pre>
+  <pre>Código\nah si\nclaro</pre>`);
 
 });
+function programarTareaDiaria() {
 
-const rulePrueba = new schedule.RecurrenceRule();
-rulePrueba.hour = 14;
-rulePrueba.minute = 59;
-rulePrueba.second = 50;
-rulePrueba.tz = TIMEZONE;
+  // Obtén la fecha actual y ajusta a la zona horaria deseada
+  const ahora = new Date(new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format(new Date()));
+  const hoy = ahora.toDateString();
 
-schedule.scheduleJob(rulePrueba, async () => {
-  console.log("Ejecución tarea programada...");
-  rulePrueba.hour = 15;
-  rulePrueba.minute = 10;
-  console.log("Siguiente hora a ejecutar: ", rulePrueba.hour, rulePrueba.minute);
-});
+  // Define el rango de tiempo entre las 23:30 y las 23:59
+  const inicio = new Date(`${hoy} 18:00:00`);
+  const fin = new Date(`${hoy} 18:15:50`);
+
+  // Asegúrate de que ambas horas estén en la zona horaria correcta
+  inicio.setMinutes(inicio.getMinutes() - inicio.getTimezoneOffset());
+  fin.setMinutes(fin.getMinutes() - fin.getTimezoneOffset());
+
+  // Calcula una hora aleatoria dentro del rango
+  const diferenciaMs = fin.getTime() - inicio.getTime();
+  const tiempoAleatorio = Math.floor(Math.random() * diferenciaMs);
+  const horaEjecucion = new Date(inicio.getTime() + tiempoAleatorio);
+  console.log("Nueva hora programada para las ", horaEjecucion);
+  // Verifica el tiempo hasta la ejecución y configura la primera ejecución
+  const tiempoHastaEjecucion = horaEjecucion.getTime() - ahora.getTime();
+  console.log(`La tarea se ejecutará hoy a las: ${horaEjecucion.toLocaleTimeString()}`);
+
+  setTimeout(() => {
+      ejecutarTarea();
+
+      // Programar nuevamente para el día siguiente al finalizar la ejecución
+      programarTareaDiaria();
+  }, tiempoHastaEjecucion);
+}
+
+function ejecutarTarea() {
+  console.log("Tarea diaria ejecutada a las ", horaEjecucion);
+  // Coloca aquí el código de la tarea que quieres ejecutar
+
+}
+
+// Inicia el proceso
+programarTareaDiaria();
+
 
 // Función para manejar el comando 'nivel'
 async function nivel(username, ctx) {
