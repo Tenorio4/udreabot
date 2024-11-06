@@ -1010,8 +1010,12 @@ bot.command("precio", async (ctx) => {
     if (precioData && precioData.fecha === today) {
       // Si ya existe un precio para hoy, lo mostramos
       await ctx.replyWithMarkdownV2(
-        `\`\`\`Precios:\n- Udrea: ${precioData.precio}€ la unidad\n\n- Utsu: ${utsuData.precio}€ la unidad\n\n- Aaah: ${aaahData.precio}€ la unidad\`\`\``
-      );
+        `\`\`\`Precios:
+- Udrea: ${precioData.precio}€ la unidad
+
+- Utsu: ${utsuData.precio}€ la unidad
+
+- Aaah: ${aaahData.precio}€ la unidad\`\`\``);
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
       const nuevoPrecio = obtenerPrecioAleatorio();
