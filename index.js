@@ -457,7 +457,7 @@ bot.command('formato', async (ctx) => {
 function programarTareaDiaria() {
 
   // Obtén la fecha actual y ajusta a la zona horaria deseada
-  const ahora = new Date(new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format(new Date()));
+  const ahora = new Date(new Intl.DateTimeFormat('en-US', { timeZone: TIMEZONE }).format(new Date()));
   const hoy = ahora.toDateString();
 
   // Define el rango de tiempo entre las 23:30 y las 23:59
