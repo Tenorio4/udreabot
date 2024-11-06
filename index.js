@@ -437,6 +437,36 @@ function obtenerFechaHoy() {
   return moment().tz(TIMEZONE).format("YYYY-MM-DD");
 }
 
+bot.command('formato1', (ctx) => {
+  ctx.replyWithMarkdownV2(`
+      *Negrita*
+      _Cursiva_
+      \`Código\`
+      ~Tachado~
+      \`Monoespaciado\`
+      [Enlace a Google](https://www.google.com)
+  `);
+  ctx.replyWithMarkdownV2(`
+    \`\`\`
+        Texto centrado
+    \`\`\`
+`);
+ctx.replyWithMarkdownV2(`
+  ░░░░░░░░░░░░░░░░
+  ░ *Mensaje centrado* ░
+  ░░░░░░░░░░░░░░░░
+  `);
+});
+
+bot.command('formato2', (ctx) => {
+  ctx.replyWithHTML(`
+      <b>Negrita</b>
+      <i>Cursiva</i>
+      <code>Código</code>
+      <a href="https://www.google.com">Enlace a Google</a>
+  `);
+});
+
 // Función para manejar el comando 'nivel'
 async function nivel(username, ctx) {
   const today = obtenerFechaHoy();
@@ -1315,7 +1345,7 @@ bot.command("mercado", async (ctx) => {
     setTimeout(async () => {
       // Eliminar el mensaje usando su ID
       await ctx.deleteMessage(message.message_id);
-  }, 5000); // Elimina el mensaje después de 5 segundos
+  }, 30000); // Elimina el mensaje después de 5 segundos
   } catch (error) {
     console.error("Error en obtener el mercado:", error);
     await ctx.reply("Udrea!");
@@ -1340,7 +1370,9 @@ bot.command("reroll", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       });
       nivel(username, ctx);
+      setTimeout(async () => {
       await ctx.deleteMessage(message.message_id);
+    }, 5000);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
