@@ -551,7 +551,7 @@ async function nivel(username, ctx) {
           `Se le ha sumado un punto más a ${username} en el ranking mensual`
         );
       } else {
-        await ctx.reply(
+        return await ctx.reply(
           `${username} tiene un ${nuevoPorcentaje}% de vasto incremento`
         );
       }
@@ -1406,13 +1406,16 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      const message = await ctx.reply(`Has usado reroll ... 🔄`, {
+      await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
-      nivel(username, ctx);
-      setTimeout(async () => {
+      const message = nivel(username, ctx);
+      await ctx.editMessageText(`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
+
+
+      /*setTimeout(async () => {
       await ctx.deleteMessage(message.message_id);
-    }, 5000);
+    }, 5000);*/
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
