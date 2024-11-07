@@ -1125,13 +1125,13 @@ bot.command("comprar", async (ctx) => {
 
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
-        ctx.reply(
+        /*ctx.reply(
           "Especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2",
           {
             reply_to_message_id: ctx.message.message_id,
           }
-        );
-        sistemaCompra(ctx);
+        );*/
+        return sistemaCompra(ctx);
       }
 
       const cantidad = parseInt(params[1]);
