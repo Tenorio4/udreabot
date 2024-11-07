@@ -551,7 +551,7 @@ async function nivel(username, ctx) {
           `Se le ha sumado un punto más a ${username} en el ranking mensual`
         );
       } else {
-        return await ctx.reply(
+        await ctx.reply(
           `${username} tiene un ${nuevoPorcentaje}% de vasto incremento`
         );
       }
@@ -1406,10 +1406,10 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      const rerollMessage = await ctx.reply(`Has usado reroll ... 🔄`, {
+      await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
-      const message = nivel(username, ctx);
+      nivel(username, ctx);
      // await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
 
 
