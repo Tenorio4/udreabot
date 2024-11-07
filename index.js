@@ -1029,9 +1029,11 @@ bot.command("precio", async (ctx) => {
       await aaahDoc.set({
         precio: nuevoPrecioAaah,
       });
-      ctx.reply(
-        `Precios:\n\n- Udrea: ${nuevoPrecio}€ la unidad\n- Utsu: ${nuevoPrecioUtsu}€ la unidad\n- Aaah: ${nuevoPrecioAaah}€ la unidad`
-      );
+      await ctx.replyWithMarkdownV2(
+        `\`\`\`Precios:
+- Udrea: ${nuevoPrecio}€ la unidad
+- Utsu: ${nuevoPrecioUtsu}€ la unidad
+- Aaah: ${nuevoPrecioAaah}€ la unidad\`\`\``);
     }
   } catch (error) {
     console.error("Error al guardar el precio en Firestore:", error);
@@ -1123,12 +1125,13 @@ bot.command("comprar", async (ctx) => {
 
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
-        return ctx.reply(
+        ctx.reply(
           "Especifica cuantas udreas quieres comprar.\nEjemplo: /comprar 2",
           {
             reply_to_message_id: ctx.message.message_id,
           }
         );
+        sistemaCompra(ctx);
       }
 
       const cantidad = parseInt(params[1]);
@@ -1193,14 +1196,14 @@ bot.command("comprar", async (ctx) => {
 const activePurchases = {};
 
 // Comando para iniciar la compra
-bot.command('comprar2', async (ctx) => {
+async function sistemaCompra(ctx) {
   const userId = ctx.from.id;
   const username = `@${ctx.from.username}`;
   
   // Inicia el flujo de compra para el usuario
   activePurchases[userId] = { username, moneda: null, cantidad: 0 };
 
-  ctx.reply(`Hola ${username}\n\nSelecciona la moneda que deseas comprar:`, {
+  await ctx.reply(`Hola ${username}\n\nSelecciona la moneda que deseas comprar:`, {
     reply_markup: {
       inline_keyboard: [
         [
@@ -1211,7 +1214,13 @@ bot.command('comprar2', async (ctx) => {
       ]
     }
   });
-});
+
+  setTimeout(async () => {
+    // La sesión caduca a los 120 segundos
+    if (activePurchases[userId])
+      delete activePurchases[userId];
+  }, 120000); 
+}
 
 // Escucha los botones de selección de moneda
 bot.on('callback_query', async (ctx) => {
