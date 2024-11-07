@@ -1406,7 +1406,7 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`Has usado reroll ... 🔄`, {
+      const message = await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
       nivel(username, ctx);
