@@ -1406,11 +1406,11 @@ bot.command("reroll", async (ctx) => {
         ultimaActualizacion: null,
         udreas: userData.udreas - mercadoData.reroll,
       });
-      await ctx.reply(`Has usado reroll ... 🔄`, {
+      const rerollMessage = await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
       const message = nivel(username, ctx);
-      await ctx.editMessageText(`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
+      await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
 
 
       /*setTimeout(async () => {
