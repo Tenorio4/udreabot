@@ -1410,12 +1410,12 @@ bot.command("reroll", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       });
       const message = nivel(username, ctx);
-      await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
+     // await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
 
 
-      /*setTimeout(async () => {
+      setTimeout(async () => {
       await ctx.deleteMessage(message.message_id);
-    }, 5000);*/
+    }, 5000);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
