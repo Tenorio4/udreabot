@@ -1056,7 +1056,7 @@ bot.command("vender", async (ctx) => {
         /*return ctx.reply(
           "Las udreas se venden al 50% de su valor en el mercado.\nEspecifica cuantas quieres vender.\nEjemplo: /vender 2"
         );*/
-        sistemaVenta(ctx);
+        return sistemaVenta(ctx);
       }
 
       const cantidad = parseInt(params[1]);
@@ -1127,9 +1127,9 @@ async function sistemaVenta(ctx) {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "Udreas", callback_data: `comprar_udreas_${userId}` },
-          { text: "Utsus", callback_data: `comprar_utsus_${userId}` },
-          { text: "Aaahs", callback_data: `comprar_aaahs_${userId}` }
+          { text: "Udreas", callback_data: `vender_udreas_${userId}` },
+          { text: "Utsus", callback_data: `vender_utsus_${userId}` },
+          { text: "Aaahs", callback_data: `vender_aaahs_${userId}` }
         ]
       ]
     }
