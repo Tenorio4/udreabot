@@ -1300,7 +1300,7 @@ bot.on('callback_query', async (ctx) => {
                 { text: "Todas", callback_data: `suball_0_${userId}` }
               ],
               [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
-              [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+              [{ text: "Cancelar", callback_data: `cancelarventa_0_${userId}` }]
             ]
           }
         });
@@ -1347,7 +1347,7 @@ bot.on('callback_query', async (ctx) => {
                   { text: "Todas", callback_data: `suball_0_${userId}` }
                 ],
                 [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
-                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+                [{ text: "Cancelar", callback_data: `cancelarventa_0_${userId}` }]
               ]
             }
           });
@@ -1382,7 +1382,7 @@ bot.on('callback_query', async (ctx) => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
-                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+                [{ text: "Cancelar", callback_data: `cancelarventa_0_${userId}` }]
               ]
             }
           });
@@ -1416,10 +1416,42 @@ bot.on('callback_query', async (ctx) => {
         }
           // Elimina la compra activa para el usuario
           delete activePurchases[userId];
-        } else if (action === 'cancelar') {
-            ctx.editMessageText(`${username} has cancelado la transacción`);
-            delete activePurchases[userId];
+        } else if (action === 'confirmarventa') {
+            if (sale.cantidad > 0 && sale.cantidad != 5) {
+            const totalPrecio = (sale.cantidad * sale.precio / 2).toFixed(2);
+
+            // Verificar si el usuario tiene saldo suficiente
+            const userDoc = await db.collection("usuarios").doc(username).get();
+            const monedas = userDoc.exists ? parseFloat(userDoc.data().udreas) : 0;
+
+            if (monedas > 0) {
+              // Actualiza el saldo y la cantidad de monedas
+              await db.collection("usuarios").doc(username).update({
+                dinero: (saldo + totalPrecio).toFixed(2),
+                [sale.moneda]: admin.firestore.FieldValue.decrement(sale.cantidad)
+              });
+
+              ctx.editMessageText(`${username} has vendido ${sale.cantidad} ${sale.moneda} por un total de ${totalPrecio}€`);
+            } else {
+              ctx.editMessageText(`${username} no hago tratos con pobres`);
+            }
+        } else {
+          if (purchase.cantidad == 5)
+            ctx.editMessageText(`${username} pues por el culo te la hinco`);
+          else
+            ctx.editMessageText(`${username} tu eres tonto`);
         }
+          // Elimina la compra activa para el usuario
+          delete activeSales[userId];
+        } else if (action === 'cancelar') {
+            ctx.editMessageText(`${username} has cancelado la compra`);
+            delete activePurchases[userId];
+            
+        }else if (action === 'cancelarventa') {
+          ctx.editMessageText(`${username} has cancelado la venta`);
+          delete activeSales[userId];       
+      }
+        
       } 
   } catch (error){
       console.error("Error en comprar:", error);
