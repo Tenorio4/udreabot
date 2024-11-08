@@ -1428,7 +1428,7 @@ bot.on('callback_query', async (ctx) => {
             if (monedas > 0) {
               // Actualiza el saldo y la cantidad de monedas
               await db.collection("usuarios").doc(username).update({
-                dinero: (saldo + totalPrecio).toFixed(2),
+                dinero: (saldo * 1 + totalPrecio * 1).toFixed(2),
                 [sale.moneda]: admin.firestore.FieldValue.decrement(sale.cantidad)
               });
 
@@ -1455,8 +1455,8 @@ bot.on('callback_query', async (ctx) => {
         
       } 
   } catch (error){
-      console.error("Error en comprar:", error);
-      await ctx.reply("Hubo un error al comprar.");
+      console.error("Error en comprar/vender:", error);
+      await ctx.reply("Hubo un error en la transacción");
   }
 });
 
