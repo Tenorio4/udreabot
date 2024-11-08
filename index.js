@@ -1053,9 +1053,10 @@ bot.command("vender", async (ctx) => {
 
       if (params.length < 2 || isNaN(params[1])) {
         // Si no se especificó un número o el parámetro no es válido
-        return ctx.reply(
+        /*return ctx.reply(
           "Las udreas se venden al 50% de su valor en el mercado.\nEspecifica cuantas quieres vender.\nEjemplo: /vender 2"
-        );
+        );*/
+        sistemaVenta(ctx);
       }
 
       const cantidad = parseInt(params[1]);
@@ -1112,6 +1113,28 @@ bot.command("vender", async (ctx) => {
     await ctx.reply("Si alguien te vende udreas no le creas");
   }
 });
+
+async function sistemaVenta(ctx) {
+  const userId = ctx.from.id;
+  const username = `@${ctx.from.username}`;
+  
+  // Inicia el flujo de venta para el usuario
+  activeSales[userId] = { username, moneda: null, cantidad: 0 };
+
+  await ctx.reply(`Hola ${username}\n\nSelecciona la moneda que deseas vender:`, {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: "Udreas", callback_data: `comprar_udreas_${userId}` },
+          { text: "Utsus", callback_data: `comprar_utsus_${userId}` },
+          { text: "Aaahs", callback_data: `comprar_aaahs_${userId}` }
+        ]
+      ]
+    }
+  });
+}
+
+
 
 bot.command("comprar", async (ctx) => {
   try {
@@ -1214,12 +1237,6 @@ async function sistemaCompra(ctx) {
       ]
     }
   });
-
-  setTimeout(async () => {
-    // La sesión caduca a los 120 segundos
-    if (activePurchases[userId])
-      delete activePurchases[userId];
-  }, 120000); 
 }
 
 // Escucha los botones de selección de moneda
@@ -1261,7 +1278,32 @@ bot.on('callback_query', async (ctx) => {
           ]
         }
       });
-    } else {
+    } else if (action === 'vender' && moneda === 'udreas') {
+        const precioDoc = await db.collection("precios").doc(moneda).get(); // Obtener el precio actual
+        const precio = precioDoc.exists ? precioDoc.data().precio : null;
+
+        if (precio === null) {
+          return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
+        }
+
+        activeSales[userId] = { ...activeSales[userId], moneda, precio };
+          // Inicia la selección de cantidad
+        ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al 50% de su valor en el mercado .\nSelecciona la cantidad que deseas vender:`, {
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { text: "+1", callback_data: `add_1_${userId}` },
+                { text: "+10", callback_data: `add_10_${userId}` },
+                { text: "+100", callback_data: `add_100_${userId}` },
+                { text: "Todas", callback_data: `all_0_${userId}` }
+              ],
+              [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+              [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+            ]
+          }
+        });
+
+    }else {
         const [action, value, targetUserId] = queryData.split('_');
         const userId = ctx.from.id;
 
