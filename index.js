@@ -1114,6 +1114,8 @@ bot.command("vender", async (ctx) => {
   }
 });
 
+const activeSales = {};
+
 async function sistemaVenta(ctx) {
   const userId = ctx.from.id;
   const username = `@${ctx.from.username}`;
@@ -2165,7 +2167,7 @@ async function enviarMensajes(ctx) {
     for (const mensaje of mensajesParaAnunciar) {
       switch (mensaje.type) {
         case "text":
-          await bot.telegram.sendMessage(groupId, mensaje.content);
+          await bot.telegram.sendMessage(groupId, mensaje.content, { parse_mode: "MarkdownV2" });
           break;
         case "photo":
           await bot.telegram.sendPhoto(groupId, mensaje.content);
