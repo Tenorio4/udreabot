@@ -1290,16 +1290,16 @@ bot.on('callback_query', async (ctx) => {
 
         activeSales[userId] = { ...activeSales[userId], moneda, precio };
           // Inicia la selección de cantidad
-        ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al 50% de su valor en el mercado .\nSelecciona la cantidad que deseas vender:`, {
+        ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al 50% de su valor en el mercado.\nSelecciona la cantidad que deseas vender:`, {
           reply_markup: {
             inline_keyboard: [
               [
-                { text: "+1", callback_data: `add_1_${userId}` },
-                { text: "+10", callback_data: `add_10_${userId}` },
-                { text: "+100", callback_data: `add_100_${userId}` },
-                { text: "Todas", callback_data: `all_0_${userId}` }
+                { text: "+1", callback_data: `sub_1_${userId}` },
+                { text: "+10", callback_data: `sub_10_${userId}` },
+                { text: "+100", callback_data: `sub_100_${userId}` },
+                { text: "Todas", callback_data: `suball_0_${userId}` }
               ],
-              [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+              [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
               [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
             ]
           }
@@ -1315,6 +1315,8 @@ bot.on('callback_query', async (ctx) => {
         }
 
         const purchase = activePurchases[userId];
+
+        const sale = activeSales[userId];
 
         // Suma a la cantidad seleccionada según el botón pulsado
         if (action === 'add') {
@@ -1333,8 +1335,23 @@ bot.on('callback_query', async (ctx) => {
               ]
             }
           });
+        } else if (action === 'sub') {
+          sale.cantidad += parseInt(value);
+          await ctx.editMessageText(`${username}\n\nCantidad de ${purchase.moneda} actual para vender: ${purchase.cantidad}\n- Total a recibir: ${(purchase.cantidad * purchase.precio / 2).toFixed(2)}€`, {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  { text: "+1", callback_data: `sub_1_${userId}` },
+                  { text: "+10", callback_data: `sub_10_${userId}` },
+                  { text: "+100", callback_data: `sub_100_${userId}` },
+                  { text: "Todas", callback_data: `suball_0_${userId}` }
+                ],
+                [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
+                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+              ]
+            }
+          });
         }
-
         // Selección de la opción "Todas" para comprar el máximo posible
         else if (action === 'all') {
           // Obtener saldo del usuario
@@ -1349,6 +1366,22 @@ bot.on('callback_query', async (ctx) => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: "Confirmar", callback_data: `confirmar_0_${userId}` }],
+                [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
+              ]
+            }
+          });
+        }
+        else if (action === 'suball') {
+      
+          const userDoc = await db.collection("usuarios").doc(username).get();
+          const monedas = userDoc.exists ? userDoc.data().udreas : 0;
+
+          sale.cantidad = monedas;
+          
+          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * sale.precio).toFixed(2)}€`, {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
                 [{ text: "Cancelar", callback_data: `cancelar_0_${userId}` }]
               ]
             }
@@ -1384,7 +1417,7 @@ bot.on('callback_query', async (ctx) => {
           // Elimina la compra activa para el usuario
           delete activePurchases[userId];
         } else if (action === 'cancelar') {
-            ctx.editMessageText(`${username} has cancelado la compra`);
+            ctx.editMessageText(`${username} has cancelado la transacción`);
             delete activePurchases[userId];
         }
       } 
