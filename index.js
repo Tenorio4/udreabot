@@ -1429,7 +1429,7 @@ bot.on('callback_query', async (ctx) => {
               // Actualiza el saldo y la cantidad de monedas
               await db.collection("usuarios").doc(username).update({
                 dinero: (saldo * 1 + totalPrecio * 1).toFixed(2),
-                [sale.moneda]: admin.firestore.FieldValue.decrement(sale.cantidad)
+                [sale.moneda]: admin.firestore.FieldValue.increment(-sale.cantidad)
               });
 
               ctx.editMessageText(`${username} has vendido ${sale.cantidad} ${sale.moneda} por un total de ${totalPrecio}€`);
