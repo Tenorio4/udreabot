@@ -1422,6 +1422,7 @@ bot.on('callback_query', async (ctx) => {
 
             // Verificar si el usuario tiene saldo suficiente
             const userDoc = await db.collection("usuarios").doc(username).get();
+            const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
             const monedas = userDoc.exists ? parseFloat(userDoc.data().udreas) : 0;
 
             if (monedas > 0) {
