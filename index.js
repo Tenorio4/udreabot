@@ -1337,7 +1337,7 @@ bot.on('callback_query', async (ctx) => {
           });
         } else if (action === 'sub') {
           sale.cantidad += parseInt(value);
-          await ctx.editMessageText(`${username}\n\nCantidad de ${purchase.moneda} actual para vender: ${purchase.cantidad}\n- Total a recibir: ${(purchase.cantidad * purchase.precio / 2).toFixed(2)}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad de ${sale.moneda} actual para vender: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * sale.precio / 2).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
                 [
@@ -1377,7 +1377,7 @@ bot.on('callback_query', async (ctx) => {
           const monedas = userDoc.exists ? userDoc.data().udreas : 0;
 
           sale.cantidad = monedas;
-          
+
           await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * sale.precio).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
