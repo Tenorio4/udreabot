@@ -676,7 +676,7 @@ bot.command("ranking", async (ctx) => {
 
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = "🏆 *Ranking del día* 🏆 \n\n";
+    let rankingMensaje = "🏆 _Ranking del día_ 🏆 \n\n";
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
@@ -1475,14 +1475,9 @@ bot.command("balance", async (ctx) => {
     const userData = (await userDoc.get()).data();
     let dinero = parseFloat(userData.dinero);
     dinero = dinero.toFixed(2);
-    await ctx.replyWithMarkdownV2(
-      `\`\`\`Precios:
-- Udrea: ${precioData.precio}€ la unidad
-- Utsu: ${utsuData.precio}€ la unidad
-- Aaah: ${aaahData.precio}€ la unidad\`\`\``);
 
     await ctx.replyWithMarkdownV2(
-      `\`\`\`${username}_tienes:
+      `\`\`\`${username}\_tienes:
 · Dinero: ${dinero}€
 · Udreas: ${userData.udreas}
 · Utsus: ${userData.utsus}
