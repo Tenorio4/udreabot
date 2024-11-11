@@ -1477,7 +1477,7 @@ bot.command("balance", async (ctx) => {
     dinero = dinero.toFixed(2);
 
     await ctx.replyWithMarkdownV2(
-      `\`\`\`${username}\_tienes:
+      `\`\`\`${username}\ttienes:
 · Dinero: ${dinero}€
 · Udreas: ${userData.udreas}
 · Utsus: ${userData.utsus}
