@@ -695,7 +695,7 @@ bot.command("ranking", async (ctx) => {
         }%*\n`;
       }
     });
-    rankingMensaje = rankingMensaje.replace(/-/g, "\\-").replace(/_/g, "\\_");
+    rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
 
     if (ranking.length > 0) ctx.replyWithMarkdownV2(rankingMensaje);
     else ctx.reply("Ahora mismo solo hay cobardes");
@@ -1477,7 +1477,7 @@ bot.command("balance", async (ctx) => {
     dinero = dinero.toFixed(2);
 
     await ctx.replyWithMarkdownV2(
-      `\`\`\`${username}\ttienes:
+      `\`\`\`${username}:
 · Dinero: ${dinero}€
 · Udreas: ${userData.udreas}
 · Utsus: ${userData.utsus}
