@@ -676,7 +676,7 @@ bot.command("ranking", async (ctx) => {
 
     ranking.sort((a, b) => b.porcentaje - a.porcentaje); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = "🏆 Ranking del día 🏆 \n\n";
+    let rankingMensaje = "🏆 *Ranking del día* 🏆 \n\n";
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
@@ -685,13 +685,18 @@ bot.command("ranking", async (ctx) => {
       if (index != 0 && user.porcentaje != ranking[index - 1].porcentaje)
         x += 1;
       icono = posiciones[x];
-
-      rankingMensaje += `${icono} ${getNombre(user.username)}: ${
-        user.porcentaje
-      }%\n`;
+      if (x != 0){
+        rankingMensaje += `${icono} ${getNombre(user.username)}: ${
+          user.porcentaje
+        }%\n`;
+      } else {
+        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+          user.porcentaje
+        }%*\n`;
+      }
     });
 
-    if (ranking.length > 0) ctx.reply(rankingMensaje);
+    if (ranking.length > 0) ctx.replyWithMarkdownV2(rankingMensaje);
     else ctx.reply("Ahora mismo solo hay cobardes");
   } catch (error) {
     console.error("Error obteniendo el ranking:", error);
