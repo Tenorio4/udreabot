@@ -695,6 +695,7 @@ bot.command("ranking", async (ctx) => {
         }%*\n`;
       }
     });
+    rankingMensaje = rankingMensaje.replace(/-/g, "\\-").replace(/_/g, "\\_");
 
     if (ranking.length > 0) ctx.replyWithMarkdownV2(rankingMensaje);
     else ctx.reply("Ahora mismo solo hay cobardes");
@@ -1474,10 +1475,18 @@ bot.command("balance", async (ctx) => {
     const userData = (await userDoc.get()).data();
     let dinero = parseFloat(userData.dinero);
     dinero = dinero.toFixed(2);
+    await ctx.replyWithMarkdownV2(
+      `\`\`\`Precios:
+- Udrea: ${precioData.precio}€ la unidad
+- Utsu: ${utsuData.precio}€ la unidad
+- Aaah: ${aaahData.precio}€ la unidad\`\`\``);
 
-    await ctx.reply(
-      `${username} tienes:\n\n· Dinero: ${dinero}€\n· Udreas: ${userData.udreas}\n· Utsus: ${userData.utsus}\n· Aaahs: ${userData.aaahs}`
-    );
+    await ctx.replyWithMarkdownV2(
+      `\`\`\`${username}_tienes:
+· Dinero: ${dinero}€
+· Udreas: ${userData.udreas}
+· Utsus: ${userData.utsus}
+· Aaahs: ${userData.aaahs}\`\`\``);
   } catch (error) {
     console.error("Error en obtener balance:", error);
     await ctx.reply("Udrea!");
