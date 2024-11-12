@@ -990,14 +990,14 @@ function obtenerPrecioAleatorio() {
   return (Math.random() * (4.99 - 0.5) + 0.5).toFixed(2); // Devuelve un número con 2 decimales
 }
 
-// Función para obtener un precio aleatorio entre 1.50€ y 14.99€
+// Función para obtener un precio aleatorio entre 9.99€ y 14.99€
 function obtenerPrecioUtsuAleatorio() {
-  return (Math.random() * (14.99 - 1.5) + 1.5).toFixed(2); // Devuelve un número con 2 decimales
+  return (Math.random() * (14.99 - 9.99) + 9.99).toFixed(2); // Devuelve un número con 2 decimales
 }
 
-// Función para obtener un precio aleatorio entre 49.99€ y 69.99€
+// Función para obtener un precio aleatorio entre 349.99€ y 669.99€
 function obtenerPrecioAaahAleatorio() {
-  return (Math.random() * (69.99 - 49.99) + 49.99).toFixed(2); // Devuelve un número con 2 decimales
+  return (Math.random() * (669.99 - 349.99) + 349.99).toFixed(2); // Devuelve un número con 2 decimales
 }
 
 // Comando /precio
@@ -1261,7 +1261,7 @@ bot.on('callback_query', async (ctx) => {
     }
 
     // Selección de moneda y obtención del precio
-    if (action === 'comprar' && moneda === 'udreas') {
+    if (action === 'comprar') {
       const precioDoc = await db.collection("precios").doc(moneda).get(); // Obtener el precio actual
       const precio = precioDoc.exists ? precioDoc.data().precio : null;
 
@@ -1286,9 +1286,10 @@ bot.on('callback_query', async (ctx) => {
           ]
         }
       });
-    } else if (action === 'vender' && moneda === 'udreas') {
+    } else if (action === 'vender') {
         const precioDoc = await db.collection("precios").doc(moneda).get(); // Obtener el precio actual
         const precio = precioDoc.exists ? precioDoc.data().precio : null;
+        const porcentajeVenta = precioDoc.exists ? precioDoc.data().porcentajeVenta : null;
 
         if (precio === null) {
           return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
@@ -1296,7 +1297,7 @@ bot.on('callback_query', async (ctx) => {
 
         activeSales[userId] = { ...activeSales[userId], moneda, precio };
           // Inicia la selección de cantidad
-        ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al 50% de su valor en el mercado.\nSelecciona la cantidad que deseas vender:`, {
+        ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al ${porcentajeVenta}% de su valor en el mercado.\nSelecciona la cantidad que deseas vender:`, {
           reply_markup: {
             inline_keyboard: [
               [
