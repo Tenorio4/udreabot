@@ -1038,13 +1038,16 @@ bot.command("precios", async (ctx) => {
       const nuevoPrecioUtsu = obtenerPrecioUtsuAleatorio();
       const nuevoPrecioAaah = obtenerPrecioAaahAleatorio();
       await precioDoc.set({
+        ...precioData,
         precio: nuevoPrecio,
         fecha: today,
       });
       await utsuDoc.set({
+        ...utsuData,
         precio: nuevoPrecioUtsu,
       });
       await aaahDoc.set({
+        ...aaahData,
         precio: nuevoPrecioAaah,
       });
       await ctx.replyWithMarkdownV2(
