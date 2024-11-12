@@ -746,7 +746,8 @@ bot.command("rankingmensual", async (ctx) => {
         }*\n`;
       }
     });
-    ctx.reply(rankingMensaje);
+    rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
+    ctx.replyWithMarkdownV2(rankingMensaje);
   } catch (error) {
     console.error("Error obteniendo el ranking:", error);
     ctx.reply("Hubo un error al obtener el ranking.");
@@ -791,7 +792,8 @@ bot.command("rankinganual", async (ctx) => {
         }*\n`;
       }
     });
-    ctx.reply(rankingMensaje);
+    rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
+    ctx.replyWithMarkdownV2(rankingMensaje);
   } catch (error) {
     console.error("Error obteniendo el ranking:", error);
     ctx.reply("Hubo un error al obtener el ranking.");
@@ -2258,7 +2260,15 @@ async function enviarMensajes(ctx) {
     for (const mensaje of mensajesParaAnunciar) {
       switch (mensaje.type) {
         case "text":
-          await bot.telegram.sendMessage(groupId, mensaje.content, { parse_mode: "MarkdownV2" });
+          rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
+    ctx.replyWithMarkdownV2(rankingMensaje);
+          await bot.telegram.sendMessage(groupId, mensaje.content
+            .replace(/-/g, "\\-")
+            .replace(/_/g, "\\_")
+            .replace(/./g, "\\.")
+            .replace(/\(/g, "\\(")
+            .replace(/\)/g, "\\)")
+            .replace(/!/g, "\\!"), { parse_mode: "MarkdownV2" });
           break;
         case "photo":
           await bot.telegram.sendPhoto(groupId, mensaje.content);
