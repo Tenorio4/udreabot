@@ -432,6 +432,41 @@ function obtenerPorcentajeAleatorio() {
   }
 }
 
+// Función para programar la tarea
+function scheduleDailyTask(taskFunction) {
+  let currentJob = null;  // Almacena la tarea programada actual
+
+  function scheduleNextExecution() {
+    // Genera una hora aleatoria entre 23:30 y 23:59 para el DÍA SIGUIENTE
+    const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
+    const executionTime = moment.tz(TIMEZONE)
+      .add(1, 'day') // Asegura que sea para el día siguiente
+      .set({ hour: 23, minute: 30 + randomMinute, second: 0 });
+
+    console.log(`Tarea programada para mañana a las: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+
+    // Programa la tarea para la hora aleatoria generada
+    currentJob = schedule.scheduleJob(executionTime.toDate(), () => {
+      // Ejecuta la función de la tarea
+      taskFunction();
+
+      // Reprograma la tarea para el día siguiente
+      scheduleNextExecution();
+    });
+  }
+
+  // Inicia la programación de la tarea
+  scheduleNextExecution();
+}
+
+// Ejemplo de uso: Define la función de tarea
+function myDailyTask() {
+  console.log("Tarea ejecutada a las " + moment.tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss'));
+}
+
+// Inicia la tarea programada
+scheduleDailyTask(myDailyTask);
+
 // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
 function obtenerFechaHoy() {
   return moment().tz(TIMEZONE).format("YYYY-MM-DD");
