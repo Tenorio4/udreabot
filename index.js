@@ -1295,7 +1295,7 @@ bot.on('callback_query', async (ctx) => {
           return ctx.editMessageText("Error: No se pudo obtener el precio de esta moneda.");
         }
 
-        activeSales[userId] = { ...activeSales[userId], moneda, precio };
+        activeSales[userId] = { ...activeSales[userId], moneda, precio, porcentajeVenta };
           // Inicia la selección de cantidad
         ctx.editMessageText(`${username}\n\nEl precio actual de l@s ${moneda} es ${precio}€ la unidad y se venden al ${porcentajeVenta}% de su valor en el mercado.\nSelecciona la cantidad que deseas vender:`, {
           reply_markup: {
@@ -1344,7 +1344,7 @@ bot.on('callback_query', async (ctx) => {
           });
         } else if (action === 'sub') {
           sale.cantidad += parseInt(value);
-          await ctx.editMessageText(`${username}\n\nCantidad de ${sale.moneda} actual para vender: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * sale.precio / 2).toFixed(2)}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad de ${sale.moneda} actual para vender: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * (sale.precio * sale.porcentajeVenta / 100)).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
                 [
@@ -1385,7 +1385,7 @@ bot.on('callback_query', async (ctx) => {
 
           sale.cantidad = monedas;
 
-          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * sale.precio).toFixed(2)}€`, {
+          await ctx.editMessageText(`${username}\n\nCantidad máxima posible: ${sale.cantidad}\n- Total a recibir: ${(sale.cantidad * (sale.precio * sale.porcentajeVenta / 100)).toFixed(2)}€`, {
             reply_markup: {
               inline_keyboard: [
                 [{ text: "Confirmar", callback_data: `confirmarventa_0_${userId}` }],
@@ -1425,7 +1425,7 @@ bot.on('callback_query', async (ctx) => {
           delete activePurchases[userId];
         } else if (action === 'confirmarventa') {
             if (sale.cantidad > 0 && sale.cantidad != 5) {
-            const totalPrecio = (sale.cantidad * sale.precio / 2).toFixed(2);
+            const totalPrecio = (sale.cantidad * (sale.precio * sale.porcentajeVenta / 100)).toFixed(2);
 
             // Verificar si el usuario tiene saldo suficiente
             const userDoc = await db.collection("usuarios").doc(username).get();
