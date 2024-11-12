@@ -368,7 +368,7 @@ bot.telegram.setMyCommands([
   { command: "/rankinganual", description: "Muestra el ranking del año" },
   { command: "/quiendeaqui", description: "Muestra quién de aquí" },
   { command: "/cobardes", description: "Muestra a los cobardes del día" },
-  { command: "/precio", description: "Muestra el precio actual" },
+  { command: "/precios", description: "Muestra el precio actual de las monedas" },
   { command: "/comprar", description: "Para comprar" },
   { command: "/vender", description: "Para vender" },
   { command: "/mercado", description: "Muestra el mercado actual" },
@@ -1013,7 +1013,7 @@ function obtenerPrecioAaahAleatorio() {
 }
 
 // Comando /precio
-bot.command("precio", async (ctx) => {
+bot.command("precios", async (ctx) => {
   const today = obtenerFechaHoy();
 
   try {
@@ -1029,9 +1029,9 @@ bot.command("precio", async (ctx) => {
       // Si ya existe un precio para hoy, lo mostramos
       await ctx.replyWithMarkdownV2(
         `\`\`\`Precios:
-- Udrea: ${precioData.precio}€ la unidad
-- Utsu: ${utsuData.precio}€ la unidad
-- Aaah: ${aaahData.precio}€ la unidad\`\`\``);
+- Udrea: ${precioData.precio}€/u
+- Utsu: ${utsuData.precio}€/u
+- Aaah: ${aaahData.precio}€/u\`\`\``);
     } else {
       // Si no existe un precio para hoy, generamos uno nuevo y actualizamos el documento
       const nuevoPrecio = obtenerPrecioAleatorio();
@@ -1049,9 +1049,9 @@ bot.command("precio", async (ctx) => {
       });
       await ctx.replyWithMarkdownV2(
         `\`\`\`Precios:
-- Udrea: ${nuevoPrecio}€ la unidad
-- Utsu: ${nuevoPrecioUtsu}€ la unidad
-- Aaah: ${nuevoPrecioAaah}€ la unidad\`\`\``);
+- Udrea: ${nuevoPrecio}€/u
+- Utsu: ${nuevoPrecioUtsu}€/u
+- Aaah: ${nuevoPrecioAaah}€/u\`\`\``);
     }
   } catch (error) {
     console.error("Error al guardar el precio en Firestore:", error);
