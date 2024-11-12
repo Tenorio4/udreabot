@@ -1676,7 +1676,7 @@ async function picaduradelacobragay(ctx) {
         if (victima !== username) {
           const victimaDoc = db.collection("usuarios").doc(victima);
           const victimaData = (await victimaDoc.get()).data();
-          if (victimaData.porcentaje > 0) {
+          if (victimaData.porcentaje == null || victimaData.porcentaje > 0) {
             const today = obtenerFechaHoy();
             victimaDoc.update({
               porcentaje: userData.porcentaje,
