@@ -723,7 +723,7 @@ bot.command("rankingmensual", async (ctx) => {
 
     ranking.sort((a, b) => b.puntosMensuales - a.puntosMensuales); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = "🏆 Ranking del mes 🏆 \n\n";
+    let rankingMensaje = "🏆 _Ranking del mes_ 🏆 \n\n";
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
@@ -772,7 +772,7 @@ bot.command("rankinganual", async (ctx) => {
 
     ranking.sort((a, b) => b.puntosAnuales - a.puntosAnuales); // Ordenar por porcentaje descendente
 
-    let rankingMensaje = "🏆 Ranking del año 🏆 \n\n";
+    let rankingMensaje = "🏆 _Ranking del año_ 🏆 \n\n";
     let icono = "";
     let x = 0;
     ranking.forEach((user, index) => {
