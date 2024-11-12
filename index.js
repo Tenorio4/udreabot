@@ -736,9 +736,15 @@ bot.command("rankingmensual", async (ctx) => {
         x += 1;
       icono = posiciones[x];
 
-      rankingMensaje += `${icono} ${getNombre(user.username)}: ${
-        user.puntosMensuales
-      }\n`;
+      if (x != 0){
+        rankingMensaje += `${icono} ${getNombre(user.username)}: ${
+          user.puntosMensuales
+        }\n`;
+      } else {
+        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+          user.puntosMensuales
+        }*\n`;
+      }
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -775,9 +781,15 @@ bot.command("rankinganual", async (ctx) => {
         x += 1;
       icono = posiciones[x];
 
-      rankingMensaje += `${icono} ${getNombre(user.username)}: ${
-        user.puntosAnuales
-      }\n`;
+      if (x != 0){
+        rankingMensaje += `${icono} ${getNombre(user.username)}: ${
+          user.puntosAnuales
+        }\n`;
+      } else {
+        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+          user.puntosAnuales
+        }*\n`;
+      }
     });
     ctx.reply(rankingMensaje);
   } catch (error) {
@@ -1381,7 +1393,7 @@ bot.on('callback_query', async (ctx) => {
         else if (action === 'suball') {
       
           const userDoc = await db.collection("usuarios").doc(username).get();
-          const monedas = userDoc.exists ? userDoc.data()[moneda] : 0;
+          const monedas = userDoc.exists ? userDoc.data()[sale.moneda] : 0;
 
           sale.cantidad = monedas;
 
@@ -1430,7 +1442,7 @@ bot.on('callback_query', async (ctx) => {
             // Verificar si el usuario tiene saldo suficiente
             const userDoc = await db.collection("usuarios").doc(username).get();
             const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
-            const monedas = userDoc.exists ? parseFloat(userDoc.data()[moneda]) : 0;
+            const monedas = userDoc.exists ? parseFloat(userDoc.data()[sale.moneda]) : 0;
 
             if (monedas > 0) {
               // Actualiza el saldo y la cantidad de monedas
@@ -1444,7 +1456,7 @@ bot.on('callback_query', async (ctx) => {
               ctx.editMessageText(`${username} no hago tratos con pobres`);
             }
         } else {
-          if (purchase.cantidad == 5)
+          if (sale.cantidad == 5)
             ctx.editMessageText(`${username} pues por el culo te la hinco`);
           else
             ctx.editMessageText(`${username} tu eres tonto`);
