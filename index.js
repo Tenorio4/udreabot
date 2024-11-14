@@ -435,15 +435,19 @@ function obtenerPorcentajeAleatorio() {
 // Función para programar la tarea
 function scheduleDailyTask(taskFunction) {
   let currentJob = null;  // Almacena la tarea programada actual
+  let isFirstExecution = true; // Bandera para la primera ejecución
 
   function scheduleNextExecution() {
-    // Genera una hora aleatoria entre 23:30 y 23:59 para el DÍA SIGUIENTE
+    // Genera una hora aleatoria entre 23:30 y 23:59
     const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
     const executionTime = moment.tz(TIMEZONE)
-      .add(1, 'day') // Asegura que sea para el día siguiente
-      .set({ hour: 23, minute: 30 + randomMinute, second: 0 });
+      .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
+      .set({ hour: 14, minute: 10 + randomMinute, second: 0 });
 
-    console.log(`Tarea programada para mañana a las: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    
+    // Resetea bandera después de la primera ejecución
+    isFirstExecution = false;
 
     // Programa la tarea para la hora aleatoria generada
     currentJob = schedule.scheduleJob(executionTime.toDate(), () => {
