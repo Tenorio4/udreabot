@@ -2254,7 +2254,7 @@ async function enviarMensajes(ctx) {
           await bot.telegram.sendMessage(groupId, mensaje.content
             .replace(/-/g, "\\-")
             .replace(/_/g, "\\_")
-            .replace(/./g, "\\.")
+            .replace(/\./g, "\\.")
             .replace(/\(/g, "\\(")
             .replace(/\)/g, "\\)")
             .replace(/!/g, "\\!"), { parse_mode: "MarkdownV2" });
