@@ -513,7 +513,8 @@ async function nivel(username, ctx, reroll = false) {
         );
       } else {
         if (reroll){
-          await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
+          await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
+${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
         } else {
           await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
         }
