@@ -1824,7 +1824,7 @@ function scheduleDailyTask(taskFunction) {
     const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
     const executionTime = moment.tz(TIMEZONE)
       .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
-      .set({ hour: 23, minute: 30 + randomMinute, second: 0 });
+      .set({ hour: 23, minute: 30 + randomMinute, second: 50 });
 
     console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
     
@@ -2251,8 +2251,6 @@ async function enviarMensajes(ctx) {
     for (const mensaje of mensajesParaAnunciar) {
       switch (mensaje.type) {
         case "text":
-          rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
-    ctx.replyWithMarkdownV2(rankingMensaje);
           await bot.telegram.sendMessage(groupId, mensaje.content
             .replace(/-/g, "\\-")
             .replace(/_/g, "\\_")
