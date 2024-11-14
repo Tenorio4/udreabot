@@ -432,45 +432,6 @@ function obtenerPorcentajeAleatorio() {
   }
 }
 
-// Función para programar la tarea
-function scheduleDailyTask(taskFunction) {
-  let currentJob = null;  // Almacena la tarea programada actual
-  let isFirstExecution = true; // Bandera para la primera ejecución
-
-  function scheduleNextExecution() {
-    // Genera una hora aleatoria entre 23:30 y 23:59
-    const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
-    const executionTime = moment.tz(TIMEZONE)
-      .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
-      .set({ hour: 14, minute: 10 + randomMinute, second: 0 });
-
-    console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
-    
-    // Resetea bandera después de la primera ejecución
-    isFirstExecution = false;
-
-    // Programa la tarea para la hora aleatoria generada
-    currentJob = schedule.scheduleJob(executionTime.toDate(), () => {
-      // Ejecuta la función de la tarea
-      taskFunction();
-
-      // Reprograma la tarea para el día siguiente
-      scheduleNextExecution();
-    });
-  }
-
-  // Inicia la programación de la tarea
-  scheduleNextExecution();
-}
-
-// Ejemplo de uso: Define la función de tarea
-function myDailyTask() {
-  console.log("Tarea ejecutada a las " + moment.tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss'));
-}
-
-// Inicia la tarea programada
-scheduleDailyTask(myDailyTask);
-
 // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
 function obtenerFechaHoy() {
   return moment().tz(TIMEZONE).format("YYYY-MM-DD");
@@ -494,49 +455,9 @@ claro que si\`\`\``);
  await ctx.replyWithHTML(`<pre>Títutlo</pre><pre>Códigooooooooooooooooooooo  o o \nah si\nclaro aaaaa aaaaaa a</pre>`);
 
 });
-function programarTareaDiaria() {
-
-  // Obtén la fecha actual y ajusta a la zona horaria deseada
-  const ahora = moment().tz(TIMEZONE).toDate();
-  const hoy = ahora.toDateString();
-
-  // Define el rango de tiempo entre las 23:30 y las 23:59
-  const inicio = new Date(`${hoy} 18:30:00`);
-  const fin = new Date(`${hoy} 18:45:50`);
-
-  // Asegúrate de que ambas horas estén en la zona horaria correcta
-  inicio.setMinutes(inicio.getMinutes() - inicio.getTimezoneOffset());
-  fin.setMinutes(fin.getMinutes() - fin.getTimezoneOffset());
-
-  // Calcula una hora aleatoria dentro del rango
-  const diferenciaMs = fin.getTime() - inicio.getTime();
-  const tiempoAleatorio = Math.floor(Math.random() * diferenciaMs);
-  const horaEjecucion = new Date(inicio.getTime() + tiempoAleatorio);
-  console.log("Hora de ahora ", ahora.getHours());
-  // Verifica el tiempo hasta la ejecución y configura la primera ejecución
-  const tiempoHastaEjecucion = horaEjecucion.getTime() - ahora.getTime();
-  console.log(`La tarea se ejecutará hoy a las: ${horaEjecucion.toLocaleTimeString()}`);
-
-  setTimeout(() => {
-      ejecutarTarea();
-
-      // Programar nuevamente para el día siguiente al finalizar la ejecución
-      programarTareaDiaria();
-  }, tiempoHastaEjecucion);
-}
-
-function ejecutarTarea() {
- // console.log("Tarea automatica aleatoria ejecutada");
-  // Coloca aquí el código de la tarea que quieres ejecutar
-
-}
-
-// Inicia el proceso
-//programarTareaDiaria();
-
 
 // Función para manejar el comando 'nivel'
-async function nivel(username, ctx) {
+async function nivel(username, ctx, reroll = false) {
   const today = obtenerFechaHoy();
 
   try {
@@ -545,7 +466,7 @@ async function nivel(username, ctx) {
 
     if (
       userData &&
-      userData.ultimaActualizacion === today &&
+      //userData.ultimaActualizacion === today &&
       !(userData.porcentaje === null)
     ) {
       if (userData.porcentaje == 100) {
@@ -557,7 +478,7 @@ async function nivel(username, ctx) {
           `Que sí que sí\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈\n${username} QUE TIENES UN VASTO INCREMENTO DEL 1.000.000%\n🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈`
         );
       } else {
-        ctx.reply(
+        await ctx.reply(
           `${username} ya te he dicho que tienes un ${userData.porcentaje}% de vasto incremento`
         );
       }
@@ -590,9 +511,11 @@ async function nivel(username, ctx) {
           `Se le ha sumado un punto más a ${username} en el ranking mensual`
         );
       } else {
-        await ctx.reply(
-          `${username} tiene un ${nuevoPorcentaje}% de vasto incremento`
-        );
+        if (reroll){
+          await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
+        } else {
+          await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+        }
       }
     }
   } catch (error) {
@@ -1585,13 +1508,13 @@ bot.command("reroll", async (ctx) => {
       const message = await ctx.reply(`Has usado reroll ... 🔄`, {
         reply_to_message_id: ctx.message.message_id,
       });
-      nivel(username, ctx);
+      nivel(username, ctx, true);
      // await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
 
 
       setTimeout(async () => {
       await ctx.deleteMessage(message.message_id);
-    }, 5000);
+    }, 1500);
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
@@ -1889,58 +1812,47 @@ async function sumarPuntosAGanadorMes(ganadorUsername) {
   }
 }
 
-const rule = new schedule.RecurrenceRule();
-rule.hour = 23;
-rule.minute = 59;
-rule.second = 50;
-rule.tz = TIMEZONE;
+// Función para programar la tarea
+function scheduleDailyTask(taskFunction) {
+  let currentJob = null;  // Almacena la tarea programada actual
+  let isFirstExecution = true; // Bandera para la primera ejecución
 
-const monthRule = new schedule.RecurrenceRule();
-monthRule.hour = 23;
-monthRule.minute = 59;
-monthRule.second = 52;
-monthRule.tz = TIMEZONE;
-// Obtenemos el último día del mes actual
-const now = moment.tz(TIMEZONE);
-const lastDay = now.clone().endOf("month").date(); // Último día del mes
-monthRule.date = lastDay; // Especificamos que sea el último día del mes
+  function scheduleNextExecution() {
+    // Genera una hora aleatoria entre 23:30 y 23:59
+    const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
+    const executionTime = moment.tz(TIMEZONE)
+      .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
+      .set({ hour: 23, minute: 30 + randomMinute, second: 0 });
 
-// Función para obtener la fecha del último día del mes a una hora específica
-function getLastDayOfMonth(hour, minute, second = 0) {
-  const now = moment.tz(TIMEZONE);
-  const lastDayOfMonth = now
-    .endOf("month")
-    .set({ hour, minute, second, millisecond: 0 });
-  return lastDayOfMonth.toDate();
+    console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    
+    // Resetea bandera después de la primera ejecución
+    isFirstExecution = false;
+
+    // Programa la tarea para la hora aleatoria generada
+    currentJob = schedule.scheduleJob(executionTime.toDate(), () => {
+      // Ejecuta la función de la tarea
+      taskFunction();
+
+      // Reprograma la tarea para el día siguiente
+      scheduleNextExecution();
+    });
+  }
+
+  // Inicia la programación de la tarea
+  scheduleNextExecution();
 }
 
-function getLastDayOfYearRule() {
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = 23;
-  rule.minute = 59;
-  rule.second = 55;
-
-  // Especificamos que sea el día 31 del mes 12 (diciembre)
-  rule.month = 11; // Diciembre (los meses en RecurrenceRule son 0-indexed, 0=enero)
-  rule.date = 31; // Día 31 de diciembre
-
-  return rule;
+// Ejemplo de uso: Define la función de tarea
+function myDailyTask() {
+  console.log("Tarea ejecutada a las " + moment.tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss'));
+  homoDelDia();
 }
 
-// Función para obtener la fecha del último día del año a una hora específica
-function getLastDayOfYear(hour, minute, second = 0) {
-  const now = moment.tz(TIMEZONE);
-  const lastDayOfYear = now
-    .endOf("year")
-    .set({ hour, minute, second, millisecond: 0 });
-  return lastDayOfYear.toDate();
-}
+// Inicia la tarea programada
+scheduleDailyTask(myDailyTask);
 
-// Programación de tareas automáticas
-schedule.scheduleJob(rule, async () => {
-  // 23:59 cada día
-  console.log("Ejecutando tarea diaria...");
-  const today = obtenerFechaHoy();
+async function homoDelDia() {
   try {
     // Obtener el chat_id del grupo desde Firestore
     const groupDoc = await db.collection("config").doc("grupo").get();
@@ -2043,6 +1955,44 @@ schedule.scheduleJob(rule, async () => {
   } catch (error) {
     console.error("Error en la tarea diaria:", error);
   }
+}
+
+
+const rule = new schedule.RecurrenceRule();
+rule.hour = 23;
+rule.minute = 59;
+rule.second = 50;
+rule.tz = TIMEZONE;
+
+const monthRule = new schedule.RecurrenceRule();
+monthRule.hour = 23;
+monthRule.minute = 59;
+monthRule.second = 52;
+monthRule.tz = TIMEZONE;
+// Obtenemos el último día del mes actual
+const now = moment.tz(TIMEZONE);
+const lastDay = now.clone().endOf("month").date(); // Último día del mes
+monthRule.date = lastDay; // Especificamos que sea el último día del mes
+
+function getLastDayOfYearRule() {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 23;
+  rule.minute = 59;
+  rule.second = 55;
+
+  // Especificamos que sea el día 31 del mes 12 (diciembre)
+  rule.month = 11; // Diciembre (los meses en RecurrenceRule son 0-indexed, 0=enero)
+  rule.date = 31; // Día 31 de diciembre
+
+  return rule;
+}
+
+// Programación de tareas automáticas
+schedule.scheduleJob(rule, async () => {
+  // 23:59 cada día
+  console.log("Ejecutando tarea diaria (old)...");
+  const today = obtenerFechaHoy();
+ 
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
