@@ -467,6 +467,7 @@ async function nivel(username, ctx, reroll = false) {
     if (
       userData &&
       //userData.ultimaActualizacion === today &&
+      !reroll &&
       !(userData.porcentaje === null)
     ) {
       if (userData.porcentaje == 100) {
