@@ -643,20 +643,32 @@ bot.command("ranking", async (ctx) => {
     let rankingMensaje = "🏆 _Ranking del día_ 🏆 \n\n";
     let icono = "";
     let x = 0;
+    let joseguillen = false;
     ranking.forEach((user, index) => {
       let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
       if (index != 0 && user.porcentaje != ranking[index - 1].porcentaje)
         x += 1;
+      if (joseguillen) {
+        x = 0;
+        joseguillen = false;
+      }
       icono = posiciones[x];
       if (x != 0){
         rankingMensaje += `${icono} ${getNombre(user.username)}: ${
           user.porcentaje
         }%\n`;
       } else {
-        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
-          user.porcentaje
-        }%*\n`;
+        if (user.username === "@Chewyck"){
+          joseguillen = true;
+          rankingMensaje += `🏳️‍🌈 *${getNombre(user.username)}: ${
+            user.porcentaje
+          }%*\n`;
+        } else {
+          rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+            user.porcentaje
+          }%*\n`;
+        }
       }
     });
     rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
