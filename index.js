@@ -702,6 +702,7 @@ bot.command("rankingmensual", async (ctx) => {
     let rankingMensaje = "🏆 _Ranking del mes_ 🏆 \n\n";
     let icono = "";
     let x = 0;
+    let joseguillen = false;
     ranking.forEach((user, index) => {
       let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
@@ -710,6 +711,10 @@ bot.command("rankingmensual", async (ctx) => {
         user.puntosMensuales != ranking[index - 1].puntosMensuales
       )
         x += 1;
+        if (joseguillen) {
+          x = 0;
+          joseguillen = false;
+        }
       icono = posiciones[x];
 
       if (x != 0){
@@ -717,9 +722,16 @@ bot.command("rankingmensual", async (ctx) => {
           user.puntosMensuales
         }\n`;
       } else {
-        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
-          user.puntosMensuales
-        }*\n`;
+        if (user.username === "@Chewyck"){
+          joseguillen = true;
+          rankingMensaje += `🏳️‍🌈 *${getNombre(user.username)}: ${
+            user.puntosMensuales
+          }*\n`;
+        } else {
+          rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+            user.puntosMensuales
+          }*\n`;
+        }
       }
     });
     rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
@@ -751,11 +763,16 @@ bot.command("rankinganual", async (ctx) => {
     let rankingMensaje = "🏆 _Ranking del año_ 🏆 \n\n";
     let icono = "";
     let x = 0;
+    let joseguillen = false;
     ranking.forEach((user, index) => {
       let posiciones = ["🥇", "🥈", "🥉", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "];
 
       if (index != 0 && user.puntosAnuales != ranking[index - 1].puntosAnuales)
         x += 1;
+        if (joseguillen) {
+          x = 0;
+          joseguillen = false;
+        }
       icono = posiciones[x];
 
       if (x != 0){
@@ -763,9 +780,16 @@ bot.command("rankinganual", async (ctx) => {
           user.puntosAnuales
         }\n`;
       } else {
-        rankingMensaje += `${icono} *${getNombre(user.username)}: ${
-          user.puntosAnuales
-        }*\n`;
+        if (user.username === "@Chewyck"){
+          joseguillen = true;
+          rankingMensaje += `🏳️‍🌈 *${getNombre(user.username)}: ${
+            user.puntosAnuales
+          }*\n`;
+        } else {
+          rankingMensaje += `${icono} *${getNombre(user.username)}: ${
+            user.puntosAnuales
+          }*\n`;
+        }   
       }
     });
     rankingMensaje = rankingMensaje.replace(/-/g, "\\-");
@@ -844,10 +868,27 @@ bot.hears(
             await ctx.reply(
               `${ganadores[0].username} es la más homo con un vasto incremento del ${ganadores[0].porcentaje}%`
             );
-          else
-            await ctx.reply(
-              `${ganadores[0].username} es el más homo con un vasto incremento del ${ganadores[0].porcentaje}%`
-            );
+          else {
+            if (ganadores[0].username === "@Chewyck") {
+              maxPorcentaje = ganadores[0].porcentaje;
+              ganadores = ranking.filter(
+                (user) => user.porcentaje === maxPorcentaje
+              );
+              ganadores.push(ganadores[0]);
+              let ganadoresMensaje = `Los homos del día son:\n\n`;
+              ganadores.forEach((user, index) => {
+                if (user.username !== "@Chewyck")
+                  sumarPuntosAGanador(user.username);
+                ganadoresMensaje += `· ${user.username}\n`;
+              });
+              ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[1].porcentaje}% (excepto José Guillén)`;
+              await ctx.reply(ganadoresMensaje);
+            } else {
+              await ctx.reply(
+                `${ganadores[0].username} es el más homo con un vasto incremento del ${ganadores[0].porcentaje}%`
+              );
+            }
+          }
         } else {
           let ganadoresMensaje = `Los homos del día son:\n\n`;
           ganadores.forEach((user, index) => {
@@ -2062,11 +2103,28 @@ schedule.scheduleJob(monthRule, async () => {
           groupId,
           `La homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
         );
-      else
-        await bot.telegram.sendMessage(
-          groupId,
-          `El homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
-        );
+      else {
+        if (ganadores[0].username === "@Chewyck") {
+          maxPuntos = ganadores[0].puntosMensuales;
+          ganadores = ranking.filter(
+            (user) => user.puntosMensuales === maxPuntos
+          );
+          ganadores.push(ganadores[0]);
+          let ganadoresMensaje = `Los homos del mes son:\n\n`;
+          ganadores.forEach((user, index) => {
+            if (user.username !== "@Chewyck")
+              sumarPuntosAGanadorMes(user.username);
+            ganadoresMensaje += `- ${user.username}\n`;
+          });
+          ganadoresMensaje += `\nTodos con ${ganadores[1].puntosMensuales} puntos (excepto José Guillén)`;
+          await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+        } else {
+          await bot.telegram.sendMessage(
+            groupId,
+            `El homo del mes es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
+          );
+        }
+      }
     } else {
       let ganadoresMensaje = `Los homos del mes son:\n\n`;
       ganadores.forEach((user, index) => {
@@ -2127,11 +2185,28 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
           groupId,
           `El homo del año es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
         );
-      else
-        await bot.telegram.sendMessage(
-          groupId,
-          `La homo del año es ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
-        );
+      else {
+        if (ganadores[0].username === "@Chewyck") {
+          maxPuntos = ganadores[0].puntosAnuales;
+          ganadores = ranking.filter(
+            (user) => user.puntosAnuales === maxPuntos
+          );
+          ganadores.push(ganadores[0]);
+          let ganadoresMensaje = `🏳️‍🌈 Los homos del año son: 🏳️‍🌈\n\n`;
+          ganadores.forEach((user, index) => {
+            if (user.username !== "@Chewyck")
+              sumarPuntosAGanadorMes(user.username);
+            ganadoresMensaje += `- ${user.username}\n`;
+          });
+          ganadoresMensaje += `\nTodos con ${ganadores[1].puntosAnuales} puntos (excepto José Guillén)`;
+          await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+        } else {
+          await bot.telegram.sendMessage(
+            groupId,
+            `🏳️‍🌈 El homo del año es 🏳️‍🌈 ${ganadores[0].username} con un total de ${ganadores[0].puntosMensuales} puntos`
+          );
+        }   
+      }
     } else {
       let ganadoresMensaje = `Los homos del año son:\n\n`;
       ganadores.forEach((user, index) => {
