@@ -1926,11 +1926,28 @@ async function homoDelDia() {
             groupId,
             `La homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`
           );
-        else
-          await bot.telegram.sendMessage(
-            groupId,
-            `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`
-          );
+        else {
+          if (ganadores[0].username === "@Chewyck") {
+            maxPorcentaje = ganadores[0].porcentaje;
+            ganadores = ranking.filter(
+              (user) => user.porcentaje === maxPorcentaje
+            );
+            ganadores.push(ganadores[0]);
+            let ganadoresMensaje = `Los homos del día son:\n\n`;
+            ganadores.forEach((user, index) => {
+              if (user.username !== "@Chewyck")
+                sumarPuntosAGanador(user.username);
+              ganadoresMensaje += `· ${user.username}\n`;
+            });
+            ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[1].porcentaje}% (excepto José Guillén)`;
+           await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+          } else {
+            await bot.telegram.sendMessage(
+              groupId,
+              `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`
+            );
+          }
+        }
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
