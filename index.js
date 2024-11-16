@@ -1564,9 +1564,6 @@ bot.command("reroll", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       });
       nivel(username, ctx, true);
-     // await ctx.editMessageText(rerollMessage.chat.id, rerollMessage.message_id, null,`\`\`\`Reroll🔄 ${message.text}\`\`\``, { parse_mode: 'MarkdownV2' });
-
-
       setTimeout(async () => {
       await ctx.deleteMessage(message.message_id);
     }, 1500);
@@ -1661,132 +1658,144 @@ bot.command("heteropocion3", async (ctx) => {
 });
 
 async function picaduradelacobragay(ctx) {
-  try {
-    const username = `@${ctx.from.username}`;
-    const userDoc = db.collection("usuarios").doc(username);
-    const userData = (await userDoc.get()).data();
-    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
-    const mercadoData = (await mercadoDoc.get()).data();
+  if (moment.tz(TIMEZONE).hour() < 15) {
+    await ctx.reply("No puedes picar antes de las 15:00", {
+        reply_to_message_id: ctx.message.message_id,
+      });
+  } else {
+    try {
+      const username = `@${ctx.from.username}`;
+      const userDoc = db.collection("usuarios").doc(username);
+      const userData = (await userDoc.get()).data();
+      const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+      const mercadoData = (await mercadoDoc.get()).data();
 
-    // Extraer el parámetro después del comando
-    const messageText = ctx.message.text; // El texto completo del mensaje
-    const params = messageText.split(" "); // Dividimos el texto en partes por espacio
+      // Extraer el parámetro después del comando
+      const messageText = ctx.message.text; // El texto completo del mensaje
+      const params = messageText.split(" "); // Dividimos el texto en partes por espacio
 
-    if (params.length < 2 || !usuarios.includes(params[1])) {
-      // Si no se especificó un número o el parámetro no es válido
-      return ctx.reply(
-        "Especifica a quién quieres picar.\nEjemplo: /picaduradelacobragay @RangoLV"
-      );
-    }
-
-    const victima = params[1];
-
-    const usersSnapshot = await db.collection("usuarios").get();
-    let lista = [];
-
-    usersSnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.porcentaje !== null) {
-        lista.push({ porcentaje: data.porcentaje });
+      if (params.length < 2 || !usuarios.includes(params[1])) {
+        // Si no se especificó un número o el parámetro no es válido
+        return ctx.reply(
+          "Especifica a quién quieres picar.\nEjemplo: /picaduradelacobragay @RangoLV"
+        );
       }
-    });
-    let maxPorcentaje = 0;
-    maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
 
-    if (userData.porcentaje >= maxPorcentaje) {
-      if (userData.udreas >= mercadoData.picaduradelacobragay) {
-        if (victima !== username) {
-          const victimaDoc = db.collection("usuarios").doc(victima);
-          const victimaData = (await victimaDoc.get()).data();
-          if (victimaData.porcentaje == null || victimaData.porcentaje > 0) {
-            const today = obtenerFechaHoy();
-            victimaDoc.update({
-              porcentaje: userData.porcentaje,
-              ultimaActualizacion: today,
-            });
+      const victima = params[1];
 
-            userDoc.update({
-              udreas: userData.udreas - mercadoData.picaduradelacobragay,
-            });
-            await ctx.reply(`${username} ha picado a ${victima} 🐍`);
-            await ctx.reply(
-              `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
-            );
+      const usersSnapshot = await db.collection("usuarios").get();
+      let lista = [];
+
+      usersSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.porcentaje !== null) {
+          lista.push({ porcentaje: data.porcentaje });
+        }
+      });
+      let maxPorcentaje = 0;
+      maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
+
+      if (userData.porcentaje >= maxPorcentaje) {
+        if (userData.udreas >= mercadoData.picaduradelacobragay) {
+          if (victima !== username) {
+            const victimaDoc = db.collection("usuarios").doc(victima);
+            const victimaData = (await victimaDoc.get()).data();
+            if (victimaData.porcentaje == null || victimaData.porcentaje > 0) {
+              const today = obtenerFechaHoy();
+              victimaDoc.update({
+                porcentaje: userData.porcentaje,
+                ultimaActualizacion: today,
+              });
+
+              userDoc.update({
+                udreas: userData.udreas - mercadoData.picaduradelacobragay,
+              });
+              await ctx.reply(`${username} ha picado a ${victima} 🐍`);
+              await ctx.reply(
+                `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
+              );
+            } else {
+              await ctx.reply(`${victima} es inmune a las picaduras`);
+            }
           } else {
-            await ctx.reply(`${victima} es inmune a las picaduras`);
-          }
+            await ctx.reply(`${username} no te puedes picar a ti mismo, tonto`);
+          }     
         } else {
-          await ctx.reply(`${username} no te puedes picar a ti mismo, tonto`);
-        }     
+          await ctx.reply(`${username} no tienes udreas suficientes`);
+        }   
       } else {
-        await ctx.reply(`${username} no tienes udreas suficientes`);
-      }   
-    } else {
-      await ctx.reply(
-        `${username} tienes que ser gay para poder picar a otro usuario`
-      );
+        await ctx.reply(
+          `${username} tienes que ser gay para poder picar a otro usuario`
+        );
+      }
+    } catch (error) {
+      console.error("Error al hacer picaduradelacobragay:", error);
+      await ctx.reply("Udrea!");
     }
-  } catch (error) {
-    console.error("Error al hacer picaduradelacobragay:", error);
-    await ctx.reply("Udrea!");
   }
 }
 
 async function superpicaduradelacobragay(ctx) {
-  try {
-    const username = `@${ctx.from.username}`;
-    const userDoc = db.collection("usuarios").doc(username);
-    const userData = (await userDoc.get()).data();
-    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
-    const mercadoData = (await mercadoDoc.get()).data();
+  if (moment.tz(TIMEZONE).hour() < 15) {
+    await ctx.reply("No puedes picar antes de las 15:00", {
+        reply_to_message_id: ctx.message.message_id,
+      });
+  } else {
+    try {
+      const username = `@${ctx.from.username}`;
+      const userDoc = db.collection("usuarios").doc(username);
+      const userData = (await userDoc.get()).data();
+      const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+      const mercadoData = (await mercadoDoc.get()).data();
 
-    const usersSnapshot = await db.collection("usuarios").get();
-    let lista = [];
+      const usersSnapshot = await db.collection("usuarios").get();
+      let lista = [];
 
-    usersSnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.porcentaje !== null) {
-        lista.push({ porcentaje: data.porcentaje });
-      }
-    });
-    let maxPorcentaje = 0;
-    maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
+      usersSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.porcentaje !== null) {
+          lista.push({ porcentaje: data.porcentaje });
+        }
+      });
+      let maxPorcentaje = 0;
+      maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
 
-    if (userData.porcentaje >= maxPorcentaje) {
-      if (userData.udreas >= mercadoData.superpicaduradelacobragay) {
-        const today = obtenerFechaHoy();
-        let picados = "";
-        usersSnapshot.forEach((doc) => {
-          const victimaData = doc.data();
-          const victimaDoc = db
-            .collection("usuarios")
-            .doc(victimaData.username);
-          if (victimaData.username != userData.username) {
-            victimaDoc.update({
-              porcentaje: userData.porcentaje,
-              ultimaActualizacion: today,
-            });
-            picados += `${victimaData.username} `;
-          }
-        });
-        userDoc.update({
-          udreas: userData.udreas - mercadoData.superpicaduradelacobragay,
-        });
-        await ctx.reply(`${username} ha picado a todos los usuarios 🐍`);
-        await ctx.reply(
-          `${picados}ahora tienen un vasto incremento del ${userData.porcentaje}%`
-        );
+      if (userData.porcentaje >= maxPorcentaje) {
+        if (userData.udreas >= mercadoData.superpicaduradelacobragay) {
+          const today = obtenerFechaHoy();
+          let picados = "";
+          usersSnapshot.forEach((doc) => {
+            const victimaData = doc.data();
+            const victimaDoc = db
+              .collection("usuarios")
+              .doc(victimaData.username);
+            if (victimaData.username != userData.username) {
+              victimaDoc.update({
+                porcentaje: userData.porcentaje,
+                ultimaActualizacion: today,
+              });
+              picados += `${victimaData.username} `;
+            }
+          });
+          userDoc.update({
+            udreas: userData.udreas - mercadoData.superpicaduradelacobragay,
+          });
+          await ctx.reply(`${username} ha picado a todos los usuarios 🐍`);
+          await ctx.reply(
+            `${picados}ahora tienen un vasto incremento del ${userData.porcentaje}%`
+          );
+        } else {
+          await ctx.reply(`${username} no tienes udreas suficientes`);
+        }
       } else {
-        await ctx.reply(`${username} no tienes udreas suficientes`);
+        await ctx.reply(
+          `${username} tienes que ser gay para poder picar a los demás usuarios`
+        );
       }
-    } else {
-      await ctx.reply(
-        `${username} tienes que ser gay para poder picar a los demás usuarios`
-      );
+    } catch (error) {
+      console.error("Error al hacer superpicaduradelacobragay:", error);
+      await ctx.reply("Udrea!");
     }
-  } catch (error) {
-    console.error("Error al hacer superpicaduradelacobragay:", error);
-    await ctx.reply("Udrea!");
   }
 }
 
