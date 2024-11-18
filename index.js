@@ -890,7 +890,7 @@ bot.hears(
             }
           }
         } else {
-          let ganadoresMensaje = `Los homos del día son:\n\n`;
+          let ganadoresMensaje = `Los homos son:\n\n`;
           ganadores.forEach((user, index) => {
             ganadoresMensaje += `· ${user.username}\n`;
           });
@@ -1657,9 +1657,11 @@ bot.command("heteropocion3", async (ctx) => {
   }
 });
 
+let habemusHomo = false;
+
 async function picaduradelacobragay(ctx) {
-  if (moment.tz(TIMEZONE).hour() < 15) {
-    await ctx.reply("No puedes picar antes de las 15:00", {
+  if (moment.tz(TIMEZONE).hour() < 15 || habemusHomo) {
+    await ctx.reply("No puedes picar antes de las 15:00 ni después del Habemus Homo", {
         reply_to_message_id: ctx.message.message_id,
       });
   } else {
@@ -1736,8 +1738,8 @@ async function picaduradelacobragay(ctx) {
 }
 
 async function superpicaduradelacobragay(ctx) {
-  if (moment.tz(TIMEZONE).hour() < 15) {
-    await ctx.reply("No puedes picar antes de las 15:00", {
+  if (moment.tz(TIMEZONE).hour() < 15 || habemusHomo) {
+    await ctx.reply("No puedes picar antes de las 15:00 ni después del Habemus Homo", {
         reply_to_message_id: ctx.message.message_id,
       });
   } else {
@@ -2033,6 +2035,8 @@ async function homoDelDia() {
       batch.update(userDoc, { porcentaje: null, desempate: null });
     });
     await batch.commit();
+
+    habemusHomo = true;
   } catch (error) {
     console.error("Error en la tarea diaria:", error);
   }
@@ -2073,7 +2077,7 @@ schedule.scheduleJob(rule, async () => {
   // 23:59 cada día
   console.log("Ejecutando tarea diaria (old)...");
   const today = obtenerFechaHoy();
- 
+  habemusHomo = false;
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
