@@ -545,7 +545,8 @@ bot.command("desempatar", async (ctx) => {
       (doc) =>
         doc.username !== username &&
         doc.porcentaje === userData.porcentaje &&
-        doc.desempate != null
+        doc.desempate != null &&
+        doc.porcentaje != null
     );
 
     if (!empatado) {
