@@ -875,7 +875,7 @@ bot.hears(
                 (user) => user.porcentaje === maxPorcentaje
               );
               ganadores.push(ganadores[0]);
-              let ganadoresMensaje = `Los homos del día son:\n\n`;
+              let ganadoresMensaje = `Los homos son:\n\n`;
               ganadores.forEach((user, index) => {
                 if (user.username !== "@Chewyck")
                   sumarPuntosAGanador(user.username);
