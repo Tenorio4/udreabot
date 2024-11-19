@@ -141,6 +141,9 @@ window.onload = function () {
 
   document.documentElement.style.opacity = "1";
   document.body.style.opacity = "1";
+  const contenedor = document.getElementById("inicio");
+  contenedor.style.opacity = "0"; // Cambia la opacidad a 0
+  //contenedor.style.zIndex = "0";
 };
 
 document.getElementById("udrea").addEventListener("click", function () {
@@ -160,7 +163,7 @@ document.getElementById("udrea").addEventListener("click", function () {
   const contenedor = document.getElementById("inicio");
   contenedor.style.opacity = "0"; // Cambia la opacidad a 0
   contenedor.style.zIndex = "0";
-  videoIframe.style.opacity = "1";
+  //videoIframe.style.opacity = "1";
 });
 
 /*const button = document.getElementById("close");
