@@ -139,6 +139,24 @@ app.get("/superpicaduradelacobragay", async (req, res) => {
   }
 });
 
+app.get("/bombadepurpurina", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.bombadepurpurina) {
+      res.json({ precio: precioData.bombadepurpurina });
+    } else {
+      res
+        .status(404)
+        .send("No se encontró el precio para bombadepurpurina.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 app.get("/ranking", async (req, res) => {
   try {
     const usersSnapshot = await db.collection("usuarios").get();
@@ -1536,6 +1554,7 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· Heteropocion 3: ${mercadoData.heteropocion3} udrea(s)\n`;
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
+    mercadoMensaje += `· Bomba de Purpurina: ${mercadoData.bombadepurpurina} udrea(s)\n`;
     const message = await ctx.reply(mercadoMensaje);
     setTimeout(async () => {
       // Eliminar el mensaje usando su ID
@@ -1852,7 +1871,7 @@ bot.command("bomba", async (ctx) => {
             });
             await ctx.reply(`${username} ha lanzado una bomba de purpurina a ${victima} 💣🌈`);
             await ctx.reply(
-              `${victima} tiene ahora un vasto incremento del ${victimaData.porcentaje + parseInt(params[2])}% (${victimaData.porcentaje}% => ${victimaData.porcentaje + parseInt(params[2])}%)`
+              `El vasto incremento de ${victima} se ha incrementado en un ${parseInt(params[2])}% (${victimaData.porcentaje}% => ${victimaData.porcentaje + parseInt(params[2])}%)`
             );
           } else {
             await ctx.reply(`${victima} es inmune a las bombas de purpurina`);

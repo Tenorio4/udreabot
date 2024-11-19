@@ -134,6 +134,7 @@ window.onload = function () {
   obtenerPrecioItem("/heteropocion3");
   obtenerPrecioItem("/picaduradelacobragay");
   obtenerPrecioItem("/superpicaduradelacobragay");
+  obtenerPrecioItem("/bombadepurpurina");
   obtenerRanking();
   obtenerRankingMensual();
   obtenerRankingAnual();
@@ -142,7 +143,7 @@ window.onload = function () {
   document.documentElement.style.opacity = "1";
   document.body.style.opacity = "1";
   const contenedor = document.getElementById("inicio");
-  contenedor.style.opacity = "0"; // Cambia la opacidad a 0
+  //contenedor.style.opacity = "0"; // Cambia la opacidad a 0
   contenedor.style.zIndex = "0";
 };
 
