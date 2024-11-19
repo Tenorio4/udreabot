@@ -1830,7 +1830,7 @@ bot.command("bomba", async (ctx) => {
     const messageText = ctx.message.text; // El texto completo del mensaje
     const params = messageText.split(" "); // Dividimos el texto en partes por espacio
 
-    if (params.length < 3 || !usuarios.includes(params[1]) || !isNaN(params[2])) {
+    if (params.length < 3 || !usuarios.includes(params[1]) || isNaN(params[2])) {
       // Si no se especificó un número o el parámetro no es válido
       return ctx.reply(
         "Especifica a quién quieres lanzar la bomba de purpurina y la cantidad (1 udrea = 1%).\nEjemplo: /bomba @Pmoai 50"
@@ -1843,7 +1843,6 @@ bot.command("bomba", async (ctx) => {
           const victimaDoc = db.collection("usuarios").doc(victima);
           const victimaData = (await victimaDoc.get()).data();
           if (victimaData.porcentaje !== null || victimaData.porcentaje > 0) {
-            const today = obtenerFechaHoy();
             victimaDoc.update({
               porcentaje: victimaData.porcentaje + parseInt(params[2]),
             });
