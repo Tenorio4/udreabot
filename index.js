@@ -1818,6 +1818,56 @@ bot.command("supercobra", async (ctx) => {
   superpicaduradelacobragay(ctx);
 });
 
+bot.command("bomba", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    // Extraer el parámetro después del comando
+    const messageText = ctx.message.text; // El texto completo del mensaje
+    const params = messageText.split(" "); // Dividimos el texto en partes por espacio
+
+    if (params.length < 3 || !usuarios.includes(params[1]) || !isNaN(params[2])) {
+      // Si no se especificó un número o el parámetro no es válido
+      return ctx.reply(
+        "Especifica a quién quieres lanzar la bomba de purpurina y la cantidad (1 udrea = 1%).\nEjemplo: /bomba @Pmoai 50"
+      );
+    }
+
+    const victima = params[1];
+
+      if (userData.udreas >= mercadoData.bombadepurpurina * parseInt(params[2])) {
+          const victimaDoc = db.collection("usuarios").doc(victima);
+          const victimaData = (await victimaDoc.get()).data();
+          if (victimaData.porcentaje !== null || victimaData.porcentaje > 0) {
+            const today = obtenerFechaHoy();
+            victimaDoc.update({
+              porcentaje: victimaData.porcentaje + parseInt(params[2]),
+            });
+
+            userDoc.update({
+              udreas: userData.udreas - mercadoData.bombadepurpurina * parseInt(params[2]),
+            });
+            await ctx.reply(`${username} ha lanzado una bomba de purpurina a ${victima} 💣🌈`);
+            await ctx.reply(
+              `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}% (${victimaData.porcentaje}% => ${victimaData.porcentaje + parseInt(params[2])}%)`
+            );
+          } else {
+            await ctx.reply(`${victima} es inmune a las bombas de purpurina`);
+          }      
+      } else {
+        await ctx.reply(`${username} no tienes udreas suficientes`);
+      }   
+
+  } catch (error) {
+    console.error("Error al hacer bombadepurpurina:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command("meme", async (ctx) => {
   try {
