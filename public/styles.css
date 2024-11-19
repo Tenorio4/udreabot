@@ -115,7 +115,7 @@ h1 {
   width: 100%;
   height: 100%;
   background-color: rgb(255, 255, 255);
-  transition: z-index 0.1s 3000ms;
+  transition: z-index 0.1s 4000ms;
   opacity: 1;
 }
 

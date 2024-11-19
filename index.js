@@ -1842,7 +1842,7 @@ bot.command("bomba", async (ctx) => {
       if (userData.udreas >= mercadoData.bombadepurpurina * parseInt(params[2])) {
           const victimaDoc = db.collection("usuarios").doc(victima);
           const victimaData = (await victimaDoc.get()).data();
-          if (victimaData.porcentaje !== null || victimaData.porcentaje > 0) {
+          if (victimaData.porcentaje !== null && victimaData.porcentaje > 0) {
             victimaDoc.update({
               porcentaje: victimaData.porcentaje + parseInt(params[2]),
             });
@@ -1852,7 +1852,7 @@ bot.command("bomba", async (ctx) => {
             });
             await ctx.reply(`${username} ha lanzado una bomba de purpurina a ${victima} 💣🌈`);
             await ctx.reply(
-              `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}% (${victimaData.porcentaje}% => ${victimaData.porcentaje + parseInt(params[2])}%)`
+              `${victima} tiene ahora un vasto incremento del ${victimaData.porcentaje + parseInt(params[2])}% (${victimaData.porcentaje}% => ${victimaData.porcentaje + parseInt(params[2])}%)`
             );
           } else {
             await ctx.reply(`${victima} es inmune a las bombas de purpurina`);
