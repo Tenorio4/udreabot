@@ -143,7 +143,7 @@ window.onload = function () {
   document.body.style.opacity = "1";
   const contenedor = document.getElementById("inicio");
   contenedor.style.opacity = "0"; // Cambia la opacidad a 0
-  //contenedor.style.zIndex = "0";
+  contenedor.style.zIndex = "0";
 };
 
 document.getElementById("udrea").addEventListener("click", function () {
