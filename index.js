@@ -556,7 +556,7 @@ async function nivel(username, ctx, reroll = false) {
 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
           } else {
             await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
-${username} tiene un (${nuevoPorcentaj} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento\`\`\``);
+${username} tiene un (${nuevoPorcentaje} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento\`\`\``);
           }
         } else {
           if (userData.heteroescudo == 0) {
@@ -2014,7 +2014,7 @@ function scheduleDailyTask(taskFunction) {
       .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
       .set({ hour: 23, minute: 30 + randomMinute, second: 50 });
 
-    console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    //console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
     
     // Resetea bandera después de la primera ejecución
     isFirstExecution = false;
