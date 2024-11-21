@@ -1590,6 +1590,8 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· ?\n`;
     mercadoMensaje += `\nStats / Habilidades\n\n`;
     mercadoMensaje += `· Hetero-escudo: ${mercadoData.heteroescudo} aaah(s)\n`;
+    
+    mercadoMensaje.replace(/\(/g, "\\(").replace(/\)/g, "\\)");
     const message = await ctx.replyWithMarkdownV2(mercadoMensaje);
     setTimeout(async () => {
       // Eliminar el mensaje usando su ID
