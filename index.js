@@ -157,6 +157,24 @@ app.get("/bombadepurpurina", async (req, res) => {
   }
 });
 
+app.get("/heteroescudo", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.heteroescudo) {
+      res.json({ precio: precioData.heteroescudo });
+    } else {
+      res
+        .status(404)
+        .send("No se encontró el precio para heteroescudo.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 app.get("/ranking", async (req, res) => {
   try {
     const usersSnapshot = await db.collection("usuarios").get();
@@ -407,6 +425,8 @@ bot.telegram.setMyCommands([
     command: "/supercobra",
     description: "Para convertir en gay a los demás usuarios",
   },
+  { command: "/bomba", description: "Para subir el vasto incremento de otro usuario" },
+  { command: "/heteroescudo", description: "Stat para bajar porcentaje en las tiradas" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
   { command: "/udrea", description: "Udrea" },
   { command: "/superudrea", description: "Para superudrear" },
@@ -531,10 +551,19 @@ async function nivel(username, ctx, reroll = false) {
         );
       } else {
         if (reroll){
-          await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
+          if (userData.heteroescudo == 0) {
+            await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
+          } else {
+            await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
+${username} tiene un (${nuevoPorcentaj} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento\`\`\``);
+          }
         } else {
-          await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+          if (userData.heteroescudo == 0) {
+            await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
+          } else {
+            await ctx.reply(`${username} tiene un (${nuevoPorcentaj} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento`);
+          }
         }
       }
     }
@@ -1549,12 +1578,14 @@ bot.command("mercado", async (ctx) => {
 
     let mercadoMensaje = `Mercado:\n\n`;
     mercadoMensaje += `· Reroll: ${mercadoData.reroll} udrea(s)\n`;
-    mercadoMensaje += `· Heteropocion 1: ${mercadoData.heteropocion1} udrea(s)\n`;
-    mercadoMensaje += `· Heteropocion 2: ${mercadoData.heteropocion2} udrea(s)\n`;
-    mercadoMensaje += `· Heteropocion 3: ${mercadoData.heteropocion3} udrea(s)\n`;
+    mercadoMensaje += `· Hetero-poción LVL 1: ${mercadoData.heteropocion1} udrea(s)\n`;
+    mercadoMensaje += `· Hetero-poción LVL 2: ${mercadoData.heteropocion2} udrea(s)\n`;
+    mercadoMensaje += `· Hetero-poción LVL 3: ${mercadoData.heteropocion3} udrea(s)\n`;
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Bomba de Purpurina: ${mercadoData.bombadepurpurina} udrea(s)\n`;
+    mercadoMensaje += `\nStats / Habilidades\n\n`;
+    mercadoMensaje += `· Hetero-escudo: ${mercadoData.heteroescudo} aaah(s)\n`;
     const message = await ctx.reply(mercadoMensaje);
     setTimeout(async () => {
       // Eliminar el mensaje usando su ID
@@ -1882,6 +1913,30 @@ bot.command("bomba", async (ctx) => {
 
   } catch (error) {
     console.error("Error al hacer bombadepurpurina:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("heteroescudo", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.aaahs >= mercadoData.heteroescudo) {
+      userDoc.update({
+        heteroescudo: userData.heteroescudo + 5,
+        aaahs: userData.aaahs - mercadoData.heteroescudo,
+      });
+      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 5}%`);
+    } else {
+      await ctx.reply(`${username} no tienes aaahs suficientes`);
+    }   
+
+  } catch (error) {
+    console.error("Error al comprar heteroescudo:", error);
     await ctx.reply("Udrea!");
   }
 });
