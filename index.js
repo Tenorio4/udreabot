@@ -1576,17 +1576,21 @@ bot.command("mercado", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    let mercadoMensaje = `Mercado:\n\n`;
+    let mercadoMensaje = `🛒 _Mercado:_ 🛒\n\n`;
+    mercadoMensaje += `*Items consumibles:*\n\n`;
     mercadoMensaje += `· Reroll: ${mercadoData.reroll} udrea(s)\n`;
     mercadoMensaje += `· Hetero-poción LVL 1: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· Hetero-poción LVL 2: ${mercadoData.heteropocion2} udrea(s)\n`;
     mercadoMensaje += `· Hetero-poción LVL 3: ${mercadoData.heteropocion3} udrea(s)\n`;
+    mercadoMensaje += `\n*Items ofensivos:*\n\n`;
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Bomba de Purpurina: ${mercadoData.bombadepurpurina} udrea(s)\n`;
+    mercadoMensaje += `\n*Items defensivos:*\n\n`;
+    mercadoMensaje += `· ?\n`;
     mercadoMensaje += `\nStats / Habilidades\n\n`;
     mercadoMensaje += `· Hetero-escudo: ${mercadoData.heteroescudo} aaah(s)\n`;
-    const message = await ctx.reply(mercadoMensaje);
+    const message = await ctx.replyWithMarkdownV2(mercadoMensaje);
     setTimeout(async () => {
       // Eliminar el mensaje usando su ID
       await ctx.deleteMessage(message.message_id);

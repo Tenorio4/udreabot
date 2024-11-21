@@ -10,13 +10,26 @@ async function obtenerPrecioUdrea() {
   }
 }
 
-async function obtenerPrecioItem(item) {
+async function obtenerPrecioItemUdreas(item) {
   try {
     const response = await fetch(`${item}`);
     const data = await response.json();
     document.getElementById(
       `${item}`
     ).textContent = `Precio: ${data.precio} udrea(s)`;
+  } catch (error) {
+    document.getElementById(`${item}`).textContent =
+      "Error al cargar el precio";
+  }
+}
+
+async function obtenerPrecioItemAaahs(item) {
+  try {
+    const response = await fetch(`${item}`);
+    const data = await response.json();
+    document.getElementById(
+      `${item}`
+    ).textContent = `Precio: ${data.precio} aaah(s)`;
   } catch (error) {
     document.getElementById(`${item}`).textContent =
       "Error al cargar el precio";
@@ -128,13 +141,14 @@ async function cargarMenu() {
 
 window.onload = function () {
   cargarMenu();
-  obtenerPrecioItem("/reroll");
-  obtenerPrecioItem("/heteropocion1");
-  obtenerPrecioItem("/heteropocion2");
-  obtenerPrecioItem("/heteropocion3");
-  obtenerPrecioItem("/picaduradelacobragay");
-  obtenerPrecioItem("/superpicaduradelacobragay");
-  obtenerPrecioItem("/bombadepurpurina");
+  obtenerPrecioItemUdreasUdreas("/reroll");
+  obtenerPrecioItemUdreas("/heteropocion1");
+  obtenerPrecioItemUdreas("/heteropocion2");
+  obtenerPrecioItemUdreas("/heteropocion3");
+  obtenerPrecioItemUdreas("/picaduradelacobragay");
+  obtenerPrecioItemUdreas("/superpicaduradelacobragay");
+  obtenerPrecioItemUdreas("/bombadepurpurina");
+  obtenerPrecioItemAaahs("/heteroescudo");
   obtenerRanking();
   obtenerRankingMensual();
   obtenerRankingAnual();
