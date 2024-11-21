@@ -2098,7 +2098,7 @@ async function homoDelDia() {
       );
     } else {
       let maxPorcentaje = Math.max(...ranking.map((user) => user.porcentaje));
-      const ganadores = ranking.filter(
+      let ganadores = ranking.filter(
         (user) => user.porcentaje === maxPorcentaje
       );
 
