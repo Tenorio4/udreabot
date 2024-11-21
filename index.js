@@ -2097,7 +2097,7 @@ async function homoDelDia() {
         "Pulse aquí -> /s si ya lo suponías"
       );
     } else {
-      const maxPorcentaje = Math.max(...ranking.map((user) => user.porcentaje));
+      let maxPorcentaje = Math.max(...ranking.map((user) => user.porcentaje));
       const ganadores = ranking.filter(
         (user) => user.porcentaje === maxPorcentaje
       );
