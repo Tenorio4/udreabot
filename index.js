@@ -1930,7 +1930,7 @@ bot.command("heteroescudo", async (ctx) => {
         heteroescudo: userData.heteroescudo + 5,
         aaahs: userData.aaahs - mercadoData.heteroescudo,
       });
-      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 5}%`);
+      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 2}%`);
     } else {
       await ctx.reply(`${username} no tienes aaahs suficientes`);
     }   
