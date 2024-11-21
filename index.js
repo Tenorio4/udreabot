@@ -556,13 +556,13 @@ async function nivel(username, ctx, reroll = false) {
 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
           } else {
             await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
-${username} tiene un (${nuevoPorcentaje} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento\`\`\``);
+${username} tiene un (${nuevoPorcentaje} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento\`\`\``);
           }
         } else {
           if (userData.heteroescudo == 0) {
             await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
           } else {
-            await ctx.reply(`${username} tiene un (${nuevoPorcentaj} + ${userData.heteroescudo}) => ${nuevoPorcentaje + userData.heteroescudo}% de vasto incremento`);
+            await ctx.reply(`${username} tiene un (${nuevoPorcentaj} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento`);
           }
         }
       }
