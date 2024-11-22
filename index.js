@@ -660,7 +660,7 @@ bot.command("desempatar", async (ctx) => {
           await ctx.reply("Pulse aquí -> /desempatar para intentarlo de nuevo");
         }
       }
-    } else if (userData.desempate !== null || userData.porcentaje !== null) {
+    } else if (userData.desempate !== null) {
       await ctx.reply(
         `${username} ya te he dicho que has sacado un ${userData.desempate}`
       );
@@ -932,7 +932,7 @@ bot.hears(
                   sumarPuntosAGanador(user.username);
                 ganadoresMensaje += `· ${user.username}\n`;
               });
-              ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[1].porcentaje}% (excepto José Guillén)`;
+              ganadoresMensaje += `\nTodos con un vasto incremento del ${maxPorcentaje}% (excepto José Guillén)`;
               await ctx.reply(ganadoresMensaje);
             } else {
               await ctx.reply(
