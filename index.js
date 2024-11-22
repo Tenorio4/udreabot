@@ -1936,7 +1936,7 @@ bot.command("heteroescudo", async (ctx) => {
 
     if (userData.aaahs >= mercadoData.heteroescudo) {
       userDoc.update({
-        heteroescudo: userData.heteroescudo + 5,
+        heteroescudo: userData.heteroescudo + 2,
         aaahs: userData.aaahs - mercadoData.heteroescudo,
       });
       await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 2}%`);
