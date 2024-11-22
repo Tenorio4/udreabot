@@ -2046,8 +2046,6 @@ function myDailyTask() {
   homoDelDia();
 }
 
-homoDelDia();
-
 // Inicia la tarea programada
 scheduleDailyTask(myDailyTask);
 
