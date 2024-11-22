@@ -525,7 +525,7 @@ async function nivel(username, ctx, reroll = false) {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
       await userDoc.set({
         ...userData,
-        porcentaje: nuevoPorcentaje,
+        porcentaje: nuevoPorcentaje - userData.heteroescudo,
         ultimaActualizacion: today,
       });
       if (nuevoPorcentaje == 0) {
@@ -603,7 +603,7 @@ bot.command("desempatar", async (ctx) => {
       );
     }
 
-    if (empatado && userData.desempate == null) {
+    if (empatado && userData.desempate == null && userData.porcentaje != null) {
       const resultado = Math.floor(Math.random() * 11); // Entre 0 y 10
       await userDoc.update({
         desempate: resultado,
@@ -660,7 +660,7 @@ bot.command("desempatar", async (ctx) => {
           await ctx.reply("Pulse aquí -> /desempatar para intentarlo de nuevo");
         }
       }
-    } else if (userData.desempate !== null) {
+    } else if (userData.desempate !== null || userData.porcentaje !== null) {
       await ctx.reply(
         `${username} ya te he dicho que has sacado un ${userData.desempate}`
       );
@@ -904,10 +904,10 @@ bot.hears(
       });
 
       if (ranking.length === usuarios.length) {
-        const maxPorcentaje = Math.max(
+        let maxPorcentaje = Math.max(
           ...ranking.map((user) => user.porcentaje)
         );
-        const ganadores = ranking.filter(
+        let ganadores = ranking.filter(
           (user) => user.porcentaje === maxPorcentaje
         );
 
@@ -918,7 +918,7 @@ bot.hears(
             );
           else {
             if (ganadores[0].username === "@Chewyck") {
-              maxPorcentaje = ganadores[0].porcentaje;
+              maxPorcentaje = ganadores[1].porcentaje;
               ganadores = ranking.filter(
                 (user) => user.porcentaje === maxPorcentaje
               );
@@ -1713,14 +1713,9 @@ bot.command("heteropocion3", async (ctx) => {
   }
 });
 
-let habemusHomo = false;
+
 
 async function picaduradelacobragay(ctx) {
-  if (moment.tz(TIMEZONE).hour() < 15 || habemusHomo) {
-    await ctx.reply("No puedes picar antes de las 15:00 ni después del Habemus Homo", {
-        reply_to_message_id: ctx.message.message_id,
-      });
-  } else {
     try {
       const username = `@${ctx.from.username}`;
       const userDoc = db.collection("usuarios").doc(username);
@@ -1758,6 +1753,12 @@ async function picaduradelacobragay(ctx) {
           if (victima !== username) {
             const victimaDoc = db.collection("usuarios").doc(victima);
             const victimaData = (await victimaDoc.get()).data();
+            if ((moment.tz(TIMEZONE).hour() < 15) && victimaData.porcentaje == null) {
+              return await ctx.reply("No puedes picar a un cobarde antes de las 15:00", {
+                  reply_to_message_id: ctx.message.message_id,
+                });
+            }
+
             if (victimaData.porcentaje == null || victimaData.porcentaje > 0) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
@@ -1790,15 +1791,9 @@ async function picaduradelacobragay(ctx) {
       console.error("Error al hacer picaduradelacobragay:", error);
       await ctx.reply("Udrea!");
     }
-  }
 }
 
 async function superpicaduradelacobragay(ctx) {
-  if (moment.tz(TIMEZONE).hour() < 15 || habemusHomo) {
-    await ctx.reply("No puedes picar antes de las 15:00 ni después del Habemus Homo", {
-        reply_to_message_id: ctx.message.message_id,
-      });
-  } else {
     try {
       const username = `@${ctx.from.username}`;
       const userDoc = db.collection("usuarios").doc(username);
@@ -1808,13 +1803,21 @@ async function superpicaduradelacobragay(ctx) {
 
       const usersSnapshot = await db.collection("usuarios").get();
       let lista = [];
-
+      let hayCobardes = false;
       usersSnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.porcentaje !== null) {
           lista.push({ porcentaje: data.porcentaje });
+        } else {
+          hayCobardes = true;
         }
       });
+      if (moment.tz(TIMEZONE).hour() < 15 && hayCobardes) {
+        return await ctx.reply("No puedes picar antes de las 15:00 si aún hay cobardes", {
+            reply_to_message_id: ctx.message.message_id,
+          });
+      } 
+
       let maxPorcentaje = 0;
       maxPorcentaje = Math.max(...lista.map((user) => user.porcentaje));
 
@@ -1854,7 +1857,6 @@ async function superpicaduradelacobragay(ctx) {
       console.error("Error al hacer superpicaduradelacobragay:", error);
       await ctx.reply("Udrea!");
     }
-  }
 }
 
 bot.command("picaduradelacobragay", async (ctx) => {
@@ -2111,7 +2113,7 @@ async function homoDelDia() {
           );
         else {
           if (ganadores[0].username === "@Chewyck") {
-            maxPorcentaje = ganadores[0].porcentaje;
+            maxPorcentaje = ganadores[1].porcentaje;
             ganadores = ranking.filter(
               (user) => user.porcentaje === maxPorcentaje
             );
@@ -2167,7 +2169,6 @@ async function homoDelDia() {
     });
     await batch.commit();
 
-    habemusHomo = true;
   } catch (error) {
     console.error("Error en la tarea diaria:", error);
   }
@@ -2208,7 +2209,6 @@ schedule.scheduleJob(rule, async () => {
   // 23:59 cada día
   console.log("Ejecutando tarea diaria (old)...");
   const today = obtenerFechaHoy();
-  habemusHomo = false;
 });
 
 // Tarea mensual (último día de cada mes a las 23:59)
@@ -2235,8 +2235,8 @@ schedule.scheduleJob(monthRule, async () => {
       });
     });
 
-    const maxPuntos = Math.max(...ranking.map((user) => user.puntosMensuales));
-    const ganadores = ranking.filter(
+    let maxPuntos = Math.max(...ranking.map((user) => user.puntosMensuales));
+    let ganadores = ranking.filter(
       (user) => user.puntosMensuales === maxPuntos
     );
 
@@ -2249,7 +2249,7 @@ schedule.scheduleJob(monthRule, async () => {
         );
       else {
         if (ganadores[0].username === "@Chewyck") {
-          maxPuntos = ganadores[0].puntosMensuales;
+          maxPuntos = ganadores[1].puntosMensuales;
           ganadores = ranking.filter(
             (user) => user.puntosMensuales === maxPuntos
           );
@@ -2318,8 +2318,8 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
       });
     });
 
-    const maxPuntos = Math.max(...ranking.map((user) => user.puntosAnuales));
-    const ganadores = ranking.filter(
+    let maxPuntos = Math.max(...ranking.map((user) => user.puntosAnuales));
+    let ganadores = ranking.filter(
       (user) => user.puntosAnuales === maxPuntos
     );
 
@@ -2331,7 +2331,7 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
         );
       else {
         if (ganadores[0].username === "@Chewyck") {
-          maxPuntos = ganadores[0].puntosAnuales;
+          maxPuntos = ganadores[1].puntosAnuales;
           ganadores = ranking.filter(
             (user) => user.puntosAnuales === maxPuntos
           );

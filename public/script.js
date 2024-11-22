@@ -141,7 +141,7 @@ async function cargarMenu() {
 
 window.onload = function () {
   cargarMenu();
-  obtenerPrecioItemUdreasUdreas("/reroll");
+  obtenerPrecioItemUdreas("/reroll");
   obtenerPrecioItemUdreas("/heteropocion1");
   obtenerPrecioItemUdreas("/heteropocion2");
   obtenerPrecioItemUdreas("/heteropocion3");
