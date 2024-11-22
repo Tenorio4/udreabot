@@ -1583,7 +1583,7 @@ bot.command("stats", async (ctx) => {
 
     await ctx.replyWithMarkdownV2(
       `\`\`\`${username}:
-· Hetero escudo: ${heteroescudo}€\`\`\``);
+· Hetero escudo: ${heteroescudo}%\`\`\``);
   } catch (error) {
     console.error("Error en obtener balance:", error);
     await ctx.reply("Udrea!");
