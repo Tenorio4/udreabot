@@ -2130,18 +2130,20 @@ async function homoDelDia() {
           );
         else {
           if (ganadores[0].username === "@Chewyck") {
-            maxPorcentaje = ganadores[1].porcentaje;
+            maxPorcentaje = Math.max(
+              ...ranking
+                .map((user) => user.porcentaje)
+                .filter((porcentaje) => porcentaje < maxPorcentaje)
+            );
             ganadores = ranking.filter(
               (user) => user.porcentaje === maxPorcentaje
             );
-            ganadores.push(ganadores[0]);
             let ganadoresMensaje = `Los homos del día son:\n\n`;
-            ganadores.forEach((user, index) => {
-              if (user.username !== "@Chewyck")
-                sumarPuntosAGanador(user.username);
+            ganadoresMensaje += `· @Chewyck\n`;
+            ganadores.forEach((user) => {
               ganadoresMensaje += `· ${user.username}\n`;
             });
-            ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[1].porcentaje}% (excepto José Guillén)`;
+            ganadoresMensaje += `\nTodos con un vasto incremento del ${maxPorcentaje}% (excepto José Guillén)`;
            await bot.telegram.sendMessage(groupId, ganadoresMensaje);
           } else {
             await bot.telegram.sendMessage(
@@ -2266,18 +2268,20 @@ schedule.scheduleJob(monthRule, async () => {
         );
       else {
         if (ganadores[0].username === "@Chewyck") {
-          maxPuntos = ganadores[1].puntosMensuales;
+          maxPuntos = Math.max(
+            ...ranking
+              .map((user) => user.puntosMensuales)
+              .filter((puntosMensuales) => puntosMensuales < maxPuntos)
+          );
           ganadores = ranking.filter(
             (user) => user.puntosMensuales === maxPuntos
           );
-          ganadores.push(ganadores[0]);
           let ganadoresMensaje = `Los homos del mes son:\n\n`;
-          ganadores.forEach((user, index) => {
-            if (user.username !== "@Chewyck")
-              sumarPuntosAGanadorMes(user.username);
+          ganadoresMensaje += `· @Chewyck\n`;
+          ganadores.forEach((user) => {
             ganadoresMensaje += `- ${user.username}\n`;
           });
-          ganadoresMensaje += `\nTodos con ${ganadores[1].puntosMensuales} puntos (excepto José Guillén)`;
+          ganadoresMensaje += `\nTodos con ${maxPuntos} puntos (excepto José Guillén)`;
           await bot.telegram.sendMessage(groupId, ganadoresMensaje);
         } else {
           await bot.telegram.sendMessage(
@@ -2348,18 +2352,20 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
         );
       else {
         if (ganadores[0].username === "@Chewyck") {
-          maxPuntos = ganadores[1].puntosAnuales;
+          maxPuntos = Math.max(
+            ...ranking
+              .map((user) => user.puntosAnuales)
+              .filter((puntosMensuales) => puntosMensuales < maxPuntos)
+          );
           ganadores = ranking.filter(
             (user) => user.puntosAnuales === maxPuntos
           );
-          ganadores.push(ganadores[0]);
           let ganadoresMensaje = `🏳️‍🌈 Los homos del año son: 🏳️‍🌈\n\n`;
-          ganadores.forEach((user, index) => {
-            if (user.username !== "@Chewyck")
-              sumarPuntosAGanadorMes(user.username);
+          ganadoresMensaje += `· @Chewyck\n`;
+          ganadores.forEach((user) => {
             ganadoresMensaje += `- ${user.username}\n`;
           });
-          ganadoresMensaje += `\nTodos con ${ganadores[1].puntosAnuales} puntos (excepto José Guillén)`;
+          ganadoresMensaje += `\nTodos con ${maxPuntos} puntos (excepto José Guillén)`;
           await bot.telegram.sendMessage(groupId, ganadoresMensaje);
         } else {
           await bot.telegram.sendMessage(
