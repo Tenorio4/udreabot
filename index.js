@@ -921,16 +921,11 @@ bot.hears(
               maxPorcentaje = Math.max(
                 ...ranking
                   .map((user) => user.porcentaje)
-                  .filter((porcentaje) => porcentaje < maxPorcentaje)
+                  .filter((porcentaje) => porcentaje <= maxPorcentaje)
               );
               ganadores = ranking.filter(
                 (user) => user.porcentaje === maxPorcentaje
               );
-              maxPorcentaje = ganadores[1].porcentaje;
-              ganadores = ranking.filter(
-                (user) => user.porcentaje === maxPorcentaje
-              );
-              ganadores.push(ganadores[0]);
               let ganadoresMensaje = `Los homos son:\n\n`;
               ganadores.forEach((user, index) => {
                 if (user.username !== "@Chewyck")
