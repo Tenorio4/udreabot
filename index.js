@@ -918,6 +918,14 @@ bot.hears(
             );
           else {
             if (ganadores[0].username === "@Chewyck") {
+              maxPorcentaje = Math.max(
+                ...ranking
+                  .map((user) => user.porcentaje)
+                  .filter((porcentaje) => porcentaje < maxPorcentaje)
+              );
+              ganadores = ranking.filter(
+                (user) => user.porcentaje === maxPorcentaje
+              );
               maxPorcentaje = ganadores[1].porcentaje;
               ganadores = ranking.filter(
                 (user) => user.porcentaje === maxPorcentaje
