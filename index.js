@@ -428,6 +428,7 @@ bot.telegram.setMyCommands([
   { command: "/bomba", description: "Para subir el vasto incremento de otro usuario" },
   { command: "/heteroescudo", description: "Stat para bajar porcentaje en las tiradas" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
+  { command: "/stats ", description: "Muestra tus stats" },
   { command: "/udrea", description: "Udrea" },
   { command: "/superudrea", description: "Para superudrear" },
   { command: "/a", description: "aaaAAaaaAAAaaaAaaAAAaHhh" },
@@ -1567,6 +1568,22 @@ bot.command("balance", async (ctx) => {
 · Udreas: ${userData.udreas}
 · Utsus: ${userData.utsus}
 · Aaahs: ${userData.aaahs}\`\`\``);
+  } catch (error) {
+    console.error("Error en obtener balance:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("stats", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const heteroescudo = parseFloat(userData.heteroescudo);
+
+    await ctx.replyWithMarkdownV2(
+      `\`\`\`${username}:
+· Hetero escudo: ${heteroescudo}€\`\`\``);
   } catch (error) {
     console.error("Error en obtener balance:", error);
     await ctx.reply("Udrea!");
