@@ -563,7 +563,7 @@ ${username} tiene un (${nuevoPorcentaje} - ${userData.heteroescudo}) => ${nuevoP
           if (userData.heteroescudo == 0) {
             await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
           } else {
-            await ctx.reply(`${username} tiene un (${nuevoPorcentaj} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento`);
+            await ctx.reply(`${username} tiene un (${nuevoPorcentaje} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento`);
           }
         }
       }
@@ -2141,6 +2141,7 @@ async function homoDelDia() {
             let ganadoresMensaje = `Los homos del día son:\n\n`;
             ganadoresMensaje += `· @Chewyck\n`;
             ganadores.forEach((user) => {
+              sumarPuntosAGanador(user.username);
               ganadoresMensaje += `· ${user.username}\n`;
             });
             ganadoresMensaje += `\nTodos con un vasto incremento del ${maxPorcentaje}% (excepto José Guillén)`;
