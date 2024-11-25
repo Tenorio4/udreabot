@@ -1956,19 +1956,18 @@ bot.command("cobralex1", async (ctx) => {
     const mercadoData = (await mercadoDoc.get()).data();
 
     if (usersCobraLex[username]?.active) {
-      return await ctx.reply(`${username} Ya tienes un CobraLex activo...\n\n ¿Cuánto le queda?\n\n ª`);
+      return await ctx.reply(`${username} ya tienes un CobraLex activo...\n\n ¿Cuánto le queda?\n\n ª`);
     }
-
-    usersCobraLex[username] = { active: true };
 
     if (userData.udreas >= mercadoData.cobralex1) {
       userDoc.update({
         udreas: userData.udreas - mercadoData.cobralex1,
       });
       await ctx.reply(`${username} ahora tiene inmunidad a las picaduras y superpicaduras durante 5 minutos`);
+      usersCobraLex[username] = { active: true };
       setTimeout(() => {
         usersCobraLex[username].active = false;
-      }, 5 * 60 * 1000); // 5 minutos en milisegundos
+      }, 50 * 60 * 1000); // 5 minutos en milisegundos
     }  else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }   
