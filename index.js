@@ -1779,7 +1779,7 @@ async function picaduradelacobragay(ctx) {
                 });
             }
 
-            if (victimaData.porcentaje == null || victimaData.porcentaje > 0 || usersCobraLex[victimaData.username].active) {
+            if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersCobraLex[victimaData.username].active) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
