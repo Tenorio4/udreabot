@@ -1601,13 +1601,14 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· Hetero poción LVL 1: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· Hetero poción LVL 2: ${mercadoData.heteropocion2} udrea(s)\n`;
     mercadoMensaje += `· Hetero poción LVL 3: ${mercadoData.heteropocion3} udrea(s)\n`;
+    mercadoMensaje += `· CobraLex LVL 1: ${mercadoData.cobralex1} udrea(s)\n`;
     mercadoMensaje += `\n*Items ofensivos:*\n\n`;
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Bomba de Purpurina: ${mercadoData.bombadepurpurina} udrea(s)\n`;
     mercadoMensaje += `\n*Items defensivos:*\n\n`;
     mercadoMensaje += `· ?\n`;
-    mercadoMensaje += `\nStats / Habilidades\n\n`;
+    mercadoMensaje += `\n*Stats / Habilidades*\n\n`;
     mercadoMensaje += `· Hetero escudo: ${mercadoData.heteroescudo} aaah(s)\n`;
     
     const message = await ctx.replyWithMarkdownV2(mercadoMensaje.replace(/\(/g, "\\(").replace(/\)/g, "\\)"));
@@ -1778,7 +1779,7 @@ async function picaduradelacobragay(ctx) {
                 });
             }
 
-            if (victimaData.porcentaje == null || victimaData.porcentaje > 0) {
+            if (victimaData.porcentaje == null || victimaData.porcentaje > 0 || usersCobraLex[victimaData.username].active) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
@@ -1849,7 +1850,7 @@ async function superpicaduradelacobragay(ctx) {
             const victimaDoc = db
               .collection("usuarios")
               .doc(victimaData.username);
-            if (victimaData.username != userData.username) {
+            if (victimaData.username != userData.username || !usersCobraLex[victimaData.username].active) {
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
                 ultimaActualizacion: today,
@@ -1943,6 +1944,41 @@ bot.command("bomba", async (ctx) => {
   }
 });
 
+// Lista para almacenar el estado CobraLex de cada usuario
+const usersCobraLex = {};
+
+bot.command("cobralex1", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (usersCobraLex[username]?.active) {
+      return await ctx.reply(`${username} Ya tienes un CobraLex activo...\n\n ¿Cuánto le queda?\n\n ª`);
+    }
+
+    usersCobraLex[username] = { active: true };
+
+    if (userData.udreas >= mercadoData.cobralex1) {
+      userDoc.update({
+        udreas: userData.udreas - mercadoData.cobralex1,
+      });
+      await ctx.reply(`${username} ahora tiene inmunidad a las picaduras y superpicaduras durante 5 minutos`);
+      setTimeout(() => {
+        usersCobraLex[username].active = false;
+      }, 5 * 60 * 1000); // 5 minutos en milisegundos
+    }  else {
+      await ctx.reply(`${username} no tienes udreas suficientes`);
+    }   
+
+  } catch (error) {
+    console.error("Error al comprar cobralex1:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
 bot.command("heteroescudo", async (ctx) => {
   try {
     const username = `@${ctx.from.username}`;
@@ -1951,12 +1987,14 @@ bot.command("heteroescudo", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    if (userData.aaahs >= mercadoData.heteroescudo) {
+    if (userData.aaahs >= mercadoData.heteroescudo && userData.heteroescudo < 80) {
       userDoc.update({
         heteroescudo: userData.heteroescudo + 2,
         aaahs: userData.aaahs - mercadoData.heteroescudo,
       });
       await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 2}%`);
+    } else if (userData.heteroescudo >= 80) {
+      await ctx.reply(`${username} ya tienes el Hetero-escudo al máximo`);
     } else {
       await ctx.reply(`${username} no tienes aaahs suficientes`);
     }   
