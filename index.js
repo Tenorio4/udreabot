@@ -1517,7 +1517,7 @@ bot.on('callback_query', async (ctx) => {
             const saldo = userDoc.exists ? parseFloat(userDoc.data().dinero) : 0;
             const monedas = userDoc.exists ? parseFloat(userDoc.data()[sale.moneda]) : 0;
 
-            if (monedas > 0) {
+            if (monedas >= sale.cantidad) {
               // Actualiza el saldo y la cantidad de monedas
               await db.collection("usuarios").doc(username).update({
                 dinero: (saldo * 1 + totalPrecio * 1).toFixed(2),
@@ -1526,7 +1526,7 @@ bot.on('callback_query', async (ctx) => {
 
               ctx.editMessageText(`${username} has vendido ${sale.cantidad} ${sale.moneda} por un total de ${totalPrecio}€`);
             } else {
-              ctx.editMessageText(`${username} no hago tratos con pobres`);
+              ctx.editMessageText(`${username} no tienes udreas suficientes`);
             }
         } else {
           if (sale.cantidad == 5)
@@ -1967,7 +1967,7 @@ bot.command("cobralex1", async (ctx) => {
       usersCobraLex[username] = { active: true };
       setTimeout(() => {
         usersCobraLex[username].active = false;
-      }, 50 * 60 * 1000); // 5 minutos en milisegundos
+      }, 5 * 60 * 1000); // 5 minutos en milisegundos
     }  else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }   
