@@ -1601,7 +1601,7 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· Hetero poción LVL 1: ${mercadoData.heteropocion1} udrea(s)\n`;
     mercadoMensaje += `· Hetero poción LVL 2: ${mercadoData.heteropocion2} udrea(s)\n`;
     mercadoMensaje += `· Hetero poción LVL 3: ${mercadoData.heteropocion3} udrea(s)\n`;
-    mercadoMensaje += `· CobraLex LVL 1: ${mercadoData.cobralex1} udrea(s)\n`;
+    mercadoMensaje += `· Repelente LVL 1: ${mercadoData.repelente1} udrea(s)\n`;
     mercadoMensaje += `\n*Items ofensivos:*\n\n`;
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
@@ -1779,7 +1779,7 @@ async function picaduradelacobragay(ctx) {
                 });
             }
 
-            if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersCobraLex[victimaData.username].active) {
+            if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersRepelente[victimaData.username]?.active) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
@@ -1850,7 +1850,7 @@ async function superpicaduradelacobragay(ctx) {
             const victimaDoc = db
               .collection("usuarios")
               .doc(victimaData.username);
-            if (victimaData.username != userData.username || !usersCobraLex[victimaData.username].active) {
+            if (victimaData.username != userData.username || !usersRepelente[victimaData.username]?.active) {
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
                 ultimaActualizacion: today,
@@ -1944,10 +1944,10 @@ bot.command("bomba", async (ctx) => {
   }
 });
 
-// Lista para almacenar el estado CobraLex de cada usuario
-const usersCobraLex = {};
+// Lista para almacenar el estado Repelente de cada usuario
+const usersRepelente = {};
 
-bot.command("cobralex1", async (ctx) => {
+bot.command("repelente1", async (ctx) => {
   try {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
@@ -1955,25 +1955,25 @@ bot.command("cobralex1", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    if (usersCobraLex[username]?.active) {
-      return await ctx.reply(`${username} ya tienes un CobraLex activo...\n\n ¿Cuánto le queda?\n\n ª`);
+    if (usersRepelente[username]?.active) {
+      return await ctx.reply(`${username} ya tienes un Repelente activo...\n\n ¿Cuánto le queda?\n\n ª`);
     }
 
-    if (userData.udreas >= mercadoData.cobralex1) {
+    if (userData.udreas >= mercadoData.repelente1) {
       userDoc.update({
-        udreas: userData.udreas - mercadoData.cobralex1,
+        udreas: userData.udreas - mercadoData.repelente1,
       });
       await ctx.reply(`${username} ahora tiene inmunidad a las picaduras y superpicaduras durante 5 minutos`);
-      usersCobraLex[username] = { active: true };
+      usersRepelente[username] = { active: true };
       setTimeout(() => {
-        usersCobraLex[username].active = false;
+        usersRepelente[username].active = false;
       }, 5 * 60 * 1000); // 5 minutos en milisegundos
     }  else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }   
 
   } catch (error) {
-    console.error("Error al comprar cobralex1:", error);
+    console.error("Error al comprar repelente1:", error);
     await ctx.reply("Udrea!");
   }
 });
