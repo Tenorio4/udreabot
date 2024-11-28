@@ -157,17 +157,35 @@ app.get("/bombadepurpurina", async (req, res) => {
   }
 });
 
-app.get("/heteroescudo", async (req, res) => {
+app.get("/repelente1", async (req, res) => {
   try {
     const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
     const precioData = precioDoc.data();
 
-    if (precioData && precioData.heteroescudo) {
-      res.json({ precio: precioData.heteroescudo });
+    if (precioData && precioData.repelente1) {
+      res.json({ precio: precioData.repelente1 });
     } else {
       res
         .status(404)
-        .send("No se encontró el precio para heteroescudo.");
+        .send("No se encontró el precio para repelente1.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
+app.get("/heteronivel", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.heteronivel) {
+      res.json({ precio: precioData.heteronivel });
+    } else {
+      res
+        .status(404)
+        .send("No se encontró el precio para heteronivel.");
     }
   } catch (error) {
     console.error("Error al obtener el precio:", error);
@@ -426,9 +444,10 @@ bot.telegram.setMyCommands([
     description: "Para convertir en gay a los demás usuarios",
   },
   { command: "/bomba", description: "Para subir el vasto incremento de otro usuario" },
-  { command: "/heteroescudo", description: "Stat para bajar porcentaje en las tiradas" },
+  { command: "/repelente1", description: "Para ganar inmunidad contra picaduras y superpicaduras" },
+  { command: "/heteronivel", description: "Stat para bajar porcentaje en las tiradas" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
-  { command: "/stats ", description: "Muestra tus stats" },
+  { command: "/stats", description: "Muestra tus stats" },
   { command: "/udrea", description: "Udrea" },
   { command: "/superudrea", description: "Para superudrear" },
   { command: "/a", description: "aaaAAaaaAAAaaaAaaAAAaHhh" },
@@ -526,7 +545,7 @@ async function nivel(username, ctx, reroll = false) {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
       await userDoc.set({
         ...userData,
-        porcentaje: nuevoPorcentaje - userData.heteroescudo,
+        porcentaje: nuevoPorcentaje - userData.heteronivel,
         ultimaActualizacion: today,
       });
       if (nuevoPorcentaje == 0) {
@@ -552,18 +571,18 @@ async function nivel(username, ctx, reroll = false) {
         );
       } else {
         if (reroll){
-          if (userData.heteroescudo == 0) {
+          if (userData.heteronivel == 0) {
             await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
 ${username} tiene un ${nuevoPorcentaje}% de vasto incremento\`\`\``);
           } else {
             await ctx.replyWithMarkdownV2(`\`\`\`Reroll🔄
-${username} tiene un (${nuevoPorcentaje} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento\`\`\``);
+${username} tiene un (${nuevoPorcentaje} - ${userData.heteronivel}) => ${nuevoPorcentaje - userData.heteronivel}% de vasto incremento\`\`\``);
           }
         } else {
-          if (userData.heteroescudo == 0) {
+          if (userData.heteronivel == 0) {
             await ctx.reply(`${username} tiene un ${nuevoPorcentaje}% de vasto incremento`);
           } else {
-            await ctx.reply(`${username} tiene un (${nuevoPorcentaje} - ${userData.heteroescudo}) => ${nuevoPorcentaje - userData.heteroescudo}% de vasto incremento`);
+            await ctx.reply(`${username} tiene un (${nuevoPorcentaje} - ${userData.heteronivel}) => ${nuevoPorcentaje - userData.heteronivel}% de vasto incremento`);
           }
         }
       }
@@ -1579,11 +1598,11 @@ bot.command("stats", async (ctx) => {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
-    const heteroescudo = parseFloat(userData.heteroescudo);
+    const heteronivel = parseFloat(userData.heteronivel);
 
     await ctx.replyWithMarkdownV2(
       `\`\`\`${username}:
-· Hetero escudo: ${heteroescudo}%\`\`\``);
+· Hetero nivel: ${heteronivel}%\`\`\``);
   } catch (error) {
     console.error("Error en obtener balance:", error);
     await ctx.reply("Udrea!");
@@ -1609,7 +1628,7 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `\n*Items defensivos:*\n\n`;
     mercadoMensaje += `· ?\n`;
     mercadoMensaje += `\n*Stats / Habilidades*\n\n`;
-    mercadoMensaje += `· Hetero escudo: ${mercadoData.heteroescudo} aaah(s)\n`;
+    mercadoMensaje += `· Hetero nivel: ${mercadoData.heteronivel} aaah(s)\n`;
     
     const message = await ctx.replyWithMarkdownV2(mercadoMensaje.replace(/\(/g, "\\(").replace(/\)/g, "\\)"));
     setTimeout(async () => {
@@ -1978,7 +1997,7 @@ bot.command("repelente1", async (ctx) => {
   }
 });
 
-bot.command("heteroescudo", async (ctx) => {
+bot.command("heteronivel", async (ctx) => {
   try {
     const username = `@${ctx.from.username}`;
     const userDoc = db.collection("usuarios").doc(username);
@@ -1986,20 +2005,20 @@ bot.command("heteroescudo", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    if (userData.aaahs >= mercadoData.heteroescudo && userData.heteroescudo < 80) {
+    if (userData.aaahs >= mercadoData.heteronivel && userData.heteronivel < 80) {
       userDoc.update({
-        heteroescudo: userData.heteroescudo + 2,
-        aaahs: userData.aaahs - mercadoData.heteroescudo,
+        heteronivel: userData.heteronivel + 2,
+        aaahs: userData.aaahs - mercadoData.heteronivel,
       });
-      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudo + 2}%`);
-    } else if (userData.heteroescudo >= 80) {
-      await ctx.reply(`${username} ya tienes el Hetero-escudo al máximo`);
+      await ctx.reply(`${username} ha subido su Hetero-nivel al ${userData.heteronivel + 2}%`);
+    } else if (userData.heteronivel >= 80) {
+      await ctx.reply(`${username} ya tienes el Hetero-nivel al máximo`);
     } else {
       await ctx.reply(`${username} no tienes aaahs suficientes`);
     }   
 
   } catch (error) {
-    console.error("Error al comprar heteroescudo:", error);
+    console.error("Error al comprar heteronivel:", error);
     await ctx.reply("Udrea!");
   }
 });
