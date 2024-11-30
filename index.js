@@ -1799,6 +1799,7 @@ async function picaduradelacobragay(ctx) {
             }
 
             if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersRepelente[victimaData.username]?.active) {
+              if (victimaData.evasion >= Math.floor(Math.random() * 100)) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
@@ -1812,6 +1813,9 @@ async function picaduradelacobragay(ctx) {
               await ctx.reply(
                 `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
               );
+              } else{
+                await ctx.reply(`${victima} ha esquivado la picadura!`);
+              }
             } else {
               await ctx.reply(`${victima} es inmune a las picaduras`);
             }
@@ -2019,6 +2023,32 @@ bot.command("heteronivel", async (ctx) => {
 
   } catch (error) {
     console.error("Error al comprar heteronivel:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
+bot.command("evasion", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.aaahs >= mercadoData.evasion && userData.evasion < 50) {
+      userDoc.update({
+        evasion: userData.evasion + 1,
+        aaahs: userData.aaahs - mercadoData.evasion,
+      });
+      await ctx.reply(`${username} ha subido su Evasión al ${userData.evasion + 1}%`);
+    } else if (userData.evasion >= 50) {
+      await ctx.reply(`${username} ya tienes Evasión al máximo`);
+    } else {
+      await ctx.reply(`${username} no tienes aaahs suficientes`);
+    }   
+
+  } catch (error) {
+    console.error("Error al comprar evasion:", error);
     await ctx.reply("Udrea!");
   }
 });
