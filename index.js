@@ -446,6 +446,7 @@ bot.telegram.setMyCommands([
   { command: "/bomba", description: "Para subir el vasto incremento de otro usuario" },
   { command: "/repelente1", description: "Para ganar inmunidad contra picaduras y superpicaduras" },
   { command: "/heteronivel", description: "Stat para bajar porcentaje en las tiradas" },
+  { command: "/evasion", description: "Stat para subir la evasión en las picaduras" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
   { command: "/stats", description: "Muestra tus stats" },
   { command: "/udrea", description: "Udrea" },
@@ -1599,10 +1600,12 @@ bot.command("stats", async (ctx) => {
     const userDoc = db.collection("usuarios").doc(username);
     const userData = (await userDoc.get()).data();
     const heteronivel = parseFloat(userData.heteronivel);
+    const evasion = parseFloat(userData.evasion);
 
     await ctx.replyWithMarkdownV2(
       `\`\`\`${username}:
-· Hetero nivel: ${heteronivel}%\`\`\``);
+· Hetero nivel: ${heteronivel}%
+· Evasión: ${evasion}%\`\`\``);
   } catch (error) {
     console.error("Error en obtener balance:", error);
     await ctx.reply("Udrea!");
@@ -1799,7 +1802,7 @@ async function picaduradelacobragay(ctx) {
             }
 
             if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersRepelente[victimaData.username]?.active) {
-              if (victimaData.evasion >= Math.floor(Math.random() * 100)) {
+              if (victimaData.evasion < Math.floor(Math.random() * 100)) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
@@ -1874,11 +1877,15 @@ async function superpicaduradelacobragay(ctx) {
               .collection("usuarios")
               .doc(victimaData.username);
             if (victimaData.username != userData.username || !usersRepelente[victimaData.username]?.active) {
-              victimaDoc.update({
-                porcentaje: userData.porcentaje,
-                ultimaActualizacion: today,
-              });
-              picados += `${victimaData.username} `;
+              if (victimaData.evasion < Math.floor(Math.random() * 100)) {
+                victimaDoc.update({
+                  porcentaje: userData.porcentaje,
+                  ultimaActualizacion: today,
+                });
+                picados += `${victimaData.username} `;
+              } else {
+                 ctx.reply(`${victimaData.username} ha esquivado la picadura!`);
+              }
             }
           });
           userDoc.update({
