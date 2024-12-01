@@ -1646,10 +1646,11 @@ bot.command("mercado", async (ctx) => {
     mercadoMensaje += `· Picadura de la Cobra Gay: ${mercadoData.picaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Superpicadura de la Cobra Gay: ${mercadoData.superpicaduradelacobragay} udrea(s)\n`;
     mercadoMensaje += `· Bomba de Purpurina: ${mercadoData.bombadepurpurina} udrea(s)\n`;
-    mercadoMensaje += `\n*Items defensivos:*\n\n`;
-    mercadoMensaje += `· ?\n`;
+    //mercadoMensaje += `\n*Items defensivos:*\n\n`;
+    //mercadoMensaje += `· ?\n`;
     mercadoMensaje += `\n*Stats / Habilidades*\n\n`;
     mercadoMensaje += `· Hetero nivel: ${mercadoData.heteronivel} aaah(s)\n`;
+    mercadoMensaje += `· Evasión: ${mercadoData.evasion} aaah(s)\n`;
     
     const message = await ctx.replyWithMarkdownV2(mercadoMensaje.replace(/\(/g, "\\(").replace(/\)/g, "\\)"));
     setTimeout(async () => {
