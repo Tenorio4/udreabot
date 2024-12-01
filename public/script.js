@@ -149,6 +149,7 @@ window.onload = function () {
   obtenerPrecioItemUdreas("/superpicaduradelacobragay");
   obtenerPrecioItemUdreas("/bombadepurpurina");
   obtenerPrecioItemUdreas("/repelente1");
+  obtenerPrecioItemUdreas("/evasion");
   obtenerPrecioItemAaahs("/heteronivel");
   obtenerRanking();
   obtenerRankingMensual();

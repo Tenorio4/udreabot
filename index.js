@@ -193,6 +193,24 @@ app.get("/heteronivel", async (req, res) => {
   }
 });
 
+app.get("/evasion", async (req, res) => {
+  try {
+    const precioDoc = await db.collection("mercado").doc("mercadoActual").get();
+    const precioData = precioDoc.data();
+
+    if (precioData && precioData.evasion) {
+      res.json({ precio: precioData.evasion });
+    } else {
+      res
+        .status(404)
+        .send("No se encontró el precio para evasion.");
+    }
+  } catch (error) {
+    console.error("Error al obtener el precio:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
+
 app.get("/ranking", async (req, res) => {
   try {
     const usersSnapshot = await db.collection("usuarios").get();
