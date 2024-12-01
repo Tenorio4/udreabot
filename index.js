@@ -1802,7 +1802,7 @@ async function picaduradelacobragay(ctx) {
             }
 
             if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersRepelente[victimaData.username]?.active) {
-              if (victimaData.evasion < Math.floor(Math.random() * 100)) {
+              if (victimaData.evasion < Math.floor(Math.random() * 100) + 1) {
               const today = obtenerFechaHoy();
               victimaDoc.update({
                 porcentaje: userData.porcentaje,
@@ -1817,6 +1817,9 @@ async function picaduradelacobragay(ctx) {
                 `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
               );
               } else{
+                userDoc.update({
+                  udreas: userData.udreas - mercadoData.picaduradelacobragay,
+                });
                 await ctx.reply(`${victima} ha esquivado la picadura!`);
               }
             } else {
@@ -1877,7 +1880,7 @@ async function superpicaduradelacobragay(ctx) {
               .collection("usuarios")
               .doc(victimaData.username);
             if (victimaData.username != userData.username || !usersRepelente[victimaData.username]?.active) {
-              if (victimaData.evasion < Math.floor(Math.random() * 100)) {
+              if (victimaData.evasion < Math.floor(Math.random() * 100) + 1) {
                 victimaDoc.update({
                   porcentaje: userData.porcentaje,
                   ultimaActualizacion: today,
@@ -1891,7 +1894,7 @@ async function superpicaduradelacobragay(ctx) {
           userDoc.update({
             udreas: userData.udreas - mercadoData.superpicaduradelacobragay,
           });
-          await ctx.reply(`${username} ha picado a todos los usuarios 🐍`);
+          await ctx.reply(`${username} ha intentado picar a todos los usuarios 🐍`);
           await ctx.reply(
             `${picados}ahora tienen un vasto incremento del ${userData.porcentaje}%`
           );
