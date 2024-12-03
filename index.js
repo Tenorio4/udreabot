@@ -562,11 +562,19 @@ async function nivel(username, ctx, reroll = false) {
       }
     } else {
       const nuevoPorcentaje = obtenerPorcentajeAleatorio();
-      await userDoc.set({
-        ...userData,
-        porcentaje: nuevoPorcentaje - userData.heteronivel,
-        ultimaActualizacion: today,
-      });
+      if (nuevoPorcentaje >= 100) {
+        await userDoc.set({
+          ...userData,
+          porcentaje: nuevoPorcentaje,
+          ultimaActualizacion: today,
+        });
+      } else {
+        await userDoc.set({
+          ...userData,
+          porcentaje: nuevoPorcentaje - userData.heteronivel,
+          ultimaActualizacion: today,
+        });
+      }
       if (nuevoPorcentaje == 0) {
         await ctx.reply(
           `${username} tiene un ${nuevoPorcentaje}% de vasto incremento`
@@ -2395,6 +2403,7 @@ schedule.scheduleJob(monthRule, async () => {
           let ganadoresMensaje = `Los homos del mes son:\n\n`;
           ganadoresMensaje += `· @Chewyck\n`;
           ganadores.forEach((user) => {
+            sumarPuntosAGanadorMes(user.username);
             ganadoresMensaje += `- ${user.username}\n`;
           });
           ganadoresMensaje += `\nTodos con ${maxPuntos} puntos (excepto José Guillén)`;
