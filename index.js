@@ -465,6 +465,7 @@ bot.telegram.setMyCommands([
   { command: "/repelente1", description: "Para ganar inmunidad contra picaduras y superpicaduras" },
   { command: "/heteronivel", description: "Stat para bajar porcentaje en las tiradas" },
   { command: "/evasion", description: "Stat para subir la evasión en las picaduras" },
+  { command: "/limosna", description: "Para dar limosna a otro usuario" },
   { command: "/balance", description: "Muestra tus dineros y tus udreas" },
   { command: "/stats", description: "Muestra tus stats" },
   { command: "/udrea", description: "Udrea" },
@@ -1598,7 +1599,46 @@ bot.on('callback_query', async (ctx) => {
   }
 });
 
+bot.command("limosna", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
 
+    // Extraer el parámetro después del comando
+    const messageText = ctx.message.text; // El texto completo del mensaje
+    const params = messageText.split(" "); // Dividimos el texto en partes por espacio
+
+    if (params.length < 3 || !usuarios.includes(params[1]) || isNaN(params[2])) {
+      // Si no se especificó un número o el parámetro no es válido
+      return ctx.reply(
+        "Especifica a quién quieres dar la limosna y la cantidad.\nEjemplo: /limosna @TenorioSRG 100"
+      );
+    }
+
+    const victima = params[1];
+
+      if (userData.udreas >= parseInt(params[2])) {
+          const victimaDoc = db.collection("usuarios").doc(victima);
+          const victimaData = (await victimaDoc.get()).data();
+            victimaDoc.update({
+              udreas: victimaData.udreas + parseInt(params[2]),
+            });
+
+            userDoc.update({
+              udreas: userData.udreas - parseInt(params[2]),
+            });
+            await ctx.reply(`${username} le ha dado ${parsedInt(params[2])} udreas a ${victima} `);           
+             
+      } else {
+        await ctx.reply(`${username} no tienes udreas suficientes`);
+      }   
+
+  } catch (error) {
+    console.error("Error al hacer limosna:", error);
+    await ctx.reply("Udrea!");
+  }
+});
 
 bot.command("balance", async (ctx) => {
   try {
@@ -2161,7 +2201,7 @@ function scheduleDailyTask(taskFunction) {
     const randomMinute = Math.floor(Math.random() * 30); // Minutos aleatorios entre 0 y 29
     const executionTime = moment.tz(TIMEZONE)
       .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
-      .set({ hour: 23, minute: 30 + randomMinute, second: 50 });
+      .set({ hour: 22, minute: 00 + randomMinute, second: 50 });
 
     //console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
     
