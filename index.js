@@ -1618,7 +1618,7 @@ bot.command("limosna", async (ctx) => {
 
     const victima = params[1];
 
-      if (userData.udreas >= parseInt(params[2])) {
+      if (userData.udreas >= parseInt(params[2]) && userData.username !== victima) {
           const victimaDoc = db.collection("usuarios").doc(victima);
           const victimaData = (await victimaDoc.get()).data();
             victimaDoc.update({
@@ -1628,7 +1628,7 @@ bot.command("limosna", async (ctx) => {
             userDoc.update({
               udreas: userData.udreas - parseInt(params[2]),
             });
-            await ctx.reply(`${username} le ha dado ${parsedInt(params[2])} udreas a ${victima} `);           
+            await ctx.reply(`${username} le ha dado ${parseInt(params[2])} udrea(s) a ${victima} 🪙`);           
              
       } else {
         await ctx.reply(`${username} no tienes udreas suficientes`);
