@@ -2130,6 +2130,32 @@ bot.command("evasion", async (ctx) => {
   }
 });
 
+bot.command("heteroescudo", async (ctx) => {
+  try {
+    const username = `@${ctx.from.username}`;
+    const userDoc = db.collection("usuarios").doc(username);
+    const userData = (await userDoc.get()).data();
+    const mercadoDoc = db.collection("mercado").doc("mercadoActual");
+    const mercadoData = (await mercadoDoc.get()).data();
+
+    if (userData.aaahs >= mercadoData.heteroescudo && userData.heteroescudo < 25) {
+      userDoc.update({
+        evasion: userData.heteroescudo + 1,
+        aaahs: userData.aaahs - mercadoData.heteroescudo,
+      });
+      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.evasion + 1}`);
+    } else if (userData.evasion >= 50) {
+      await ctx.reply(`${username} ya tienes Hetero-escudo al máximo`);
+    } else {
+      await ctx.reply(`${username} no tienes aaahs suficientes`);
+    }   
+
+  } catch (error) {
+    console.error("Error al comprar heteroescudo:", error);
+    await ctx.reply("Udrea!");
+  }
+});
+
 // Comando /memedeldia para obtener un meme aleatorio
 bot.command("meme", async (ctx) => {
   try {
@@ -2262,7 +2288,7 @@ async function homoDelDia() {
       });
       await bot.telegram.sendMessage(groupId, cobardesMensaje);
       await bot.telegram.sendMessage(groupId, "Por cobardes");
-    } else if (cobardes.length === 1) {
+    } else if (cobardes.length === 1 && cobardes[0] !== "@Chewyck") {
       sumarPuntosAGanador(cobardes[0]);
       if (cobardes[0] === "@ireeneeri")
         await bot.telegram.sendMessage(
