@@ -2305,6 +2305,10 @@ async function homoDelDia() {
         "Pulse aquí -> /s si ya lo suponías"
       );
     } else {
+      if (cobardes.length === 1 && cobardes[0] === "@Chewyck") {
+        sumarPuntosAGanador(cobardes[0]);
+      }
+
       let maxPorcentaje = Math.max(...ranking.map((user) => user.porcentaje));
       let ganadores = ranking.filter(
         (user) => user.porcentaje === maxPorcentaje
@@ -2578,7 +2582,6 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
       "Pulse aquí -> /s si ya lo suponías"
     );
     await bot.telegram.sendMessage(groupId, "Y feliz año Udrea");
-    await enviarMensajeAleatorio(ctx, "udreaMessages");
 
     // Resetear porcentajes para el siguiente mes
     const batch = db.batch();
@@ -2588,7 +2591,7 @@ schedule.scheduleJob(getLastDayOfYearRule(), async () => {
     });
     await batch.commit();
   } catch (error) {
-    console.error("Error en la tarea mensual:", error);
+    console.error("Error en la tarea anual:", error);
   }
 });
 
