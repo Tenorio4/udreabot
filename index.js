@@ -2254,6 +2254,10 @@ function myDailyTask() {
   homoDelDia();
 }
 
+bot.command("homodeldia", async (ctx) => {
+  homoDelDia();
+});
+
 // Inicia la tarea programada
 scheduleDailyTask(myDailyTask);
 
