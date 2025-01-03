@@ -2229,7 +2229,7 @@ function scheduleDailyTask(taskFunction) {
       .add(isFirstExecution ? 0 : 1, 'day') // Primera ejecución: hoy; siguientes: mañana
       .set({ hour: 22, minute: 00 + randomMinute, second: 50 });
 
-    //console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    console.log(`Tarea programada para: ${executionTime.format('YYYY-MM-DD HH:mm:ss')}`);
     
     // Resetea bandera después de la primera ejecución
     isFirstExecution = false;
