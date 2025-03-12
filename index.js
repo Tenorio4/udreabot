@@ -370,7 +370,7 @@ const usuarios = [
   "@ireeneeri",
   "@RangoLV",
   //"@Chewyck",
-  "@Papadopoulos",
+  //"@Papadopoulos",
   //"@Numuhukumakiakiaialunamor",
 ];
 
