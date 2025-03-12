@@ -369,9 +369,9 @@ const usuarios = [
   "@Pmoai",
   "@ireeneeri",
   "@RangoLV",
-  "@Chewyck",
+  //"@Chewyck",
   "@Papadopoulos",
-  "@Numuhukumakiakiaialunamor",
+  //"@Numuhukumakiakiaialunamor",
 ];
 
 function getNombre(username) {
@@ -1870,19 +1870,47 @@ async function picaduradelacobragay(ctx) {
 
             if ((victimaData.porcentaje == null || victimaData.porcentaje > 0) && !usersRepelente[victimaData.username]?.active) {
               if (victimaData.evasion < Math.floor(Math.random() * 100) + 1) {
-              const today = obtenerFechaHoy();
-              victimaDoc.update({
-                porcentaje: userData.porcentaje,
-                ultimaActualizacion: today,
-              });
+                if (victimaData.heteroescudo > 0){
+                  if (victimaData.heteroescudo <= userData.porcentaje){
+                    const today = obtenerFechaHoy();
+                    victimaDoc.update({
+                      heteroescudo: 0,
+                      porcentaje: userData.porcentaje - victimaData.heteroescudo,
+                      ultimaActualizacion: today,
+                    });
+                    await ctx.reply(`${username} ha picado a ${victima} 🐍`);
+                    await ctx.reply(
+                      `${victima} tiene ahora un vasto incremento del ${userData.porcentaje - userData.heteroescudo}% y ha roto su hetero-escudo!`
+                    );
+                  } else {
+                    const today = obtenerFechaHoy();
+                    victimaDoc.update({
+                      heteroescudo: victimaData.heteroescudo - userData.porcentaje,
+                      ultimaActualizacion: today,
+                    });
+                    await ctx.reply(`${username} ha picado a ${victima} 🐍`);
+                    await ctx.reply(
+                      `${victima} tiene ahora su hetero-escudo al ${userData.heteroescudo - userData.porcentaje}%`
+                    );
+                  }
+                  userDoc.update({
+                    udreas: userData.udreas - mercadoData.picaduradelacobragay,
+                  });
+                } else {
+                  const today = obtenerFechaHoy();
+                  victimaDoc.update({
+                    porcentaje: userData.porcentaje,
+                    ultimaActualizacion: today,
+                  });
 
-              userDoc.update({
-                udreas: userData.udreas - mercadoData.picaduradelacobragay,
-              });
-              await ctx.reply(`${username} ha picado a ${victima} 🐍`);
-              await ctx.reply(
-                `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
-              );
+                  userDoc.update({
+                    udreas: userData.udreas - mercadoData.picaduradelacobragay,
+                  });
+                  await ctx.reply(`${username} ha picado a ${victima} 🐍`);
+                  await ctx.reply(
+                    `${victima} tiene ahora un vasto incremento del ${userData.porcentaje}%`
+                  );
+                }
               } else{
                 userDoc.update({
                   udreas: userData.udreas - mercadoData.picaduradelacobragay,
@@ -2138,13 +2166,13 @@ bot.command("heteroescudo", async (ctx) => {
     const mercadoDoc = db.collection("mercado").doc("mercadoActual");
     const mercadoData = (await mercadoDoc.get()).data();
 
-    if (userData.aaahs >= mercadoData.heteroescudo && userData.heteroescudo < 25) {
+    if (userData.aaahs >= mercadoData.heteroescudo && userData.heteroescudomax < 30) {
       userDoc.update({
-        evasion: userData.heteroescudo + 1,
+        evasion: userData.heteroescudomax + 1,
         aaahs: userData.aaahs - mercadoData.heteroescudo,
       });
-      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.evasion + 1}`);
-    } else if (userData.evasion >= 50) {
+      await ctx.reply(`${username} ha subido su Hetero-escudo al ${userData.heteroescudomax + 1}`);
+    } else if (userData.heteroescudomax >= 30) {
       await ctx.reply(`${username} ya tienes Hetero-escudo al máximo`);
     } else {
       await ctx.reply(`${username} no tienes aaahs suficientes`);
@@ -2417,6 +2445,7 @@ function getLastDayOfYearRule() {
   // Especificamos que sea el día 31 del mes 12 (diciembre)
   rule.month = 11; // Diciembre (los meses en RecurrenceRule son 0-indexed, 0=enero)
   rule.date = 31; // Día 31 de diciembre
+  rule.tz = TIMEZONE;
 
   return rule;
 }
