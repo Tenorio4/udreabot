@@ -1750,15 +1750,19 @@ bot.command("heteropocion1", async (ctx) => {
     const mercadoData = (await mercadoDoc.get()).data();
     const anteriorPorcentaje = userData.porcentaje;
     if (userData.udreas >= mercadoData.heteropocion1) {
-      userDoc.update({
-        porcentaje: userData.porcentaje - 10,
-        udreas: userData.udreas - mercadoData.heteropocion1,
-      });
-      await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 1 🧪 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${
-          userData.porcentaje - 10
-        }%)`
-      );
+      if (userData.porcentaje !== null) {
+        userDoc.update({
+          porcentaje: userData.porcentaje - 10,
+          udreas: userData.udreas - mercadoData.heteropocion1,
+        });
+        await ctx.reply(
+          `${username} ha usado Hetero-poción LVL 1 🧪 y su vasto incremento ha disminuido en un 10%:\n(${anteriorPorcentaje}% => ${
+            userData.porcentaje - 10
+          }%)`
+        );
+      } else {
+        await ctx.reply(`${username} no puedes usar una hetero-poción si no has tirado nivel`);
+      }
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
@@ -1777,15 +1781,19 @@ bot.command("heteropocion2", async (ctx) => {
     const mercadoData = (await mercadoDoc.get()).data();
     const anteriorPorcentaje = userData.porcentaje;
     if (userData.udreas >= mercadoData.heteropocion2) {
-      userDoc.update({
-        porcentaje: userData.porcentaje - 50,
-        udreas: userData.udreas - mercadoData.heteropocion2,
-      });
-      await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 2 🧪y su vasto incremento ha disminuido en un 50%:\n(${anteriorPorcentaje}% => ${
-          userData.porcentaje - 50
-        }%)`
-      );
+      if (userData.porcentaje !== null) {
+        userDoc.update({
+          porcentaje: userData.porcentaje - 50,
+          udreas: userData.udreas - mercadoData.heteropocion2,
+        });
+        await ctx.reply(
+          `${username} ha usado Hetero-poción LVL 2 🧪y su vasto incremento ha disminuido en un 50%:\n(${anteriorPorcentaje}% => ${
+            userData.porcentaje - 50
+          }%)`
+        );
+      } else {
+        await ctx.reply(`${username} no puedes usar una hetero-poción si no has tirado nivel`);
+      }
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
@@ -1804,15 +1812,19 @@ bot.command("heteropocion3", async (ctx) => {
     const mercadoData = (await mercadoDoc.get()).data();
     const anteriorPorcentaje = userData.porcentaje;
     if (userData.udreas >= mercadoData.heteropocion3) {
-      userDoc.update({
-        porcentaje: userData.porcentaje - 100,
-        udreas: userData.udreas - mercadoData.heteropocion3,
-      });
-      await ctx.reply(
-        `${username} ha usado Hetero-poción LVL 3 🧪 y su vasto incremento ha disminuido en un 100%:\n(${anteriorPorcentaje}% => ${
-          userData.porcentaje - 100
-        }%)`
-      );
+      if (userData.porcentaje !== null) {
+        userDoc.update({
+          porcentaje: userData.porcentaje - 100,
+          udreas: userData.udreas - mercadoData.heteropocion3,
+        });
+        await ctx.reply(
+          `${username} ha usado Hetero-poción LVL 3 🧪 y su vasto incremento ha disminuido en un 100%:\n(${anteriorPorcentaje}% => ${
+            userData.porcentaje - 100
+          }%)`
+        );
+      } else {
+        await ctx.reply(`${username} no puedes usar una hetero-poción si no has tirado nivel`);
+      }
     } else {
       await ctx.reply(`${username} no tienes udreas suficientes`);
     }
