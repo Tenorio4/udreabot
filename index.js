@@ -2330,11 +2330,11 @@ async function homoDelDia() {
         sumarPuntosAGanador(user);
         cobardesMensaje += `· ${user}\n`;
       });
-      await bot.telegram.sendMessage(groupId, cobardesMensaje);
-      await bot.telegram.sendMessage(groupId, "Por cobardes");
+      //await bot.telegram.sendMessage(groupId, cobardesMensaje);
+      //await bot.telegram.sendMessage(groupId, "Por cobardes");
     } else if (cobardes.length === 1 && cobardes[0] !== "@Chewyck") {
       sumarPuntosAGanador(cobardes[0]);
-      if (cobardes[0] === "@ireeneeri")
+     /* if (cobardes[0] === "@ireeneeri")
         await bot.telegram.sendMessage(
           groupId,
           `La homo del día es ${cobardes[0]} por cobarde`
@@ -2347,7 +2347,7 @@ async function homoDelDia() {
       await bot.telegram.sendMessage(
         groupId,
         "Pulse aquí -> /s si ya lo suponías"
-      );
+      );*/
     } else {
       if (cobardes.length === 1 && cobardes[0] === "@Chewyck") {
         sumarPuntosAGanador(cobardes[0]);
@@ -2360,12 +2360,12 @@ async function homoDelDia() {
 
       if (ganadores.length === 1) {
         sumarPuntosAGanador(ganadores[0].username);
-        if (ganadores[0].username === "@ireeneeri")
+        /*if (ganadores[0].username === "@ireeneeri")
           await bot.telegram.sendMessage(
             groupId,
             `La homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`
-          );
-        else {
+          );*/
+        //else {
           if (ganadores[0].username === "@Chewyck") {
             maxPorcentaje = Math.max(
               ...ranking
@@ -2382,14 +2382,14 @@ async function homoDelDia() {
               ganadoresMensaje += `· ${user.username}\n`;
             });
             ganadoresMensaje += `\nTodos con un vasto incremento del ${maxPorcentaje}% (excepto José Guillén)`;
-           await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+           //await bot.telegram.sendMessage(groupId, ganadoresMensaje);
           } else {
-            await bot.telegram.sendMessage(
+            /*await bot.telegram.sendMessage(
               groupId,
               `El homo del día es ${ganadores[0].username} con un ${ganadores[0].porcentaje}% de vasto incremento`
-            );
+            );*/
           }
-        }
+        //}
       } else {
         let ganadoresMensaje = `Los homos del día son:\n\n`;
         ganadores.forEach((user, index) => {
@@ -2397,12 +2397,12 @@ async function homoDelDia() {
           ganadoresMensaje += `· ${user.username}\n`;
         });
         ganadoresMensaje += `\nTodos con un vasto incremento del ${ganadores[0].porcentaje}%`;
-        await bot.telegram.sendMessage(groupId, ganadoresMensaje);
+        //await bot.telegram.sendMessage(groupId, ganadoresMensaje);
       }
-      await bot.telegram.sendMessage(
+      /*await bot.telegram.sendMessage(
         groupId,
         "Pulse aquí -> /s si ya lo suponías"
-      );
+      );*/
     }
 
     const batch = db.batch();
